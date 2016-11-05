@@ -3,3 +3,34 @@ extends layout
 block content
   .page-header
     h1 people
+    script(type='text/javascript', src='main.js')
+
+  body
+    p
+      | Click the button to trigger a function that will output "Hello World" in a p element with id="demo".
+    button(onclick='myFunction()') Click me
+    p#demo
+
+    table.pure-table
+      thead
+        tr
+          th #
+          th Make
+          th Model
+          th Year
+      tbody
+        tr
+          td 1
+          td Honda
+          td Accord
+          td 2009
+        tr
+          td 2
+          td Toyota
+          td Camry
+          td 2012
+        tr
+          td 3
+          td Hyundai
+          td Elantra
+          td 2010
