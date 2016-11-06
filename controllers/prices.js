@@ -6,6 +6,6 @@ const Prices = require('../models/Prices.js');
 
 exports.getPrices = (req, res) => {
   Prices.find((err, docs) => {
-    res.render('Prices', { prices: docs });
+    res.render('prices', { prices: docs });
   });
 };
