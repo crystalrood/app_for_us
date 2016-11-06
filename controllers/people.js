@@ -6,6 +6,6 @@ const People = require('../models/People.js');
 
 exports.getPeople = (req, res) => {
   People.find((err, docs) => {
-    res.render('People', { people: docs });
+    res.render('people', { people: docs });
   });
 };

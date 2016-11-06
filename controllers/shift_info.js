@@ -6,6 +6,6 @@ const Shift_info = require('../models/Shift_info.js');
 
 exports.getShift_info = (req, res) => {
   Shift_info.find((err, docs) => {
-    res.render('Shift_info', { shift_info: docs });
+    res.render('shift_info', { shift_info: docs });
   });
 };
