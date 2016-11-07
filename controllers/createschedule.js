@@ -16,7 +16,7 @@ exports.getCreateschedule = (req, res) => {
 
 
 exports.postCreateschedule = (req, res) => {
-  req.assert('test', 'Name cannot be blank').notEmpty();
+  req.assert('name', 'Name cannot be blank').notEmpty();
 
   const errors = req.validationErrors();
 
