@@ -13,19 +13,3 @@ exports.getCreateschedule = (req, res) => {
     res.render('createschedule', { createschedule: docs });
   });
 };
-
-
-exports.postCreateschedule = (req, res) => {
-  req.assert('name', 'Name cannot be blank').notEmpty();
-
-  const errors = req.validationErrors();
-
-  if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('/createschedule');
-  };
-
-    req.flash('success', { msg: 'Email has been sent successfully!' });
-    res.redirect('/createschedule');
-  });
-};
