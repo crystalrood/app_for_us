@@ -127,7 +127,7 @@ app.get('/prices', pricesController.getPrices);
 app.get('/createschedule', passportConfig.isAuthenticated, createscheduleController.getCreateschedule);
 
 //added this line 11/6
-app.post('/createschedule', passportConfig.isAuthenticated, createscheduleController.postCreateschedule);
+//app.post('/createschedule', passportConfig.isAuthenticated, createscheduleController.postCreateschedule);
 
 app.get('/people', passportConfig.isAuthenticated, peopleController.getPeople);
 app.get('/shift_info', passportConfig.isAuthenticated, shift_infoController.getShift_info);
