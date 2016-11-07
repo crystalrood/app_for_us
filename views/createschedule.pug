@@ -6,10 +6,11 @@ block content
     h2 mimsey creates this schedule
 
   form.form-horizontal(method='POST')
+    input(type='hidden', name='_csrf', value=_csrf)
     .form-group
-      label.col-sm-3.control-label(for='test') Test
+      label.col-sm-3.control-label(for='name') Name
       .col-sm-7
-        input.form-control(type='test', name='test', id='test', placeholder='Test', autofocus, required)
+        input.form-control(type='name', name='name', id='name', placeholder='Name', autofocus, required)
     .form-group
       .col-sm-offset-3.col-sm-7
         button.col-sm-3.btn.btn-primary(type='submit')
