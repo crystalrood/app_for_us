@@ -6,5 +6,4 @@ const createscheduleSchema = new mongoose.Schema({
 
 const Createschedule = mongoose.model('Createschedule', createscheduleSchema);
 
-
 module.exports = Createschedule;

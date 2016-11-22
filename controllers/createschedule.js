@@ -1,18 +1,31 @@
 const async = require('async');
 const passport = require('passport');
 //const Createschedule = require('../models/Createschedule');
-
 /**
  * GET /books
  * List all books.
  */
 const Createschedule = require('../models/Createschedule.js');
 
-exports.getCreateschedule = (req, res) => {
+
+exports.getCreateschedule = (req, res, next) => {
+  const errors = req.validationErrors();
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('/createschedule');
+  }
+
   Createschedule.find((err, docs) => {
-    res.render('createschedule', { createschedule: docs });
-  });
+    if (err) { return next(err); }
+    docs.name = docs.length || '';
+    console.log(docs.name);
+    res.render('createschedule', {createschedule: docs});
+
+  })
 };
+
+
 
 exports.postCreateschedule = (req, res, next) => {
   req.assert('name', 'Name is not valid').len(2);
@@ -27,7 +40,6 @@ exports.postCreateschedule = (req, res, next) => {
   const createschedule = new Createschedule({
     name: req.body.name
   });
-
 
 
   createschedule.save((err) => {

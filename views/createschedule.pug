@@ -10,8 +10,21 @@ block content
     .form-group
       label.col-sm-3.control-label(for='name') Name
       .col-sm-7
-        input.form-control(type='name', name='name', id='name', placeholder='Name', autofocus, required)
+        input.form-control(type='name', name='name', id='name', value=createschedule.name)
     .form-group
       .col-sm-offset-3.col-sm-7
         button.col-sm-3.btn.btn-primary(type='submit')
           | Submit
+
+  .page-header
+    h3 Trying to pull from database
+  form.form-horizontal(method='GET')
+    input(type='hidden', name='_csrf', value=_csrf)
+    .form-group
+      label.col-sm-3.control-label(for='output') Output
+      .col-sm-7
+        input.form-control(type='text', name='output', id='output', value=createschedule)
+    .form-group
+      .col-sm-offset-3.col-sm-7
+        button.col-sm-3.btn.btn-default()
+          | Return
