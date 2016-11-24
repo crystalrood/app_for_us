@@ -20,6 +20,7 @@ exports.getCreateschedule = (req, res, next) => {
     if (err) { return next(err); }
     docs.name = docs.length || '';
     console.log(docs.name);
+    docs.user_id = user.id;
     res.render('createschedule', {createschedule: docs});
 
   })
