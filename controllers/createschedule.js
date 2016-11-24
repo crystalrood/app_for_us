@@ -41,7 +41,6 @@ exports.getCreateschedule = (req, res, next) => {
   })
 
 
-
 //this will createschedule that has all the information in the data base that matches the user_id
   Createschedule.find({ 'userid': req.user.id }, function (err, createschedule) {
     if (err) return handleError(err);
