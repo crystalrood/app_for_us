@@ -5,32 +5,78 @@ block content
     h1 people
     script(type='text/javascript', src='main.js')
 
-  body
-    p
-      | Click the button to trigger a function that will output "Hello World" in a p element with id="demo".
-    button(onclick='myFunction()') Click me
-    p#demo
-
-    table.pure-table
-      thead
-        tr
-          th #
-          th Make
-          th Model
-          th Year
-      tbody
-        tr
-          td 1
-          td Honda
-          td Accord
-          td 2009
-        tr
-          td 2
-          td Toyota
-          td Camry
-          td 2012
-        tr
-          td 3
-          td Hyundai
-          td Elantra
-          td 2010
+    head
+      script(type='text/javascript').
+        function addRow() {
+        //variables
+        var myName = document.getElementById("name");
+        var type = document.getElementById("type");
+        var min_hours = document.getElementById("min_hours");
+        var max_hours = document.getElementById("max_hours");
+        var email = document.getElementById("email");
+        var phone_number = document.getElementById("phone_number");
+        var table = document.getElementById("myTableData");
+        var rowCount = table.rows.length;
+        var row = table.insertRow(rowCount);
+        row.insertCell(0).innerHTML= '<input type="button" value = "Delete" onClick="Javacsript:deleteRow(this)">';
+        row.insertCell(1).innerHTML= myName.value;
+        row.insertCell(2).innerHTML= type.value;
+        row.insertCell(3).innerHTML= min_hours.value;
+        row.insertCell(4).innerHTML= max_hours.value;
+        row.insertCell(5).innerHTML= email.value;
+        row.insertCell(6).innerHTML= phone_number.value;
+        }
+        function deleteRow(obj) {
+        var index = obj.parentNode.parentNode.rowIndex;
+        var table = document.getElementById("myTableData");
+        table.deleteRow(index);
+        }
+      title HTML dynamic table using JavaScript
+    body(onload='load()')
+      #myform
+        b Simple form with name and age ...
+        br
+        br
+        |         Name:
+        input#name(type='text')
+        br
+        br
+        |         Type:
+        input#type(type='text')
+        br
+        br
+        |         Min Hours:
+        input#min_hours(type='number')
+        br
+        br
+        |         Max Hours:
+        input#max_hours(type='number')
+        br
+        br
+        |         Email:
+        input#email(type='text')
+        br
+        br
+        |         Phone Number:
+        input#phone_number(type='text')
+        br
+        input#add(type='submit', value='Add', onclick='addRow()')
+      br
+      br
+      #mydata
+        b Current data in the system ...
+        table#myTableData(border='1', cellpadding='2')
+          tr
+            td  
+            td
+              b Name
+            td
+              b Type
+            td
+              b Min Hours
+            td
+              b Max Hours
+            td
+              b Email
+            td
+              b Phone Number
