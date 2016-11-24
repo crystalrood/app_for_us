@@ -86,6 +86,9 @@ exports.postSignup = (req, res, next) => {
     return res.redirect('/signup');
   }
 
+// testing radio button
+  console.log(req.body.radio1);
+
   const user = new User({
     email: req.body.email,
     password: req.body.password

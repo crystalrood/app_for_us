@@ -5,6 +5,26 @@ block content
     h3 Sign up
   form.form-horizontal(id='signup-form', method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
+
+
+    .form-group
+      label.col-sm-3.control-label() Employee Type:
+
+    .form-group.radio
+      label.col-sm-4.control-label(for='account_type') I am a scheduler
+      .col-sm-7
+        input(type='radio', name='radio1', id='scheduler_type', value='schedule_type', required)
+
+
+    .form-group.radio
+      label.col-sm-4.control-label(for='account_type') I am an employee
+      .col-sm-7
+        input(type='radio', name='radio1', id='employee_type', value='employee_type',required)
+
+    br
+    br
+    br
+
     .form-group
       label.col-sm-3.control-label(for='email') Email
       .col-sm-7
