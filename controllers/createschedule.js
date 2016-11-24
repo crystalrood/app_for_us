@@ -19,8 +19,8 @@ exports.getCreateschedule = (req, res, next) => {
   Createschedule.find((err, docs) => {
     if (err) { return next(err); }
     docs.name = docs.length || '';
-    console.log(docs.name);
-    docs.user_id = user.id;
+    //console.log(docs.name);
+    //docs.user_id = user.id;
     res.render('createschedule', {createschedule: docs});
 
   })
