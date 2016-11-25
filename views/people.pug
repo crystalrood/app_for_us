@@ -18,13 +18,13 @@ block content
         var table = document.getElementById("myTableData");
         var rowCount = table.rows.length;
         var row = table.insertRow(rowCount);
-        row.insertCell(0).innerHTML= '<input type="button" value = "Delete" onClick="Javacsript:deleteRow(this)">';
-        row.insertCell(1).innerHTML= myName.value;
-        row.insertCell(2).innerHTML= type.value;
-        row.insertCell(3).innerHTML= min_hours.value;
-        row.insertCell(4).innerHTML= max_hours.value;
-        row.insertCell(5).innerHTML= email.value;
-        row.insertCell(6).innerHTML= phone_number.value;
+        row.insertCell(0).innerHTML= myName.value;
+        row.insertCell(1).innerHTML= type.value;
+        row.insertCell(2).innerHTML= min_hours.value;
+        row.insertCell(3).innerHTML= max_hours.value;
+        row.insertCell(4).innerHTML= email.value;
+        row.insertCell(5).innerHTML= phone_number.value;
+        row.insertCell(6).innerHTML= '<input type="button" value = "Delete" onClick="Javacsript:deleteRow(this)">';
         }
         function deleteRow(obj) {
         var index = obj.parentNode.parentNode.rowIndex;
@@ -67,16 +67,16 @@ block content
         b Current data in the system ...
         table#myTableData(border='1', cellpadding='2')
           tr
-            td  
-            td
+            th
               b Name
-            td
+            th
               b Type
-            td
+            th
               b Min Hours
-            td
+            th
               b Max Hours
-            td
+            th
               b Email
-            td
+            th
               b Phone Number
+            th

@@ -99,8 +99,13 @@ app.use((req, res, next) => {
 });
 app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
+
+
 app.use((req, res, next) => {
   res.locals.user = req.user;
+//added 11-24
+  res.locals.user_type = req.user_type;
+//used this line as test to see what prints console.log(res.locals.user.user_type);
   next();
 });
 app.use(function(req, res, next) {

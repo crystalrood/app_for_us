@@ -24,20 +24,26 @@ exports.getCreateschedule = (req, res, next) => {
 
   Createschedule.findOne({ 'name': 'testformimsey' }, 'name', function (err, createschedule) {
     if (err) return handleError(err);
-    console.log('%s is a.', createschedule.name) // Space Ghost is a talk show host.
+    if (createschedule != null){
+      console.log('%s is a.', createschedule.name)
+    } // Space Ghost is a talk show host.
   })
 
 
 //returns the user id that matches the user id that's currently logged in
   Createschedule.findOne({ 'userid': req.user.id }, 'userid', function (err, createschedule) {
     if (err) return handleError(err);
-    console.log('%s is a.', createschedule.userid) // Space Ghost is a talk show host.
+    if (createschedule != null){
+      console.log('%s is a.', createschedule.userid)
+    } // Space Ghost is a talk show host.
   })
 
   //this will createschedule that has all the information in the data base that matches the user_id
   Createschedule.find({ 'userid': req.user.id }, function (err, createschedule) {
     if (err) return handleError(err);
-    console.log('%s is a.', createschedule) // Space Ghost is a talk show host.
+    if (createschedule != null){
+      console.log('%s is a.', createschedule)
+    } // Space Ghost is a talk show host.
   })
 
 
@@ -45,18 +51,22 @@ exports.getCreateschedule = (req, res, next) => {
   Createschedule.find({ 'userid': req.user.id }, function (err, createschedule) {
     if (err) return handleError(err);
     //trying to iterate through the docs
-    createschedule.forEach(function(createschedule, index) {
-      console.log(index + " key: " + createschedule.name)
-    });
-    console.log('%s is a.', createschedule) // Space Ghost is a talk show host.
+    if (createschedule != null){
+      createschedule.forEach(function(createschedule, index) {
+        console.log(index + " key: " + createschedule.name)
+      });
+      console.log('%s is a.', createschedule)
+    } // Space Ghost is a talk show host.
   })
 
 
   Createschedule.find((err, docs) => {
     if (err) { return next(err); }
-    docs.name = docs.length || '';
-    console.log(docs.length);
-    res.render('createschedule', {createschedule: docs});
+    if (docs != null){
+      docs.name = docs.length || '';
+      console.log(docs.length);
+      res.render('createschedule', {createschedule: docs})
+    }
 
   })
 };
