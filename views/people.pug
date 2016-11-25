@@ -7,60 +7,70 @@ block content
 
     head
       script(type='text/javascript').
+
         function addRow() {
-        //variables
-        var myName = document.getElementById("name");
-        var type = document.getElementById("type");
-        var min_hours = document.getElementById("min_hours");
-        var max_hours = document.getElementById("max_hours");
-        var email = document.getElementById("email");
-        var phone_number = document.getElementById("phone_number");
-        var table = document.getElementById("myTableData");
-        var rowCount = table.rows.length;
-        var row = table.insertRow(rowCount);
-        row.insertCell(0).innerHTML= myName.value;
-        row.insertCell(1).innerHTML= type.value;
-        row.insertCell(2).innerHTML= min_hours.value;
-        row.insertCell(3).innerHTML= max_hours.value;
-        row.insertCell(4).innerHTML= email.value;
-        row.insertCell(5).innerHTML= phone_number.value;
-        row.insertCell(6).innerHTML= '<input type="button" value = "Delete" onClick="Javacsript:deleteRow(this)">';
+          //variables
+          var myName = document.getElementById("name");
+          var type = document.getElementById("type");
+          var min_hours = document.getElementById("min_hours");
+          var max_hours = document.getElementById("max_hours");
+          var email = document.getElementById("email");
+          var phone_number = document.getElementById("phone_number");
+          var table = document.getElementById("myTableData");
+          var rowCount = table.rows.length;
+          var row = table.insertRow(rowCount);
+          row.insertCell(0).innerHTML= myName.value;
+          row.insertCell(1).innerHTML= type.value;
+          row.insertCell(2).innerHTML= min_hours.value;
+          row.insertCell(3).innerHTML= max_hours.value;
+          row.insertCell(4).innerHTML= email.value;
+          row.insertCell(5).innerHTML= phone_number.value;
+          row.insertCell(6).innerHTML= '<input type="button" value = "Update" onClick="Javacsript:deleteRow(this)">';
+          row.insertCell(7).innerHTML= '<input type="button" value = "Delete" onClick="Javacsript:deleteRow(this)">';
         }
+
         function deleteRow(obj) {
-        var index = obj.parentNode.parentNode.rowIndex;
-        var table = document.getElementById("myTableData");
-        table.deleteRow(index);
+          var index = obj.parentNode.parentNode.rowIndex;
+          var table = document.getElementById("myTableData");
+          table.deleteRow(index);
         }
       title HTML dynamic table using JavaScript
     body(onload='load()')
       #myform
+      form.form-horizontal(method='POST')
+        input(type='hidden', name='_csrf', value=_csrf)
+
         b Simple form with name and age ...
         br
         br
         |         Name:
-        input#name(type='text')
+        input(type='text', name='name', id='name', placeholder='Name', autofocus, required)
         br
         br
         |         Type:
-        input#type(type='text')
+        input(type='text', name='type', id='type', placeholder='Employee Type', autofocus, required)
         br
         br
         |         Min Hours:
-        input#min_hours(type='number')
+        input(type='number', name='min_hours', id='min_hours', placeholder='Min hours required', autofocus, required)
         br
         br
         |         Max Hours:
-        input#max_hours(type='number')
+        input(type='number', name='max_hours', id='max_hours', placeholder='Max hours required', autofocus, required)
         br
         br
         |         Email:
-        input#email(type='text')
+        input(type='email', name='email', id='email', placeholder='Email', autofocus, required)
         br
         br
         |         Phone Number:
-        input#phone_number(type='text')
+        input(type='text', name='phone_number', id='phone_number', placeholder='Phone Number', autofocus, required)
         br
-        input#add(type='submit', value='Add', onclick='addRow()')
+        .form-group
+          .col-sm-offset-3.col-sm-7
+            button.col-sm-3.btn.btn-primary(type='submit', value = 'Add', onclick = 'addRow()')
+              | Add
+
       br
       br
       #mydata
@@ -80,3 +90,6 @@ block content
             th
               b Phone Number
             th
+              b Update
+            th
+              b Delete

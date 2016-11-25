@@ -95,8 +95,6 @@ exports.getCreateschedule = (req, res, next) => {
 };
 */
 
-
-
 exports.postCreateschedule = (req, res, next) => {
   req.assert('name', 'Name is not valid').len(2);
 

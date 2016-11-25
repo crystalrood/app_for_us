@@ -133,9 +133,13 @@ app.get('/createschedule', passportConfig.isAuthenticated, createscheduleControl
 
 //added this line 11/6
 app.post('/createschedule', passportConfig.isAuthenticated, createscheduleController.postCreateschedule);
-
 app.get('/people', passportConfig.isAuthenticated, peopleController.getPeople);
 app.get('/shift_info', passportConfig.isAuthenticated, shift_infoController.getShift_info);
+
+//added this line 11/25
+app.post('/people', passportConfig.isAuthenticated, peopleController.postPeople);
+
+
 
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
