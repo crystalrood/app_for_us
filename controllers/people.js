@@ -6,7 +6,18 @@ const People = require('../models/People.js');
 
 exports.getPeople = (req, res) => {
   People.find((err, docs) => {
-    res.render('people', { people: docs });
+    if (err) { return next(err); }
+    if (docs != null){
+      console.log(docs.length)
+      docs.forEach(function(docs, index) {
+        console.log(index + " key: " + docs.name)
+      });
+      res.render('people', { people: docs });
+    }
+    else{
+      res.render('people', { people: docs });
+    }
+
   });
 };
 
@@ -22,7 +33,7 @@ exports.postPeople = (req, res, next) => {
       req.flash('errors', errors);
       return res.redirect('/people');
     }
-
+    /* define what needs to be saved*/
     const people = new People({
       userid: req.user.id,
       name: req.body.name,

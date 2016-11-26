@@ -7,6 +7,9 @@ block content
 
     head
       script(type='text/javascript').
+        function load() {
+
+        }
 
         function addRow() {
           //variables
@@ -32,14 +35,15 @@ block content
         function deleteRow(obj) {
           var index = obj.parentNode.parentNode.rowIndex;
           var table = document.getElementById("myTableData");
+          console.log("Hello World!!!");
           table.deleteRow(index);
         }
+
       title HTML dynamic table using JavaScript
     body(onload='load()')
       #myform
       form.form-horizontal(method='POST')
         input(type='hidden', name='_csrf', value=_csrf)
-
         b Simple form with name and age ...
         br
         br
@@ -93,3 +97,12 @@ block content
               b Update
             th
               b Delete
+
+        br
+        br
+        b Docs output
+        form.form-horizontal(method='GET')
+          input(type='hidden', name='_csrf', value=_csrf)
+          .form-group
+            .col-sm-7
+              input.form-control(type='text', name='output', id='output', value=people)
