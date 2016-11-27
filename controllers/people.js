@@ -4,18 +4,19 @@
  */
 const People = require('../models/People.js');
 
-exports.getPeople = (req, res) => {
-  People.find((err, docs) => {
+exports.getPeople = (req, res, next) => {
+  People.find({ 'userid': req.user.id }, function (err, docs) {
     if (err) { return next(err); }
     if (docs != null){
       console.log(docs.length)
       docs.forEach(function(docs, index) {
         console.log(index + " key: " + docs.name)
+        console.log(docs)
       });
-      res.render('people', { people: docs });
+      res.render('people', { people: docs});
     }
     else{
-      res.render('people', { people: docs });
+      res.render('people', { people:docs});
     }
 
   });
