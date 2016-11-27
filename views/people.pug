@@ -4,15 +4,10 @@ block content
   .page-header
     h1 people
     script(type='text/javascript', src='main.js')
-
     head
       script(type='text/javascript').
-        function load() {
-
-        }
-
         function addRow() {
-          //variables
+        //variables
           var myName = document.getElementById("name");
           var type = document.getElementById("type");
           var min_hours = document.getElementById("min_hours");
@@ -31,78 +26,102 @@ block content
           row.insertCell(6).innerHTML= '<input type="button" value = "Update" onClick="Javacsript:deleteRow(this)">';
           row.insertCell(7).innerHTML= '<input type="button" value = "Delete" onClick="Javacsript:deleteRow(this)">';
         }
-
         function deleteRow(obj) {
-          var index = obj.parentNode.parentNode.rowIndex;
-          var table = document.getElementById("myTableData");
-          console.log("Hello World!!!");
-          table.deleteRow(index);
+        var index = obj.parentNode.parentNode.rowIndex;
+        var table = document.getElementById("myTableData");
+        console.log("Hello World!!!");
+        table.deleteRow(index);
         }
 
+
+      script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.js', charset='UTF-8')
+      script.
+        $(document).ready(function(){
+          var obj=[{"_id":"5838b7b8f885eff16ece30e8","updatedAt":"2016-11-25T22:17:24.320Z","createdAt":"2016-11-25T22:14:16.999Z","userid":"5837934758d5d066a3c7088d","name":"erik","type":"peanuts","min_hours":0,"max_hours":15,"email":"erood20@gmail.com","phone_number":"8104346937","__v":0},{"_id":"5838b9c283aaa8f3fe83aeae","updatedAt":"2016-11-25T22:22:58.544Z","createdAt":"2016-11-25T22:22:58.544Z","userid":"5838b8f656d9eff2d2001c6f","name":"Erik T Rood","type":"adf","min_hours":0,"max_hours":15,"email":"crymawes@umich.edu","phone_number":"8104346937","__v":0},{"_id":"5838bc80813bf0f4d2a6f25a","updatedAt":"2016-11-25T22:34:40.174Z","createdAt":"2016-11-25T22:34:40.174Z","userid":"5838b8f656d9eff2d2001c6f","name":"test","type":"test","min_hours":0,"max_hours":15,"email":"test1@gmail.com","phone_number":"165435613","__v":0},{"_id":"5838c8a3d0a226ff764b2c8d","updatedAt":"2016-11-25T23:26:27.073Z","createdAt":"2016-11-25T23:26:27.073Z","userid":"5838be57b77fd6f6dacf32cd","name":"erik","type":"peanuts","min_hours":0,"max_hours":15,"email":"test2@gmail.com","phone_number":"6503709891","__v":0},{"_id":"5838c905d0a226ff764b2c8f","updatedAt":"2016-11-25T23:28:05.382Z","createdAt":"2016-11-25T23:28:05.382Z","userid":"5838be57b77fd6f6dacf32cd","name":"Crystal T Wesnoski","type":"test","min_hours":0,"max_hours":15,"email":"test3@gmail.com","phone_number":"6507309891","__v":0},{"_id":"5838dd6fd0a226ff764b2c90","updatedAt":"2016-11-26T00:55:11.212Z","createdAt":"2016-11-26T00:55:11.212Z","userid":"5838be57b77fd6f6dacf32cd","name":"Crystal Wesnoski","type":"boss","min_hours":0,"max_hours":15,"email":"test15@gmail.com","phone_number":"6507309891","__v":0},{"_id":"583a50362dd5fb659efc1adc","updatedAt":"2016-11-27T03:17:10.249Z","createdAt":"2016-11-27T03:17:10.249Z","userid":"5838be57b77fd6f6dacf32cd","name":"Crystal","type":"Mimsey","min_hours":0,"max_hours":15,"email":"mimsey@gmail.com","phone_number":"6507309891","__v":0},{"_id":"583a5f632dd5fb659efc1add","updatedAt":"2016-11-27T04:21:55.398Z","createdAt":"2016-11-27T04:21:55.398Z","userid":"5838be57b77fd6f6dacf32cd","name":"mimsey","type":"test","min_hours":0,"max_hours":15,"email":"test190283@gmail.com","phone_number":"5646542313","__v":0},{"_id":"583a62bd2dd5fb659efc1ade","updatedAt":"2016-11-27T04:36:13.749Z","createdAt":"2016-11-27T04:36:13.749Z","userid":"5838be57b77fd6f6dacf32cd","name":"mimsey","type":"loves","min_hours":0,"max_hours":40,"email":"mimseylovesboss@gmail.com","phone_number":"023480983","__v":0}]
+          var tbl = "<table>"
+          var content="";
+          for(i=0; i<obj.length;i++){
+            content +=
+              '<tr>+<td>' +obj[i]["name"]+
+              '</td><td>'+obj[i]["type"]+
+              '</td><td>'+obj[i]["min_hours"]+
+              '</td><td>'+obj[i]["max_hours"]+
+              '</td><td>'+obj[i]["email"]+
+              '</td><td>'+obj[i]["phone_number"]+
+              '</td><td>'+ '<input type="button" value = "Update" onClick="Javacsript:deleteRow(this)">' +
+              '</td><td>'+'<input type="button" value = "Delete" onClick="Javacsript:deleteRow(this)">';
+              '</td></tr>';
+            }
+          content += "</table>"
+          $('#myTableData').append(content);
+        });
+
+
       title HTML dynamic table using JavaScript
+
+
     body(onload='load()')
-      #myform
-      form.form-horizontal(method='POST')
+      b Docs output
+      form.form-horizontal(method='GET')
         input(type='hidden', name='_csrf', value=_csrf)
-        b Simple form with name and age ...
-        br
-        br
-        |         Name:
-        input(type='text', name='name', id='name', placeholder='Name', autofocus, required)
-        br
-        br
-        |         Type:
-        input(type='text', name='type', id='type', placeholder='Employee Type', autofocus, required)
-        br
-        br
-        |         Min Hours:
-        input(type='number', name='min_hours', id='min_hours', placeholder='Min hours required', autofocus, required)
-        br
-        br
-        |         Max Hours:
-        input(type='number', name='max_hours', id='max_hours', placeholder='Max hours required', autofocus, required)
-        br
-        br
-        |         Email:
-        input(type='email', name='email', id='email', placeholder='Email', autofocus, required)
-        br
-        br
-        |         Phone Number:
-        input(type='text', name='phone_number', id='phone_number', placeholder='Phone Number', autofocus, required)
-        br
         .form-group
-          .col-sm-offset-3.col-sm-7
-            button.col-sm-3.btn.btn-primary(type='submit', value = 'Add', onclick = 'addRow()')
-              | Add
+          .col-sm-7
+            input#output.form-control(type='text', name='output', value =people)
 
+
+    #myform
+    form.form-horizontal(method='POST')
+      input(type='hidden', name='_csrf', value=_csrf)
+      b Simple form with name and age ...
       br
       br
-      #mydata
-        b Current data in the system ...
-        table#myTableData(border='1', cellpadding='2')
-          tr
-            th
-              b Name
-            th
-              b Type
-            th
-              b Min Hours
-            th
-              b Max Hours
-            th
-              b Email
-            th
-              b Phone Number
-            th
-              b Update
-            th
-              b Delete
-
-        br
-        br
-        b Docs output
-        form.form-horizontal(method='GET')
-          input(type='hidden', name='_csrf', value=_csrf)
-          .form-group
-            .col-sm-7
-              input.form-control(type='text', name='output', id='output', value=people)
+      |         Name:
+      input#name(type='text', name='name', placeholder='Name', autofocus='autofocus', required='required')
+      br
+      br
+      |         Type:
+      input#type(type='text', name='type', placeholder='Employee Type', autofocus='autofocus', required='required')
+      br
+      br
+      |         Min Hours:
+      input#min_hours(type='number', name='min_hours', placeholder='Min hours required', autofocus='autofocus', required='required')
+      br
+      br
+      |         Max Hours:
+      input#max_hours(type='number', name='max_hours', placeholder='Max hours required', autofocus='autofocus', required='required')
+      br
+      br
+      |         Email:
+      input#email(type='email', name='email', placeholder='Email', autofocus='autofocus', required='required')
+      br
+      br
+      |         Phone Number:
+      input#phone_number(type='text', name='phone_number', placeholder='Phone Number', autofocus='autofocus', required='required')
+      br
+      .form-group
+        .col-sm-offset-3.col-sm-7
+          button.col-sm-3.btn.btn-primary(type='submit', value='Add', onclick='addRow()') Add
+    br
+    br
+    #mydata
+      b Current data in the system ...
+      table#myTableData(border='1', cellpadding='2')
+        tr
+          th
+            b Name
+          th
+            b Type
+          th
+            b Min Hours
+          th
+            b Max Hours
+          th
+            b Email
+          th
+            b Phone Number
+          th
+            b Update
+          th
+            b Delete
+      br
+      br
