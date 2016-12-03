@@ -21,11 +21,10 @@
 
         else if user.user_type == 'schedule_type'
           li(class=(title == 'Create Schedule') ? 'active' : undefined)
-              a(href='/createschedule') Schedule
+              a(href='/createschedule') Build a Schedule
           li(class=(title == 'People') ? 'active' : undefined)
-                  a(href='/people') People
-          li(class=(title == 'Shift Info') ? 'active' : undefined)
-                  a(href='/shift_info') Shift Info
+                  a(href='/people') Preferences
+
 
         else if user.user_type == 'employee_type'
           li(class=(title == 'Shift Preferences') ? 'active' : undefined)
