@@ -137,8 +137,11 @@ app.get('/people', passportConfig.isAuthenticated, peopleController.getPeople);
 app.get('/shift_info', passportConfig.isAuthenticated, shift_infoController.getShift_info);
 
 //added this line 11/25
-app.post('/people', passportConfig.isAuthenticated, peopleController.postPeople);
-
+app.post('/people/people', passportConfig.isAuthenticated, peopleController.postPeople);
+app.post('/people/shift', passportConfig.isAuthenticated, peopleController.postShift);
+app.get('/people/shift', passportConfig.isAuthenticated, peopleController.getShift);
+app.post('/people/employeetype', passportConfig.isAuthenticated, peopleController.postEmployeetype);
+app.get('/people/employeetype', passportConfig.isAuthenticated, peopleController.getEmployeetype);
 
 
 app.get('/login', userController.getLogin);

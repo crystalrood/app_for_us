@@ -1,8 +1,90 @@
 extends layout
 
 block content
+
+  //defining employee types
+  .page-header
+    h1 employee types
+    #myform
+    form.form-horizontal(action='/people/employeetype', method='POST')
+      input(type='hidden', name='_csrf', value=_csrf)
+      br
+      b Simple form with name and age ...
+      br
+      br
+      |         Employee Type:
+      input#name(type='text', name='employee_type_define', placeholder='Employee Type', autofocus='autofocus', required='required')
+      br
+      br
+      .form-group
+        .col-sm-offset-3.col-sm-7
+          button.col-sm-3.btn.btn-primary(type='submit', value='Add') Add
+    br
+    br
+    br
+    br
+
+  //defining shifts
+  .page-header
+    h1 shifts
+    #myform
+    form.form-horizontal(action='/people/shift', method='POST')
+      input(type='hidden', name='_csrf', value=_csrf)
+      br
+      b Simple form with name and age ...
+      br
+      br
+      |         Employee Type:
+      input#name(type='text', name='employee_type', placeholder='Employee Type', autofocus='autofocus', required='required')
+      br
+      br
+      |         Days of week worked:
+      br
+      br
+      |         Monday:
+      input#type(type='checkbox', name='days_week_worked', value = 'Monday', autofocus='autofocus')
+      |         Tuesday:
+      input#type(type='checkbox', name='days_week_worked', value = 'Tuesday', autofocus='autofocus', )
+      |         Wednesday:
+      input#type(type='checkbox', name='days_week_worked', value = 'Wednesday', autofocus='autofocus')
+      |         Thursday:
+      input#type(type='checkbox', name='days_week_worked',  value = 'Thursday', autofocus='autofocus')
+      |         Friday:
+      input#type(type='checkbox', name='days_week_worked', value = 'Friday', autofocus='autofocus')
+      |         Saturday:
+      input#type(type='checkbox', name='days_week_worked', value = 'Saturday', autofocus='autofocus')
+      |         Sunday:
+      input#type(type='checkbox', name='days_week_worked', value = 'Sunday', autofocus='autofocus')
+      br
+      br
+      |         Number of employees needed:
+      input#min_hours(type='number', name='num_employees', placeholder='# of Employees', autofocus='autofocus', required='required')
+      br
+      br
+      |         Shift start:
+      input#max_hours(type='text', name='start_time', placeholder='12:00', autofocus='autofocus', required='required')
+      br
+      br
+      |         Shift end time:
+      input#email(type='text', name='end_time', placeholder='12:00', autofocus='autofocus', required='required')
+      br
+      br
+
+      .form-group
+        .col-sm-offset-3.col-sm-7
+          button.col-sm-3.btn.btn-primary(type='submit', value='Add') Add
+    br
+    br
+
+    br
+    br
+
+
+
   .page-header
     h1 people
+
+
     head
       script(type='text/javascript').
         function addRow() {
@@ -25,7 +107,7 @@ block content
           row.insertCell(6).innerHTML= '<input type="button" value = "Update" onClick="Javacsript:deleteRow(this)">';
           row.insertCell(7).innerHTML= '<input type="button" value = "Delete" onClick="Javacsript:deleteRow(this)">';
         }
-        
+
         function deleteRow(obj) {
           var index = obj.parentNode.parentNode.rowIndex;
           var table = document.getElementById("myTableData");
@@ -34,8 +116,9 @@ block content
         }
 
     #myform
-    form.form-horizontal(method='POST')
+    form.form-horizontal(action='/people/people', method='POST')
       input(type='hidden', name='_csrf', value=_csrf)
+      br
       b Simple form with name and age ...
       br
       br

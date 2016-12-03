@@ -3,6 +3,8 @@
  * List all books.
  */
 const People = require('../models/People.js');
+const Shift = require('../models/Shift.js');
+const Employeetype = require('../models/Employeetype.js');
 
 exports.getPeople = (req, res, next) => {
   People.find({ 'userid': req.user.id }, function (err, docs) {
@@ -58,7 +60,80 @@ exports.postPeople = (req, res, next) => {
       req.flash('success', { msg: 'This has been saved!' });
       res.redirect('/people');
 });
+};
+
+
+exports.getShift = (req, res) => {
+  res.render('/people', {
+    title: 'Account Management'
+  });
+};
 
 
 
+exports.postShift = (req, res, next) => {
+
+    const errors = req.validationErrors();
+
+    if (errors) {
+      req.flash('errors', errors);
+      return res.redirect('/people');
+    }
+    /* define what needs to be saved*/
+    const shift = new Shift({
+      userid: req.user.id,
+      employee_type: req.body.employee_type,
+      days_worked: req.body.days_week_worked,
+      num_employees: req.body.num_employees,
+      shift_start_time: req.body.start_time,
+      shift_end_time: req.body.end_time
+    });
+
+    shift.save((err) => {
+      /* this provides a block if the error is that hte email address is already associated with an employee*/
+      if (err) {
+        return next(err);
+      }
+      console.log("SAVED!");
+      req.flash('success', { msg: 'This shift has been saved!' });
+      res.redirect('/people');
+});
+};
+
+
+
+
+
+
+exports.getEmployeetype = (req, res) => {
+  res.render('/people', {
+    title: 'Account Management'
+  });
+};
+
+
+
+exports.postEmployeetype = (req, res, next) => {
+
+    const errors = req.validationErrors();
+
+    if (errors) {
+      req.flash('errors', errors);
+      return res.redirect('/people');
+    }
+    /* define what needs to be saved*/
+    const employeetype = new Employeetype({
+      userid: req.user.id,
+      employee_type: req.body.employee_type_define
+    });
+
+    employeetype.save((err) => {
+      /* this provides a block if the error is that hte email address is already associated with an employee*/
+      if (err) {
+        return next(err);
+      }
+      console.log("SAVED!");
+      req.flash('success', { msg: 'This shift has been saved!' });
+      res.redirect('/people');
+});
 };
