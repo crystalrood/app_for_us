@@ -1,3 +1,7 @@
+/*calendar formatting*/
+
+/*end calendar formatting*/
+
 /* MailChimp Form Embed Code - Classic - 12/17/2015 v10.7 */
 /*Use this to shift sign-up form from left to center*/
 
@@ -366,6 +370,29 @@ button, input, optgroup, select, textarea {
   color: inherit;
   font: inherit;
   margin: 0;
+}
+
+#myTableData {
+    font-family: "Helvetica Neue", sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#myTableData td, #myTableData th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+/*#myTableData tr:nth-child(even){background-color: #f2f2f2;}*/
+
+#myTableData tr:hover {background-color: #ddd;}
+
+#myTableData th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #204868;
+    color: white;
 }
 
 button {
