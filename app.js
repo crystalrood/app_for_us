@@ -99,8 +99,13 @@ app.use((req, res, next) => {
 });
 app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
+
+
 app.use((req, res, next) => {
   res.locals.user = req.user;
+//added 11-24
+  res.locals.user_type = req.user_type;
+//used this line as test to see what prints console.log(res.locals.user.user_type);
   next();
 });
 app.use(function(req, res, next) {
@@ -128,9 +133,16 @@ app.get('/createschedule', passportConfig.isAuthenticated, createscheduleControl
 
 //added this line 11/6
 app.post('/createschedule', passportConfig.isAuthenticated, createscheduleController.postCreateschedule);
-
 app.get('/people', passportConfig.isAuthenticated, peopleController.getPeople);
 app.get('/shift_info', passportConfig.isAuthenticated, shift_infoController.getShift_info);
+
+//added this line 11/25
+app.post('/people/people', passportConfig.isAuthenticated, peopleController.postPeople);
+app.post('/people/shift', passportConfig.isAuthenticated, peopleController.postShift);
+app.get('/people/shift', passportConfig.isAuthenticated, peopleController.getShift);
+app.post('/people/employeetype', passportConfig.isAuthenticated, peopleController.postEmployeetype);
+app.get('/people/employeetype', passportConfig.isAuthenticated, peopleController.getEmployeetype);
+
 
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
