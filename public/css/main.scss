@@ -395,6 +395,29 @@ button, input, optgroup, select, textarea {
     color: white;
 }
 
+#myTableData1 {
+    font-family: "Helvetica Neue", sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#myTableData1 td, #myTableData1 th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+/*#myTableData tr:nth-child(even){background-color: #f2f2f2;}*/
+
+#myTableData1 tr:hover {background-color: #ddd;}
+
+#myTableData1 th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #204868;
+    color: white;
+}
+
 button {
   overflow: visible;
   text-transform: none;

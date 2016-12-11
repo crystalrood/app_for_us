@@ -2,6 +2,8 @@ extends layout
 
 block content
 
+
+
   //defining employee types
   .page-header
     h1 employee types
@@ -24,9 +26,48 @@ block content
     br
     br
 
+
+
+
+
+
+
+
+
+
   //defining shifts
   .page-header
     h1 shifts
+    head
+      script(type='text/javascript').
+        function addRow() {
+        //variables
+          var myName = document.getElementById("name");
+          var type = document.getElementById("type");
+          var min_hours = document.getElementById("min_hours");
+          var max_hours = document.getElementById("max_hours");
+          var email = document.getElementById("email");
+          var phone_number = document.getElementById("phone_number");
+          var table = document.getElementById("myTableData");
+          var rowCount = table.rows.length;
+          var row = table.insertRow(rowCount);
+          row.insertCell(0).innerHTML= myName.value;
+          row.insertCell(1).innerHTML= type.value;
+          row.insertCell(2).innerHTML= min_hours.value;
+          row.insertCell(3).innerHTML= max_hours.value;
+          row.insertCell(4).innerHTML= email.value;
+          row.insertCell(5).innerHTML= phone_number.value;
+          row.insertCell(6).innerHTML= '<input type="button" value = "Update" onClick="Javacsript:deleteRow(this)">';
+          row.insertCell(7).innerHTML= '<input type="button" value = "Delete" onClick="Javacsript:deleteRow(this)">';
+        }
+
+        function deleteRow(obj) {
+          var index = obj.parentNode.parentNode.rowIndex;
+          var table = document.getElementById("myTableData");
+          console.log("Hello World!!!");
+          table.deleteRow(index);
+        }
+
     #myform
     form.form-horizontal(action='/people/shift', method='POST')
       input(type='hidden', name='_csrf', value=_csrf)
@@ -75,19 +116,69 @@ block content
           button.col-sm-3.btn.btn-primary(type='submit', value='Add') Add
     br
     br
+    br
+    #mydata
+      b Current data in the system ...
+      table#myTableData(border='1', cellpadding='2')
+        tr
+          th
+            b Employee type
+          th
+            b Days worked
+          th
+            b Number of employees
+          th
+            b Shift start
+          th
+            b Shift end
+          th
+            b Update
+          th
+            b Delete
+
+        each shf in shift
+
+          // build a new table row
+          tr
+
+            // insert table data
+            td #{shf.employee_type})
+
+            td #{shf.days_worked}
+            td #{shf.num_employees}
+            td #{shf.shift_start_time}
+            td #{shf.shift_end_time}
+
+            // add the update and delete buttons
+            td
+              input(type="button" value = "Update" onClick="Javacsript:deleteRow(this)")
+            td
+              input(type="button" value = "Delete" onClick="Javacsript:deleteRow(this)")
+
+            // move to next person in the people array ...
+
+
+
+
 
     br
     br
+
+
+
+
+
+
+
 
 
 
   .page-header
     h1 people
 
-
     head
       script(type='text/javascript').
-        function addRow() {
+        function addRow1() {
         //variables
           var myName = document.getElementById("name");
           var type = document.getElementById("type");
@@ -95,7 +186,7 @@ block content
           var max_hours = document.getElementById("max_hours");
           var email = document.getElementById("email");
           var phone_number = document.getElementById("phone_number");
-          var table = document.getElementById("myTableData");
+          var table = document.getElementById("myTableData1");
           var rowCount = table.rows.length;
           var row = table.insertRow(rowCount);
           row.insertCell(0).innerHTML= myName.value;
@@ -108,9 +199,9 @@ block content
           row.insertCell(7).innerHTML= '<input type="button" value = "Delete" onClick="Javacsript:deleteRow(this)">';
         }
 
-        function deleteRow(obj) {
+        function deleteRow1(obj) {
           var index = obj.parentNode.parentNode.rowIndex;
-          var table = document.getElementById("myTableData");
+          var table = document.getElementById("myTableData1");
           console.log("Hello World!!!");
           table.deleteRow(index);
         }
@@ -147,12 +238,12 @@ block content
       br
       .form-group
         .col-sm-offset-3.col-sm-7
-          button.col-sm-3.btn.btn-primary(type='submit', value='Add', onclick='addRow()') Add
+          button.col-sm-3.btn.btn-primary(type='submit', value='Add', onclick='addRow1()') Add
     br
     br
     #mydata
-      b Current data in the system ...
-      table#myTableData(border='1', cellpadding='2')
+      b Current employee data!
+      table#myTableData1(border='1', cellpadding='2')
         tr
           th
             b Name
@@ -186,9 +277,9 @@ block content
 
             // add the update and delete buttons
             td
-              input(type="button" value = "Update" onClick="Javacsript:deleteRow(this)")
+              input(type="button" value = "Update" onClick="Javacsript:deleteRow1(this)")
             td
-              input(type="button" value = "Delete" onClick="Javacsript:deleteRow(this)")
+              input(type="button" value = "Delete" onClick="Javacsript:deleteRow1(this)")
 
             // move to next person in the people array ...
 

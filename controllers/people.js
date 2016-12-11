@@ -2,25 +2,48 @@
  * GET /books
  * List all books.
  */
+ const async = require('async');
 const People = require('../models/People.js');
 const Shift = require('../models/Shift.js');
 const Employeetype = require('../models/Employeetype.js');
 
 exports.getPeople = (req, res, next) => {
-  People.find({ 'userid': req.user.id }, function (err, docs) {
-    if (err) { return next(err); }
-    if (docs != null){
-      console.log(docs.length)
-      docs.forEach(function(docs, index) {
-        console.log(index + " key: " + docs.name)
-        console.log(docs)
-      });
-      res.render('people', { people: docs});
-    }
-    else{
-      res.render('people', { people:docs});
-    }
+  var locals = {};
+  var tasks = [
+      function(callback){
+        People.find({ 'userid': req.user.id }, function (err, docs) {
+          if (err) { return callback(err); }
+          if (docs != null){
+            locals.people = docs;
+            callback();
+          }
+          else{
+            locals.people = docs;
+            callback();
+          }
+        });
+      },
 
+
+      function(callback){
+        Shift.find({ 'userid': req.user.id }, function (err, docs1) {
+          if (err) { return next(err); }
+          if (docs1 != null){
+            locals.shift = docs1;
+            callback();
+          }
+          else{
+            locals.shift = docs1;
+            callback();
+          }
+
+        });
+      }
+  ];
+
+  async.parallel(tasks, function(err) {
+      if (err) return next(err);
+      res.render('people', locals);
   });
 };
 
@@ -64,6 +87,9 @@ exports.postPeople = (req, res, next) => {
 
 
 exports.getShift = (req, res) => {
+
+
+
   res.render('/people', {
     title: 'Account Management'
   });

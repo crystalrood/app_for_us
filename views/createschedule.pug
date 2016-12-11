@@ -5,26 +5,90 @@ block content
     h3 Create Schedule
     h2 mimsey creates this schedule
 
-  form.form-horizontal(method='POST')
-    input(type='hidden', name='_csrf', value=_csrf)
-    .form-group
-      label.col-sm-3.control-label(for='name') Name
-      .col-sm-7
-        input.form-control(type='name', name='name', id='name', value=createschedule.name)
-    .form-group
-      .col-sm-offset-3.col-sm-7
-        button.col-sm-3.btn.btn-primary(type='submit')
-          | Submit
+    br
+    #mydata
+      b Current employee data!
+      table#myTableData(border='1', cellpadding='2')
+        tr
+          th
+            b Name
+          th
+            b Type
+          th
+            b Min Hours
+          th
+            b Max Hours
+          th
+            b Email
+          th
+            b Phone Number
+          th
+            b Update
+          th
+            b Delete
 
-  .page-header
-    h3 Trying to pull from database
-  form.form-horizontal(method='GET')
-    input(type='hidden', name='_csrf', value=_csrf)
-    .form-group
-      label.col-sm-3.control-label(for='output') Output
-      .col-sm-7
-        input.form-control(type='text', name='output', id='output', value=createschedule)
-    .form-group
-      .col-sm-offset-3.col-sm-7
-        button.col-sm-3.btn.btn-default()
-          | Return
+        each person in people
+
+          // build a new table row
+          tr
+
+            // insert table data
+            td #{person.name}
+            td #{person.type}
+            td #{person.min_hours}
+            td #{person.max_hours}
+            td #{person.email}
+            td #{person.phone_number}
+
+            // add the update and delete buttons
+            td
+              input(type="button" value = "Update" onClick="Javacsript:deleteRow(this)")
+            td
+              input(type="button" value = "Delete" onClick="Javacsript:deleteRow(this)")
+
+            // move to next person in the people array ...
+      br
+      br
+
+      br
+      #mydata
+        b Current data in the system ...
+        table#myTableData(border='1', cellpadding='2')
+          tr
+            th
+              b Employee type
+            th
+              b Days worked
+            th
+              b Number of employees
+            th
+              b Shift start
+            th
+              b Shift end
+            th
+              b Update
+            th
+              b Delete
+
+
+          each shf in shift
+
+            // build a new table row
+            tr
+
+              // insert table data
+              td #{shf.employee_type}
+              td #{shf.days_worked}
+              td #{shf.num_employees}
+              td #{shf.shift_start_time}
+              td #{shf.shift_end_time}
+
+              // add the update and delete buttons
+              td
+                input(type="button" value = "Update" onClick="Javacsript:deleteRow(this)")
+              td
+                input(type="button" value = "Delete" onClick="Javacsript:deleteRow(this)")
+
+              // move to next person in the people array ...
+        br
+        br
