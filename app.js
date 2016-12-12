@@ -38,6 +38,7 @@ const pricesController = require('./controllers/prices');
 const createscheduleController = require('./controllers/createschedule');
 const peopleController = require('./controllers/people');
 const shift_infoController = require('./controllers/shift_info');
+const sprefController = require('./controllers/spref');
 
 /**
  * API keys and Passport configuration.
@@ -142,6 +143,7 @@ app.post('/people/shift', passportConfig.isAuthenticated, peopleController.postS
 app.get('/people/shift', passportConfig.isAuthenticated, peopleController.getShift);
 app.post('/people/employeetype', passportConfig.isAuthenticated, peopleController.postEmployeetype);
 app.get('/people/employeetype', passportConfig.isAuthenticated, peopleController.getEmployeetype);
+app.get('/spref', sprefController.getSpref);
 
 
 app.get('/login', userController.getLogin);
