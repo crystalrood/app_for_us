@@ -1,5 +1,7 @@
 extends layout
 
+
+
 block content
   .page-header
     h3 Create Schedule
@@ -92,3 +94,110 @@ block content
               // move to next person in the people array ...
         br
         br
+
+
+
+
+    //defining shifts
+    .page-header
+      head
+        script(type='text/javascript').
+
+          function addRow() {
+          //variables
+            var myName = document.getElementById("name");
+            var type = document.getElementById("type");
+            var min_hours = document.getElementById("min_hours");
+            var max_hours = document.getElementById("max_hours");
+            var email = document.getElementById("email");
+            var phone_number = document.getElementById("phone_number");
+            var table = document.getElementById("testtable");
+            var rowCount = table.rows.length;
+            var row = table.insertRow(rowCount);
+            row.insertCell(0).innerHTML= myName.value;
+            row.insertCell(1).innerHTML= type.value;
+            row.insertCell(2).innerHTML= min_hours.value;
+            row.insertCell(3).innerHTML= max_hours.value;
+            row.insertCell(4).innerHTML= email.value;
+            row.insertCell(5).innerHTML= phone_number.value;
+            row.insertCell(6).innerHTML= '<input type="button" value = "Update" onClick="Javacsript:deleteRow(this)">';
+            row.insertCell(7).innerHTML= '<input type="button" value = "Delete" onClick="Javacsript:deleteRow(this)">';
+          }
+
+          function deleteRow(obj) {
+            var index = obj.parentNode.parentNode.rowIndex;
+            var table = document.getElementById("testtable");
+            table.deleteRow(index);
+          }
+
+          function editRow(obj) {
+            var currentTD = obj.parentNode.parentNode.rowIndex;
+            var table = document.getElementById("testtable");
+            var row_length = document.getElementById("testtable").rows[currentTD].cells.length;
+            console.log(currentTD);
+
+            if (obj.value == 'Edit') {
+              document.getElementById("testtable").rows[currentTD].cells[0].setAttribute("contentEditable", true);
+              document.getElementById("testtable").rows[currentTD].cells[1].setAttribute("contentEditable", true);
+              document.getElementById("testtable").rows[currentTD].cells[2].setAttribute("contentEditable", true);
+              document.getElementById("testtable").rows[currentTD].cells[3].setAttribute("contentEditable", true);
+              document.getElementById("testtable").rows[currentTD].cells[4].setAttribute("contentEditable", true);
+              document.getElementById("testtable").rows[currentTD].cells[5].setAttribute("contentEditable", true);
+              obj.value = 'Save'
+            } else {
+              document.getElementById("testtable").rows[currentTD].cells[0].setAttribute("contentEditable", false);
+              document.getElementById("testtable").rows[currentTD].cells[1].setAttribute("contentEditable", false);
+              document.getElementById("testtable").rows[currentTD].cells[2].setAttribute("contentEditable", false);
+              document.getElementById("testtable").rows[currentTD].cells[3].setAttribute("contentEditable", false);
+              document.getElementById("testtable").rows[currentTD].cells[4].setAttribute("contentEditable", false);
+              document.getElementById("testtable").rows[currentTD].cells[5].setAttribute("contentEditable", false);
+              obj.value = 'Edit'
+            }
+
+          }
+
+
+        #mydata
+          b Current employee data!
+          table#testtable(border='1', cellpadding='2')
+            tr
+              th
+                b Name
+              th
+                b Type
+              th
+                b Min Hours
+              th
+                b Max Hours
+              th
+                b Email
+              th
+                b Phone Number
+              th
+                b Update
+              th
+                b Delete
+
+            each person in people
+
+              // build a new table row
+              tr
+
+                // insert table data
+                td(contenteditable='false') #{person.name}
+                td(contenteditable='false') #{person.type}
+                td(contenteditable='false') #{person.min_hours}
+                td(contenteditable='false') #{person.max_hours}
+                td(contenteditable='false') #{person.email}
+                td(contenteditable='false') #{person.phone_number}
+
+
+                td
+                  input(type="button" name = "Edit" value = "Edit" onClick="Javacsript:editRow(this)")
+
+                td
+                  input(type="button" value = "Delete" onClick="Javacsript:deleteRow(this)")
+
+                // move to next person in the people array ...
+          br
+          br
