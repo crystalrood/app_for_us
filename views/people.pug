@@ -68,6 +68,38 @@ block content
           table.deleteRow(index);
         }
 
+
+        function editRow(obj) {
+          var currentTD = obj.parentNode.parentNode.rowIndex;
+          var table = document.getElementById("myTableData");
+          var row_length = document.getElementById("myTableData").rows[currentTD].cells.length;
+          console.log(obj.parentNode);
+
+          if (obj.value == 'Edit') {
+            document.getElementById("myTableData").rows[currentTD].cells[0].setAttribute("contentEditable", true);
+            document.getElementById("myTableData").rows[currentTD].cells[1].setAttribute("contentEditable", true);
+            document.getElementById("myTableData").rows[currentTD].cells[2].setAttribute("contentEditable", true);
+            document.getElementById("myTableData").rows[currentTD].cells[3].setAttribute("contentEditable", true);
+            document.getElementById("myTableData").rows[currentTD].cells[4].setAttribute("contentEditable", true);
+            document.getElementById("myTableData").rows[currentTD].cells[5].setAttribute("contentEditable", true);
+
+            document.getElementById("myTableData").rows[currentTD].style.backgroundColor = "#A4D9F5";
+
+            obj.value = 'Save'
+          } else {
+            document.getElementById("myTableData").rows[currentTD].cells[0].setAttribute("contentEditable", false);
+            document.getElementById("myTableData").rows[currentTD].cells[1].setAttribute("contentEditable", false);
+            document.getElementById("myTableData").rows[currentTD].cells[2].setAttribute("contentEditable", false);
+            document.getElementById("myTableData").rows[currentTD].cells[3].setAttribute("contentEditable", false);
+            document.getElementById("myTableData").rows[currentTD].cells[4].setAttribute("contentEditable", false);
+            document.getElementById("myTableData").rows[currentTD].cells[5].setAttribute("contentEditable", false);
+            document.getElementById("myTableData").rows[currentTD].style.backgroundColor = "#FFFFFF"
+            obj.value = 'Edit'
+          }
+
+        }
+
+
     #myform
     form.form-horizontal(action='/people/shift', method='POST')
       input(type='hidden', name='_csrf', value=_csrf)
@@ -151,7 +183,7 @@ block content
 
             // add the update and delete buttons
             td
-              input(type="button" value = "Update" onClick="Javacsript:deleteRow(this)")
+              input(type="button" name = "Edit" value = "Edit" onClick="Javacsript:editRow(this)")
             td
               input(type="button" value = "Delete" onClick="Javacsript:deleteRow(this)")
 
@@ -204,6 +236,36 @@ block content
           var table = document.getElementById("myTableData1");
           console.log("Hello World!!!");
           table.deleteRow(index);
+        }
+
+        function editRow2(obj) {
+          var currentTD = obj.parentNode.parentNode.rowIndex;
+          var table = document.getElementById("myTableData1");
+          var row_length = document.getElementById("myTableData1").rows[currentTD].cells.length;
+          console.log(obj.parentNode);
+
+          if (obj.value == 'Edit') {
+            document.getElementById("myTableData1").rows[currentTD].cells[0].setAttribute("contentEditable", true);
+            document.getElementById("myTableData1").rows[currentTD].cells[1].setAttribute("contentEditable", true);
+            document.getElementById("myTableData1").rows[currentTD].cells[2].setAttribute("contentEditable", true);
+            document.getElementById("myTableData1").rows[currentTD].cells[3].setAttribute("contentEditable", true);
+            document.getElementById("myTableData1").rows[currentTD].cells[4].setAttribute("contentEditable", true);
+            document.getElementById("myTableData1").rows[currentTD].cells[5].setAttribute("contentEditable", true);
+
+            document.getElementById("myTableData1").rows[currentTD].style.backgroundColor = "#A4D9F5";
+
+            obj.value = 'Save'
+          } else {
+            document.getElementById("myTableData1").rows[currentTD].cells[0].setAttribute("contentEditable", false);
+            document.getElementById("myTableData1").rows[currentTD].cells[1].setAttribute("contentEditable", false);
+            document.getElementById("myTableData1").rows[currentTD].cells[2].setAttribute("contentEditable", false);
+            document.getElementById("myTableData1").rows[currentTD].cells[3].setAttribute("contentEditable", false);
+            document.getElementById("myTableData1").rows[currentTD].cells[4].setAttribute("contentEditable", false);
+            document.getElementById("myTableData1").rows[currentTD].cells[5].setAttribute("contentEditable", false);
+            document.getElementById("myTableData1").rows[currentTD].style.backgroundColor = "#FFFFFF"
+            obj.value = 'Edit'
+          }
+
         }
 
     #myform
@@ -277,7 +339,7 @@ block content
 
             // add the update and delete buttons
             td
-              input(type="button" value = "Update" onClick="Javacsript:deleteRow1(this)")
+                  input(type="button" name = "Edit" value = "Edit" onClick="Javacsript:editRow2(this)")
             td
               input(type="button" value = "Delete" onClick="Javacsript:deleteRow1(this)")
 

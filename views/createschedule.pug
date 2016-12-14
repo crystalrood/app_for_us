@@ -4,6 +4,45 @@ extends layout
 
 block content
   .page-header
+    head
+      script(type='text/javascript').
+
+        function deleteRow1(obj) {
+          var index = obj.parentNode.parentNode.rowIndex;
+          var table = document.getElementById("myTableData");
+          table.deleteRow(index);
+        }
+
+        function editRow1(obj) {
+          var currentTD = obj.parentNode.parentNode.rowIndex;
+          var table = document.getElementById("myTableData");
+          var row_length = document.getElementById("myTableData").rows[currentTD].cells.length;
+          console.log(obj.parentNode);
+
+          if (obj.value == 'Edit') {
+            document.getElementById("myTableData").rows[currentTD].cells[0].setAttribute("contentEditable", true);
+            document.getElementById("myTableData").rows[currentTD].cells[1].setAttribute("contentEditable", true);
+            document.getElementById("myTableData").rows[currentTD].cells[2].setAttribute("contentEditable", true);
+            document.getElementById("myTableData").rows[currentTD].cells[3].setAttribute("contentEditable", true);
+            document.getElementById("myTableData").rows[currentTD].cells[4].setAttribute("contentEditable", true);
+            document.getElementById("myTableData").rows[currentTD].cells[5].setAttribute("contentEditable", true);
+
+            document.getElementById("myTableData").rows[currentTD].style.backgroundColor = "#A4D9F5";
+
+            obj.value = 'Save'
+          } else {
+            document.getElementById("myTableData").rows[currentTD].cells[0].setAttribute("contentEditable", false);
+            document.getElementById("myTableData").rows[currentTD].cells[1].setAttribute("contentEditable", false);
+            document.getElementById("myTableData").rows[currentTD].cells[2].setAttribute("contentEditable", false);
+            document.getElementById("myTableData").rows[currentTD].cells[3].setAttribute("contentEditable", false);
+            document.getElementById("myTableData").rows[currentTD].cells[4].setAttribute("contentEditable", false);
+            document.getElementById("myTableData").rows[currentTD].cells[5].setAttribute("contentEditable", false);
+            document.getElementById("myTableData").rows[currentTD].style.backgroundColor = "#FFFFFF"
+            obj.value = 'Edit'
+          }
+
+        }
+
     h3 Create Schedule
     h2 mimsey creates this schedule
 
@@ -25,7 +64,7 @@ block content
           th
             b Phone Number
           th
-            b Update
+            b Edit
           th
             b Delete
 
@@ -35,27 +74,73 @@ block content
           tr
 
             // insert table data
-            td #{person.name}
-            td #{person.type}
-            td #{person.min_hours}
-            td #{person.max_hours}
-            td #{person.email}
-            td #{person.phone_number}
+            td(contenteditable='false')  #{person.name}
+            td(contenteditable='false')  #{person.type}
+            td(contenteditable='false')  #{person.min_hours}
+            td(contenteditable='false')  #{person.max_hours}
+            td(contenteditable='false')  #{person.email}
+            td(contenteditable='false')  #{person.phone_number}
 
             // add the update and delete buttons
             td
-              input(type="button" value = "Update" onClick="Javacsript:deleteRow(this)")
+              input(type="button" name = "Edit" value = "Edit"  onClick="Javacsript:editRow1(this)")
             td
-              input(type="button" value = "Delete" onClick="Javacsript:deleteRow(this)")
+              input(type="button" value = "Delete" onClick="Javacsript:deleteRow1(this)")
 
             // move to next person in the people array ...
       br
       br
 
+
+
+
+
+
+
+
+      head
+        script(type='text/javascript').
+
+          function deleteRow2(obj) {
+            var index = obj.parentNode.parentNode.rowIndex;
+            var table = document.getElementById("myTableData1");
+            table.deleteRow(index);
+          }
+
+          function editRow2(obj) {
+            var currentTD = obj.parentNode.parentNode.rowIndex;
+            var table = document.getElementById("myTableData1");
+            var row_length = document.getElementById("myTableData1").rows[currentTD].cells.length;
+            console.log(obj.parentNode);
+
+            if (obj.value == 'Edit') {
+              document.getElementById("myTableData1").rows[currentTD].cells[0].setAttribute("contentEditable", true);
+              document.getElementById("myTableData1").rows[currentTD].cells[1].setAttribute("contentEditable", true);
+              document.getElementById("myTableData1").rows[currentTD].cells[2].setAttribute("contentEditable", true);
+              document.getElementById("myTableData1").rows[currentTD].cells[3].setAttribute("contentEditable", true);
+              document.getElementById("myTableData1").rows[currentTD].cells[4].setAttribute("contentEditable", true);
+              document.getElementById("myTableData1").rows[currentTD].cells[5].setAttribute("contentEditable", true);
+
+              document.getElementById("myTableData1").rows[currentTD].style.backgroundColor = "#A4D9F5";
+
+              obj.value = 'Save'
+            } else {
+              document.getElementById("myTableData1").rows[currentTD].cells[0].setAttribute("contentEditable", false);
+              document.getElementById("myTableData1").rows[currentTD].cells[1].setAttribute("contentEditable", false);
+              document.getElementById("myTableData1").rows[currentTD].cells[2].setAttribute("contentEditable", false);
+              document.getElementById("myTableData1").rows[currentTD].cells[3].setAttribute("contentEditable", false);
+              document.getElementById("myTableData1").rows[currentTD].cells[4].setAttribute("contentEditable", false);
+              document.getElementById("myTableData1").rows[currentTD].cells[5].setAttribute("contentEditable", false);
+              document.getElementById("myTableData1").rows[currentTD].style.backgroundColor = "#FFFFFF"
+              obj.value = 'Edit'
+            }
+
+          }
+
       br
       #mydata
         b Current data in the system ...
-        table#myTableData(border='1', cellpadding='2')
+        table#myTableData1(border='1', cellpadding='2')
           tr
             th
               b Employee type
@@ -87,13 +172,21 @@ block content
 
               // add the update and delete buttons
               td
-                input(type="button" value = "Update" onClick="Javacsript:deleteRow(this)")
+                  input(type="button" name = "Edit" value = "Edit" onClick="Javacsript:editRow2(this)")
               td
-                input(type="button" value = "Delete" onClick="Javacsript:deleteRow(this)")
+                input(type="button" value = "Delete" onClick="Javacsript:deleteRow2(this)")
 
               // move to next person in the people array ...
         br
         br
+
+
+
+
+
+
+
+
 
 
 
@@ -134,7 +227,7 @@ block content
             var currentTD = obj.parentNode.parentNode.rowIndex;
             var table = document.getElementById("testtable");
             var row_length = document.getElementById("testtable").rows[currentTD].cells.length;
-            console.log(currentTD);
+            console.log(obj.parentNode);
 
             if (obj.value == 'Edit') {
               document.getElementById("testtable").rows[currentTD].cells[0].setAttribute("contentEditable", true);
@@ -143,6 +236,9 @@ block content
               document.getElementById("testtable").rows[currentTD].cells[3].setAttribute("contentEditable", true);
               document.getElementById("testtable").rows[currentTD].cells[4].setAttribute("contentEditable", true);
               document.getElementById("testtable").rows[currentTD].cells[5].setAttribute("contentEditable", true);
+
+              document.getElementById("testtable").rows[currentTD].style.backgroundColor = "#A4D9F5";
+
               obj.value = 'Save'
             } else {
               document.getElementById("testtable").rows[currentTD].cells[0].setAttribute("contentEditable", false);
@@ -151,11 +247,11 @@ block content
               document.getElementById("testtable").rows[currentTD].cells[3].setAttribute("contentEditable", false);
               document.getElementById("testtable").rows[currentTD].cells[4].setAttribute("contentEditable", false);
               document.getElementById("testtable").rows[currentTD].cells[5].setAttribute("contentEditable", false);
+              document.getElementById("testtable").rows[currentTD].style.backgroundColor = "#FFFFFF"
               obj.value = 'Edit'
             }
 
           }
-
 
         #mydata
           b Current employee data!
