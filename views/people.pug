@@ -174,7 +174,7 @@ block content
           tr
 
             // insert table data
-            td #{shf.employee_type})
+            td #{shf.employee_type}
 
             td #{shf.days_worked}
             td #{shf.num_employees}
@@ -238,7 +238,7 @@ block content
           table.deleteRow(index);
         }
 
-        function editRow2(obj) {
+        function editRow1(obj) {
           var currentTD = obj.parentNode.parentNode.rowIndex;
           var table = document.getElementById("myTableData1");
           var row_length = document.getElementById("myTableData1").rows[currentTD].cells.length;
@@ -339,7 +339,7 @@ block content
 
             // add the update and delete buttons
             td
-                  input(type="button" name = "Edit" value = "Edit" onClick="Javacsript:editRow2(this)")
+                  input(type="button" name = "Edit" value = "Edit" onClick="Javacsript:editRow1(this)")
             td
               input(type="button" value = "Delete" onClick="Javacsript:deleteRow1(this)")
 
