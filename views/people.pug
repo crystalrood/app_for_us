@@ -68,25 +68,43 @@ block content
           table.deleteRow(index);
         }
 
+        //setting some global variables for updating shifts
+        var var_employeetype
+        var var_daysworked
+        var var_num_employees
+        var var_shift_start
+        var var_shift_end
+
 
         function editRow(obj) {
           var currentTD = obj.parentNode.parentNode.rowIndex;
           var table = document.getElementById("myTableData");
           var row_length = document.getElementById("myTableData").rows[currentTD].cells.length;
           console.log(obj.parentNode);
+          //the below is a way to get the HMTL within a cell
+          console.log(document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML);
+
 
           if (obj.value == 'Edit') {
+
             document.getElementById("myTableData").rows[currentTD].cells[0].setAttribute("contentEditable", true);
             document.getElementById("myTableData").rows[currentTD].cells[1].setAttribute("contentEditable", true);
             document.getElementById("myTableData").rows[currentTD].cells[2].setAttribute("contentEditable", true);
             document.getElementById("myTableData").rows[currentTD].cells[3].setAttribute("contentEditable", true);
             document.getElementById("myTableData").rows[currentTD].cells[4].setAttribute("contentEditable", true);
             document.getElementById("myTableData").rows[currentTD].cells[5].setAttribute("contentEditable", true);
-
             document.getElementById("myTableData").rows[currentTD].style.backgroundColor = "#A4D9F5";
-
+            var_employeetype = document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML
+            var_daysworked = document.getElementById("myTableData").rows[currentTD].cells[1].innerHTML
+            var_num_employees = document.getElementById("myTableData").rows[currentTD].cells[2].innerHTML
+            var_shift_start = document.getElementById("myTableData").rows[currentTD].cells[3].innerHTML
+            var_shift_start = document.getElementById("myTableData").rows[currentTD].cells[4].innerHTML
+            var_shift_end = document.getElementById("myTableData").rows[currentTD].cells[5].innerHTML
+            console.log(var_employeetype)
             obj.value = 'Save'
+
           } else {
+
             document.getElementById("myTableData").rows[currentTD].cells[0].setAttribute("contentEditable", false);
             document.getElementById("myTableData").rows[currentTD].cells[1].setAttribute("contentEditable", false);
             document.getElementById("myTableData").rows[currentTD].cells[2].setAttribute("contentEditable", false);
@@ -95,6 +113,8 @@ block content
             document.getElementById("myTableData").rows[currentTD].cells[5].setAttribute("contentEditable", false);
             document.getElementById("myTableData").rows[currentTD].style.backgroundColor = "#FFFFFF"
             obj.value = 'Edit'
+            location.href = '/people/updateshift'
+
           }
 
         }

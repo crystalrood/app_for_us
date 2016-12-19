@@ -89,7 +89,6 @@ exports.postPeople = (req, res, next) => {
 exports.getShift = (req, res) => {
 
 
-
   res.render('/people', {
     title: 'Account Management'
   });
@@ -127,14 +126,24 @@ exports.postShift = (req, res, next) => {
 };
 
 
+exports.postUpdateShift = (req, res) => {
+  res.render('/people', {
+    title: 'Account Management'
+  });
+};
 
+exports.getUpdateShift = (req, res) => {
+
+
+    res.render('/people', {
+      title: 'Account Management'
+    });
+};
 
 
 
 exports.getEmployeetype = (req, res) => {
-  res.render('/people', {
-    title: 'Account Management'
-  });
+  res.render('/people');
 };
 
 
