@@ -286,7 +286,7 @@ exports.postReset = (req, res, next) => {
       });
       const mailOptions = {
         to: user.email,
-        from: 'hackathon@starter.com',
+        from: 'erik@quickshifts.io',
         subject: 'Your Hackathon Starter password has been changed',
         text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
       };
