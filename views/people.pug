@@ -203,9 +203,9 @@ block content
 
             // add the update and delete buttons
             td
-              input(type="button" name = "Edit" value = "Edit" onClick="Javacsript:editRow(this)")
+              input(type="button" name = "btn-Edit" value = "Edit" onClick="Javacsript:editRow(this)")
             td
-              input(type="button" value = "Delete" onClick="Javacsript:deleteRow(this)")
+              input(type="button" name = "Delete" value = "Delete" onClick="Javacsript:deleteRow(this)")
 
             // move to next person in the people array ...
 
@@ -284,6 +284,12 @@ block content
             document.getElementById("myTableData1").rows[currentTD].cells[5].setAttribute("contentEditable", false);
             document.getElementById("myTableData1").rows[currentTD].style.backgroundColor = "#FFFFFF"
             obj.value = 'Edit'
+            $('#btn-Edit').click(function() {
+                $.ajax({
+                    type: 'POST',
+                    url: '/controllers/people/updateshift'
+                });
+            });
           }
 
         }
