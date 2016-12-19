@@ -113,7 +113,7 @@ block content
             document.getElementById("myTableData").rows[currentTD].cells[5].setAttribute("contentEditable", false);
             document.getElementById("myTableData").rows[currentTD].style.backgroundColor = "#FFFFFF"
             obj.value = 'Edit'
-            location.href = '/people/updateshift'
+
 
           }
 
@@ -229,6 +229,7 @@ block content
     h1 people
 
     head
+      script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js').
       script(type='text/javascript').
         function addRow1() {
         //variables
@@ -258,6 +259,16 @@ block content
           table.deleteRow(index);
         }
 
+        //setting global variables
+        var var_name
+        var var_type
+        var var_min_hours
+        var var_max_hours
+        var var_email
+        var var_phone_number
+
+
+
         function editRow1(obj) {
           var currentTD = obj.parentNode.parentNode.rowIndex;
           var table = document.getElementById("myTableData1");
@@ -274,7 +285,14 @@ block content
 
             document.getElementById("myTableData1").rows[currentTD].style.backgroundColor = "#A4D9F5";
 
-            obj.value = 'Save'
+             var_name = document.getElementById("myTableData1").rows[currentTD].cells[0].innerHTML
+             var_type =  document.getElementById("myTableData1").rows[currentTD].cells[1].innerHTML
+             var_min_hours =  document.getElementById("myTableData1").rows[currentTD].cells[2].innerHTML
+             var_max_hours=  document.getElementById("myTableData1").rows[currentTD].cells[3].innerHTML
+             var_email=  document.getElementById("myTableData1").rows[currentTD].cells[4].innerHTML
+             var_phone_number =  document.getElementById("myTableData1").rows[currentTD].cells[5].innerHTML
+
+           obj.value = 'Save'
           } else {
             document.getElementById("myTableData1").rows[currentTD].cells[0].setAttribute("contentEditable", false);
             document.getElementById("myTableData1").rows[currentTD].cells[1].setAttribute("contentEditable", false);
@@ -284,15 +302,32 @@ block content
             document.getElementById("myTableData1").rows[currentTD].cells[5].setAttribute("contentEditable", false);
             document.getElementById("myTableData1").rows[currentTD].style.backgroundColor = "#FFFFFF"
             obj.value = 'Edit'
-            $('#btn-Edit').click(function() {
-                $.ajax({
-                    type: 'POST',
-                    url: '/controllers/people/updateshift'
-                });
-            });
-          }
 
-        }
+
+            var newUser = {
+                     'name': document.getElementById("myTableData1").rows[currentTD].cells[0].innerHTML ,
+                     'type': document.getElementById("myTableData1").rows[currentTD].cells[1].innerHTML,
+                     'min_hours':  document.getElementById("myTableData1").rows[currentTD].cells[2].innerHTML,
+                     'max_hours':  document.getElementById("myTableData1").rows[currentTD].cells[3].innerHTML,
+                     'email':  document.getElementById("myTableData1").rows[currentTD].cells[4].innerHTML,
+                     'phone_number':  document.getElementById("myTableData1").rows[currentTD].cells[5].innerHTML
+             }
+
+
+            var token = _csrf;
+
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+              jqXHR.setRequestHeader('X-CSRF-Token', token);
+            });
+
+            $.ajax({
+                type: 'POST',
+                data: newUser,
+                url: '/people/updateshift',
+                dataType: 'JSON'
+            });
+
+        }}
 
     #myform
     form.form-horizontal(action='/people/people', method='POST')
