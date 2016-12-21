@@ -32,9 +32,6 @@ block content
 
 
 
-
-
-
   //defining shifts
   .page-header
     h1 shifts
@@ -61,59 +58,100 @@ block content
           row.insertCell(7).innerHTML= '<input type="button" value = "Delete" onClick="Javacsript:deleteRow(this)">';
         }
 
+
+
         function deleteRow(obj) {
           var index = obj.parentNode.parentNode.rowIndex;
           var table = document.getElementById("myTableData");
-          console.log("Hello World!!!");
+          var currentTD = obj.parentNode.parentNode.rowIndex;
+          var row_length = document.getElementById("myTableData").rows[currentTD].cells.length;
+
+          var shift = {
+
+            employee_type: document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML,
+            days_worked: document.getElementById("myTableData").rows[currentTD].cells[1].innerHTML,
+            num_employees: document.getElementById("myTableData").rows[currentTD].cells[2].innerHTML,
+            shift_start_time: document.getElementById("myTableData").rows[currentTD].cells[3].innerHTML,
+            shift_end_time: document.getElementById("myTableData").rows[currentTD].cells[4].innerHTML
+
+           }
+
+          setCSRFToken($('meta[name="csrf-token"]').attr('content'));
+
+          $.ajax({
+              type: 'POST',
+              data: shift,
+              url: '/people/deleteshift',
+              dataType: 'JSON'
+          });
+
           table.deleteRow(index);
         }
 
+
         //setting some global variables for updating shifts
-        var var_employeetype
-        var var_daysworked
-        var var_num_employees
-        var var_shift_start
-        var var_shift_end
+        var employee_type
+        var days_worked
+        var num_employees
+        var shift_start_time
+        var shift_end_time
+
 
 
         function editRow(obj) {
           var currentTD = obj.parentNode.parentNode.rowIndex;
           var table = document.getElementById("myTableData");
           var row_length = document.getElementById("myTableData").rows[currentTD].cells.length;
-          console.log(obj.parentNode);
-          //the below is a way to get the HMTL within a cell
-          console.log(document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML);
-
 
           if (obj.value == 'Edit') {
 
-            document.getElementById("myTableData").rows[currentTD].cells[0].setAttribute("contentEditable", true);
-            document.getElementById("myTableData").rows[currentTD].cells[1].setAttribute("contentEditable", true);
-            document.getElementById("myTableData").rows[currentTD].cells[2].setAttribute("contentEditable", true);
-            document.getElementById("myTableData").rows[currentTD].cells[3].setAttribute("contentEditable", true);
-            document.getElementById("myTableData").rows[currentTD].cells[4].setAttribute("contentEditable", true);
-            document.getElementById("myTableData").rows[currentTD].cells[5].setAttribute("contentEditable", true);
-            document.getElementById("myTableData").rows[currentTD].style.backgroundColor = "#A4D9F5";
-            var_employeetype = document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML
-            var_daysworked = document.getElementById("myTableData").rows[currentTD].cells[1].innerHTML
-            var_num_employees = document.getElementById("myTableData").rows[currentTD].cells[2].innerHTML
-            var_shift_start = document.getElementById("myTableData").rows[currentTD].cells[3].innerHTML
-            var_shift_start = document.getElementById("myTableData").rows[currentTD].cells[4].innerHTML
-            var_shift_end = document.getElementById("myTableData").rows[currentTD].cells[5].innerHTML
-            console.log(var_employeetype)
-            obj.value = 'Save'
+              document.getElementById("myTableData").rows[currentTD].cells[0].setAttribute("contentEditable", true);
+              document.getElementById("myTableData").rows[currentTD].cells[1].setAttribute("contentEditable", true);
+              document.getElementById("myTableData").rows[currentTD].cells[2].setAttribute("contentEditable", true);
+              document.getElementById("myTableData").rows[currentTD].cells[3].setAttribute("contentEditable", true);
+              document.getElementById("myTableData").rows[currentTD].cells[4].setAttribute("contentEditable", true);
+              document.getElementById("myTableData").rows[currentTD].cells[5].setAttribute("contentEditable", true);
+              document.getElementById("myTableData").rows[currentTD].style.backgroundColor = "#A4D9F5";
+              employee_type = document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML
+              days_worked = document.getElementById("myTableData").rows[currentTD].cells[1].innerHTML
+              num_employees = document.getElementById("myTableData").rows[currentTD].cells[2].innerHTML
+              shift_start_time = document.getElementById("myTableData").rows[currentTD].cells[3].innerHTML
+              shift_end_time = document.getElementById("myTableData").rows[currentTD].cells[4].innerHTML
+              obj.value = 'Save'
+            }
 
-          } else {
+          else {
+              document.getElementById("myTableData").rows[currentTD].cells[0].setAttribute("contentEditable", false);
+              document.getElementById("myTableData").rows[currentTD].cells[1].setAttribute("contentEditable", false);
+              document.getElementById("myTableData").rows[currentTD].cells[2].setAttribute("contentEditable", false);
+              document.getElementById("myTableData").rows[currentTD].cells[3].setAttribute("contentEditable", false);
+              document.getElementById("myTableData").rows[currentTD].cells[4].setAttribute("contentEditable", false);
+              document.getElementById("myTableData").rows[currentTD].cells[5].setAttribute("contentEditable", false);
+              document.getElementById("myTableData").rows[currentTD].style.backgroundColor = "#FFFFFF"
+              obj.value = 'Edit'
 
-            document.getElementById("myTableData").rows[currentTD].cells[0].setAttribute("contentEditable", false);
-            document.getElementById("myTableData").rows[currentTD].cells[1].setAttribute("contentEditable", false);
-            document.getElementById("myTableData").rows[currentTD].cells[2].setAttribute("contentEditable", false);
-            document.getElementById("myTableData").rows[currentTD].cells[3].setAttribute("contentEditable", false);
-            document.getElementById("myTableData").rows[currentTD].cells[4].setAttribute("contentEditable", false);
-            document.getElementById("myTableData").rows[currentTD].cells[5].setAttribute("contentEditable", false);
-            document.getElementById("myTableData").rows[currentTD].style.backgroundColor = "#FFFFFF"
-            obj.value = 'Edit'
+              var newshift = {
+                       'employee_type': document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML ,
+                       'days_worked': document.getElementById("myTableData").rows[currentTD].cells[1].innerHTML,
+                       'num_employees':  document.getElementById("myTableData").rows[currentTD].cells[2].innerHTML,
+                       'shift_start_time':  document.getElementById("myTableData").rows[currentTD].cells[3].innerHTML,
+                       'shift_end_time':  document.getElementById("myTableData").rows[currentTD].cells[4].innerHTML,
+                       'old_employee_type':employee_type,
+                       'old_days_worked': days_worked,
+                       'old_num_employees': num_employees,
+                       'old_shift_start_time': shift_start_time,
+                       'old_shift_end_time': shift_end_time
+               }
 
+
+              setCSRFToken($('meta[name="csrf-token"]').attr('content'));
+
+              $.ajax({
+                  type: 'POST',
+                  data: newshift,
+                  url: '/people/updateshift',
+                  dataType: 'JSON'
+              });
 
           }
 
@@ -195,7 +233,6 @@ block content
 
             // insert table data
             td #{shf.employee_type}
-
             td #{shf.days_worked}
             td #{shf.num_employees}
             td #{shf.shift_start_time}
@@ -252,12 +289,32 @@ block content
           row.insertCell(7).innerHTML= '<input type="button" value = "Delete" onClick="Javacsript:deleteRow(this)">';
         }
 
+
+
         function deleteRow1(obj) {
           var index = obj.parentNode.parentNode.rowIndex;
           var table = document.getElementById("myTableData1");
-          console.log("Hello World!!!");
+          var currentTD = obj.parentNode.parentNode.rowIndex;
+          var row_length = document.getElementById("myTableData1").rows[currentTD].cells.length;
+          var user = {
+             'name': document.getElementById("myTableData1").rows[currentTD].cells[0].innerHTML ,
+             'type': document.getElementById("myTableData1").rows[currentTD].cells[1].innerHTML,
+             'min_hours':  document.getElementById("myTableData1").rows[currentTD].cells[2].innerHTML,
+             'max_hours':  document.getElementById("myTableData1").rows[currentTD].cells[3].innerHTML,
+             'email':  document.getElementById("myTableData1").rows[currentTD].cells[4].innerHTML,
+             'phone_number':  document.getElementById("myTableData1").rows[currentTD].cells[5].innerHTML
+           }
+
+          setCSRFToken($('meta[name="csrf-token"]').attr('content'));
+          $.ajax({
+              type: 'POST',
+              data: user,
+              url: '/people/deletepeople',
+              dataType: 'JSON'
+          });
           table.deleteRow(index);
         }
+
 
         //setting global variables
         var var_name
@@ -266,8 +323,6 @@ block content
         var var_max_hours
         var var_email
         var var_phone_number
-
-
 
 
         var CSRF_HEADER = 'x-csrf-token';
@@ -323,20 +378,28 @@ block content
                      'min_hours':  document.getElementById("myTableData1").rows[currentTD].cells[2].innerHTML,
                      'max_hours':  document.getElementById("myTableData1").rows[currentTD].cells[3].innerHTML,
                      'email':  document.getElementById("myTableData1").rows[currentTD].cells[4].innerHTML,
-                     'phone_number':  document.getElementById("myTableData1").rows[currentTD].cells[5].innerHTML
+                     'phone_number':  document.getElementById("myTableData1").rows[currentTD].cells[5].innerHTML,
+                     'old_name':var_name,
+                     'old_type': var_type,
+                     'old_min_hours': var_min_hours,
+                     'old_max_hours': var_max_hours,
+                     'old_email': var_email,
+                     'old_phone_number':  var_phone_number
              }
 
 
-
             setCSRFToken($('meta[name="csrf-token"]').attr('content'));
+
             $.ajax({
                 type: 'POST',
                 data: newUser,
-                url: '/people/updateshift',
+                url: '/people/updatepeople',
                 dataType: 'JSON'
             });
 
         }}
+
+
 
     #myform
     form.form-horizontal(action='/people/people', method='POST')
@@ -367,6 +430,7 @@ block content
       br
       |         Phone Number:
       input#phone_number(type='text', name='phone_number', placeholder='Phone Number', autofocus='autofocus', required='required')
+      br
       br
       .form-group
         .col-sm-offset-3.col-sm-7

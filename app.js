@@ -142,6 +142,10 @@ app.post('/people/people', passportConfig.isAuthenticated, peopleController.post
 app.post('/people/shift', passportConfig.isAuthenticated, peopleController.postShift);
 app.post('/people/updateshift', passportConfig.isAuthenticated, peopleController.postUpdateShift);
 app.get('/people/updateshift', passportConfig.isAuthenticated, peopleController.getUpdateShift);
+app.post('/people/updatepeople', passportConfig.isAuthenticated, peopleController.postUpdatePeople);
+app.get('/people/updatepeople', passportConfig.isAuthenticated, peopleController.getUpdatePeople);
+app.post('/people/deletepeople', passportConfig.isAuthenticated, peopleController.postDeletePeople);
+app.post('/people/deleteshift', passportConfig.isAuthenticated, peopleController.postDeleteShift);
 app.get('/people/shift', passportConfig.isAuthenticated, peopleController.getShift);
 app.post('/people/employeetype', passportConfig.isAuthenticated, peopleController.postEmployeetype);
 app.get('/people/employeetype', passportConfig.isAuthenticated, peopleController.getEmployeetype);
