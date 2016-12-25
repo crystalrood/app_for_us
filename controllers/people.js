@@ -129,8 +129,6 @@ exports.getUpdatePeople = (req, res) => {
 
 
 
-
-
 /*
 ------- [Posting] Updated employee information
 */
@@ -159,7 +157,7 @@ exports.postUpdatePeople = (req, res, next) => {
           email: req.body.email,
           phone_number:req.body.phone_number}
         },
-        
+
         function(err, result) {
             if (err) {
                 console.log(err);
