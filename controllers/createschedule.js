@@ -9,13 +9,19 @@ const Createschedule = require('../models/Createschedule.js');
 const People = require('../models/People.js');
 const Shift = require('../models/Shift.js');
 const Employeetype = require('../models/Employeetype.js');
+const Finalshift = require('../models/Finalshift.js');
+const Secondaryshift = require('../models/Secondaryshift.js');
 
-/*exports.getCreateschedule = (req, res) => {
-    Createschedule.find((err, docs) => {
+
+
+
+
+exports.getCreateschedule = (req, res) => {
+    Secondaryshift.find((err, docs) => {
       res.render('createschedule', { createschedule: docs });
     });
   };
-*/
+
 
 /*exports.getCreateschedule = (req, res, next) => {
   const errors = req.validationErrors();

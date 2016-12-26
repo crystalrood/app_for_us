@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const finalshiftSchema = new mongoose.Schema({
+const secondaryshiftSchema = new mongoose.Schema({
   userid: String,
   date_range: String,
   employee_type: String,
@@ -11,5 +11,5 @@ const finalshiftSchema = new mongoose.Schema({
   { timestamps: true }
 );
 
-const Finalshift = mongoose.model('finalshift', finalshiftSchema);
-module.exports = Finalshift;
+const Secondaryshift = mongoose.model('secondaryshift', secondaryshiftSchema);
+module.exports = Secondaryshift;

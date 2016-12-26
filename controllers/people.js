@@ -46,6 +46,21 @@ exports.getPeople = (req, res, next) => {
           }
 
         });
+      },
+
+      function(callback){
+        Employeetype.find({ 'userid': req.user.id }, function (err, docs2) {
+          if (err) { return next(err); }
+          if (docs2 != null){
+            locals.employeetype = docs2;
+            callback();
+          }
+          else{
+            locals.employeetype = docs2;
+            callback();
+          }
+
+        });
       }
   ];
 
@@ -398,4 +413,24 @@ exports.postEmployeetype = (req, res, next) => {
       req.flash('success', { msg: 'This shift has been saved!' });
       res.redirect('/people');
 });
+};
+
+
+
+/*
+------- [Delete] Delete shift
+*/
+
+
+exports.postDeleteEmployeetype = (req, res, next) => {
+
+  Employeetype.remove({$and:[
+    { userid: req.user.id },
+    { employee_type: req.body.employee_type }
+    ]}, (err) =>
+      {
+        if (err) { return next(err); }
+        console.log("employee deleted");
+      }
+    );
 };

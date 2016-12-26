@@ -4,9 +4,42 @@ block content
 
 
 
+
+
+
   //defining employee types
   .page-header
     h1 employee types
+    head
+      script(type='text/javascript').
+
+        function deleteRow2(obj) {
+          var index = obj.parentNode.parentNode.rowIndex;
+          var table = document.getElementById("myTableData2");
+          var currentTD = obj.parentNode.parentNode.rowIndex;
+          var row_length = document.getElementById("myTableData2").rows[currentTD].cells.length;
+
+          var employeetype = {
+
+            employee_type: document.getElementById("myTableData2").rows[currentTD].cells[0].innerHTML
+
+           }
+
+          setCSRFToken($('meta[name="csrf-token"]').attr('content'));
+
+          $.ajax({
+              type: 'POST',
+              data: employeetype,
+              url: '/people/deleteemployeetype',
+              dataType: 'JSON'
+          });
+
+          table.deleteRow(index);
+        }
+
+
+
+
     #myform
     form.form-horizontal(action='/people/employeetype', method='POST')
       input(type='hidden', name='_csrf', value=_csrf)
@@ -21,10 +54,39 @@ block content
       .form-group
         .col-sm-offset-3.col-sm-7
           button.col-sm-3.btn.btn-primary(type='submit', value='Add') Add
-    br
-    br
-    br
-    br
+      br
+      br
+      br
+      #mydata
+        b Current data in the system ...
+        table#myTableData2(border='1', cellpadding='2')
+          tr
+            th
+              b Employee type
+            th
+              b Delete
+
+          each emt in employeetype
+
+            // build a new table row
+            tr
+
+              // insert table data
+              td #{emt.employee_type}
+
+              // add the update and delete buttons
+
+              td
+                input(type="button" name = "Delete" value = "Delete" onClick="Javacsript:deleteRow2(this)")
+
+              // move to next person in the people array ...
+
+        br
+        br
+        br
+
+
+
 
 
 
@@ -54,7 +116,7 @@ block content
           row.insertCell(3).innerHTML= max_hours.value;
           row.insertCell(4).innerHTML= email.value;
           row.insertCell(5).innerHTML= phone_number.value;
-          row.insertCell(6).innerHTML= '<input type="button" value = "Update" onClick="Javacsript:deleteRow(this)">';
+          row.insertCell(6).innerHTML= '<input type="button" value = "Update" onClick="Javacsript:editRow(this)">';
           row.insertCell(7).innerHTML= '<input type="button" value = "Delete" onClick="Javacsript:deleteRow(this)">';
         }
 
@@ -285,7 +347,7 @@ block content
           row.insertCell(3).innerHTML= max_hours.value;
           row.insertCell(4).innerHTML= email.value;
           row.insertCell(5).innerHTML= phone_number.value;
-          row.insertCell(6).innerHTML= '<input type="button" value = "Update" onClick="Javacsript:deleteRow(this)">';
+          row.insertCell(6).innerHTML= '<input type="button" value = "Update" onClick="Javacsript:editRow(this)">';
           row.insertCell(7).innerHTML= '<input type="button" value = "Delete" onClick="Javacsript:deleteRow(this)">';
         }
 
