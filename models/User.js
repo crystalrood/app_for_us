@@ -12,10 +12,6 @@ const userSchema = new mongoose.Schema({
   user_type: String,
   profile: {
     name: String,
-    gender: String,
-    location: String,
-    website: String,
-    picture: String
   }
 }, { timestamps: true });
 

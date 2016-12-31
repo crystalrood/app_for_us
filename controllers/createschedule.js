@@ -17,10 +17,63 @@ const Secondaryshift = require('../models/Secondaryshift.js');
 
 
 exports.getCreateschedule = (req, res) => {
+    Shift.find({ 'userid': req.user.id }, function (err, shifts) {
+      if (err) return handleError(err);
+      //trying to iterate through the docs
+      if (shifts != null){
+      //  console.log(shifts);
+      }
+    });
+
     Secondaryshift.find((err, docs) => {
+    //  console.log(docs)
       res.render('createschedule', { createschedule: docs });
     });
+    //console.log(req.body.cb)
   };
+
+
+
+
+
+  exports.postCreateschedule = (req, res, next) => {
+
+    console.log(req.body.start_date);
+    console.log(req.body.end_date);
+    res.redirect('/createschedule');
+
+  };
+
+
+
+
+
+  /*
+  xports.postCreateschedule = (req, res, next) => {
+    req.assert('name', 'Name is not valid').len(2);
+
+    const errors = req.validationErrors();
+
+    if (errors) {
+      req.flash('errors', errors);
+      return res.redirect('/createschedule');
+    }
+
+    const createschedule = new Createschedule({
+      userid: req.user.id,
+      name: req.body.name
+    });
+
+
+    createschedule.save((err) => {
+      console.log("SAVED!");
+      req.flash('success', { msg: 'This has been saved!' });
+      res.redirect('/createschedule');
+    if(err){
+      console.error(err);
+    }});
+  };
+  */
 
 
 /*exports.getCreateschedule = (req, res, next) => {
@@ -90,74 +143,3 @@ exports.getCreateschedule = (req, res) => {
   })
 };
 */
-
-
-exports.getCreateschedule = (req, res, next) => {
-  var locals = {};
-  var tasks = [
-      function(callback){
-        People.find({ 'userid': req.user.id }, function (err, docs) {
-          if (err) { return callback(err); }
-          if (docs != null){
-            locals.people = docs;
-            callback();
-          }
-          else{
-            locals.people = docs;
-            callback();
-          }
-        });
-      },
-
-
-      function(callback){
-        Shift.find({ 'userid': req.user.id }, function (err, docs1) {
-          if (err) { return next(err); }
-          if (docs1 != null){
-            locals.shift = docs1;
-            callback();
-          }
-          else{
-            locals.shift = docs1;
-            callback();
-          }
-
-        });
-      }
-  ];
-
-
-
-  async.parallel(tasks, function(err) { //This function gets called after the two tasks have called their "task callbacks"
-      if (err) return next(err); //If an error occurred, let express handle it by calling the `next` function
-      // Here `locals` will be an object with `users` and `colors` keys
-      // Example: `locals = {users: [...], colors: [...]}`
-      res.render('createschedule', locals);
-  });
-
-};
-
-exports.postCreateschedule = (req, res, next) => {
-  req.assert('name', 'Name is not valid').len(2);
-
-  const errors = req.validationErrors();
-
-  if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('/createschedule');
-  }
-
-  const createschedule = new Createschedule({
-    userid: req.user.id,
-    name: req.body.name
-  });
-
-
-  createschedule.save((err) => {
-    console.log("SAVED!");
-    req.flash('success', { msg: 'This has been saved!' });
-    res.redirect('/createschedule');
-  if(err){
-    console.error(err);
-  }});
-};
