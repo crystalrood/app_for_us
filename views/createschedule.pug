@@ -60,6 +60,7 @@ html
         });
       };
 
+      var secondshiftobj = [];
 
       $(function() {
         var start = moment().startOf('week').isoWeekday(1);
@@ -94,6 +95,19 @@ html
                   console.log(data)
                   console.log('Success: ')
                   var trHTML = '';
+                  secondshiftobj = data;
+                  console.log(secondshiftobj)
+
+                  // need to delete old rows everytime a new data range is selected
+                  var elmtTable = document.getElementById('myTableData');
+                  var tableRows = elmtTable.getElementsByTagName('tr');
+                  var rowCount = tableRows.length;
+                  for (var x=rowCount-1; x>0; x--) {
+                     elmtTable.deleteRow(x)
+                  }
+
+
+                  //putting all the new rows from the post function together in HTML
                   data.forEach(function(item, itemIndex){
                     trHTML += '<tr><td>' + item.employee_type
                       +'<td>' + item.days_worked
@@ -103,6 +117,8 @@ html
                       +'<td>' + '<input type="button" name="btn-Edit" value="Edit" onClick="Javacsript:editRow(this)"/>'
                       +'<td>' + '<input type="button" name="Delete" value="Delete" onClick="Javacsript:deleteRow(this)"/>'
                   })
+
+                  //appending all rows to the myTableData table :)
                   $('#myTableData').append(trHTML);
               },
               error: function (xhr, status, error) {
