@@ -36,6 +36,7 @@ html
 
   // Include Required Prerequisites - http://www.daterangepicker.com/#config
   .col-sm-12.center
+    script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js').
     script(type='text/javascript', src='//cdn.jsdelivr.net/jquery/1/jquery.min.js')
     script(type='text/javascript', src='//cdn.jsdelivr.net/momentjs/latest/moment.min.js')
     // Include Date Range Picker
@@ -47,6 +48,8 @@ html
       span
       b.caret
     script(type='text/javascript').
+
+
       var CSRF_HEADER = 'x-csrf-token';
 
       var setCSRFToken = function (securityToken) {
@@ -57,24 +60,59 @@ html
         });
       };
 
+
       $(function() {
         var start = moment().startOf('week').isoWeekday(1);
         var startmonth = moment().startOf('month');
         var end = moment(start).add(6,'days');
         function cb(start, end) {
           $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+
           //need to add ajax here
           var date_range_picker = {
             start_date: start.format('MM-D-YYYY'),
             end_date: end.format('MM-D-YYYY')
            }
+
           setCSRFToken($('meta[name="csrf-token"]').attr('content'));
+
+          //ajax to first create new schedule
           $.ajax({
               type: 'POST',
               data: date_range_picker,
               url: '/createschedule',
               dataType: 'JSON'
           });
+
+          //ajax call to get data from secondary schedule
+          $.ajax({
+              type: 'POST',
+              data: date_range_picker,
+              url: '/createschedule/get',
+              dataType: 'JSON',
+              success: function (data) {
+                  console.log(data)
+                  console.log('Success: ')
+                  var trHTML = '';
+                  data.forEach(function(item, itemIndex){
+                    trHTML += '<tr><td>' + item.employee_type
+                      +'<td>' + item.days_worked
+                      +'<td>' + item.num_employees
+                      +'<td>' + item.shift_start_time
+                      +'<td>' + item.shift_end_time
+                      +'<td>' + '<input type="button" name="btn-Edit" value="Edit" onClick="Javacsript:editRow(this)"/>'
+                      +'<td>' + '<input type="button" name="Delete" value="Delete" onClick="Javacsript:deleteRow(this)"/>'
+                  })
+                  $('#myTableData').append(trHTML);
+              },
+              error: function (xhr, status, error) {
+                  console.log('test')
+                  console.log('Error: ' + error.message);
+                  $('#lblResponse').html('Error connecting to the server.');
+              },
+
+          });
+
         }
 
         $('#reportrange').daterangepicker({
@@ -96,17 +134,28 @@ html
         }
 
         }, cb);
-
         cb(start, end);
-        //console.log(start);
-        //console.log(end);
       });
 
-    br
-    br
-    br
-    form.form-horizontal(action='/createschedule', method='POST')
-      input(type='hidden', name='_csrf', value=_csrf)
-      .form-group
-        .col-sm-offset-3.col-sm-7
-          button.col-sm-3.btn.btn-primary(type='submit', value='Add') Add
+
+  form.form-horizontal(action='/createschedule', method='POST')
+    input(type='hidden', name='_csrf', value=_csrf)
+
+    #mydata
+      b Current data in the system ...
+      table#myTableData(border='1', cellpadding='2')
+        tr
+          th
+            b Employee type
+          th
+            b Days worked
+          th
+            b Number of employees
+          th
+            b Shift start
+          th
+            b Shift end
+          th
+            b Update
+          th
+            b Delete

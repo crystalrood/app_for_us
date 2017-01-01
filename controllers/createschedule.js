@@ -16,74 +16,86 @@ const Secondaryshift = require('../models/Secondaryshift.js');
 
 
 
-exports.getCreateschedule = (req, res) => {
-    Shift.find({ 'userid': req.user.id }, function (err, shifts) {
-      if (err) return handleError(err);
-      //trying to iterate through the docs
-      if (shifts != null){
-      //  console.log(shifts);
-      }
-    });
+exports.getCreateschedule = (req, res, next) => {
 
-    Secondaryshift.find((err, docs) => {
-    //  console.log(docs)
-      res.render('createschedule', { createschedule: docs });
-    });
+  Secondaryshift.find(
+  {$and:[{userid: req.user.id}, {date_range_start: req.body.start_date}, {date_range_end: req.body.end_date}]},
+  function (err, docs) {
+    if (err) return handleError(err);
+    res.render('createschedule', { shift: docs });
+    console.log(docs.length)
+  });
+
     //console.log(req.body.cb)
-  };
+};
 
 
+exports.postCreatescheduledata = (req,res,next) => {
 
-  exports.postCreateschedule = (req, res, next) => {
+  //  res.redirect('/createschedule');
+  Secondaryshift.find(
+  {$and:[{userid: req.user.id}, {date_range_start: req.body.start_date}, {date_range_end: req.body.end_date}]},
+  function (err, docs) {
+    if (err) return handleError(err);
+    //res.render('createschedule', docs);
+    //res.render('createschedule', { shift: docs.toString() });
+
+    console.log('mimsey')
+    console.log(docs.length)
+    res.send(docs)
+  });
 
 
-    //testing to make sure that date range picker brings in dates selected
-    console.log(req.body.start_date);
-    console.log(req.body.end_date);
+}
 
-    //calling secondary shift to see if there's anything in the collection...
-    Secondaryshift.find(
-      {$and:[{userid: req.user.id}, {date_range_start: req.body.start_date}, {date_range_end: req.body.end_date}]},
-      function (err, shifts) {
-        //if error return error message
-        if (err) return handleError(err);
-        //checking to see if the shift length is 0, if so we're going to create a new collection
-        if (shifts.length == 0){
 
-          //now since there is no record, we're going to find the shift's from
-          //manager preferences
-            Shift.find({ 'userid': req.user.id }, function (err, shft) {
-              if (err) return handleError(err);
-              //trying to iterate through the docs
-              if (shft.length >= 1){
+exports.postCreateschedule = (req, res, next) => {
 
-                shft.forEach(function(shft, index) {
 
-                  const sec_shift = new Secondaryshift({
-                    userid: req.user.id,
-                    date_range_start: req.body.start_date,
-                    date_range_end: req.body.end_date,
-                    employee_type: shft.employee_type,
-                    days_worked: shft.days_worked,
-                    num_employees: shft.num_employees,
-                    shift_start_time: shft.shift_start_time,
-                    shift_end_time: shft.shift_end_time}
-                  );
+  //testing to make sure that date range picker brings in dates selected
+  console.log(req.body.start_date);
+  console.log(req.body.end_date);
 
-                  sec_shift.save((err) => {
-                    if (err) {return next(err);}
-                    console.log("SAVED!");
-                  });
+  //calling secondary shift to see if there's anything in the collection...
+  Secondaryshift.find(
+    {$and:[{userid: req.user.id}, {date_range_start: req.body.start_date}, {date_range_end: req.body.end_date}]},
+    function (err, shifts) {
+      //if error return error message
+      if (err) return handleError(err);
+      //checking to see if the shift length is 0, if so we're going to create a new collection
+      if (shifts.length == 0){
+
+        //now since there is no record, we're going to find the shift's from
+        //manager preferences
+          Shift.find({ 'userid': req.user.id }, function (err, shft) {
+            if (err) return handleError(err);
+            //checking to ensure we're actually going to be adding documents
+            if (shft.length >= 1){
+              //iterating through each document and adding it to the
+              //secondary collection
+              shft.forEach(function(shft, index) {
+
+                const sec_shift = new Secondaryshift({
+                  userid: req.user.id,
+                  date_range_start: req.body.start_date,
+                  date_range_end: req.body.end_date,
+                  employee_type: shft.employee_type,
+                  days_worked: shft.days_worked,
+                  num_employees: shft.num_employees,
+                  shift_start_time: shft.shift_start_time,
+                  shift_end_time: shft.shift_end_time}
+                );
+
+                sec_shift.save((err) => {
+                  if (err) {return next(err);}
+                  console.log("SAVED!");
                 });
-              }
-            });
-        };
-
-      }
-    );
-
-  res.redirect('/createschedule');
-
+              });
+            }
+          });
+      };
+    });
+      res.redirect('/createschedule');
 };
 
 /*
