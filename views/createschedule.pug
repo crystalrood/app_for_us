@@ -98,11 +98,9 @@ html
               url: '/createschedule/get',
               dataType: 'JSON',
               success: function (data) {
-                  console.log(data)
                   console.log('Success: ')
                   var trHTML = '';
                   secondshiftobj = data;
-                  console.log(secondshiftobj)
 
                   // need to delete old rows everytime a new data range is selected
                   var elmtTable = document.getElementById('myTableData');
@@ -163,23 +161,23 @@ html
 
       function addRow() {
       //variables
-        var myName = document.getElementById("name");
-        var type = document.getElementById("type");
-        var min_hours = document.getElementById("min_hours");
-        var max_hours = document.getElementById("max_hours");
-        var email = document.getElementById("email");
-        var phone_number = document.getElementById("phone_number");
         var table = document.getElementById("myTableData");
         var rowCount = table.rows.length;
-        var row = table.insertRow(rowCount);
-        row.insertCell(0).innerHTML= myName.value;
-        row.insertCell(1).innerHTML= type.value;
-        row.insertCell(2).innerHTML= min_hours.value;
-        row.insertCell(3).innerHTML= max_hours.value;
-        row.insertCell(4).innerHTML= email.value;
-        row.insertCell(5).innerHTML= phone_number.value;
-        row.insertCell(6).innerHTML= '<input type="button" value = "Update" onClick="Javacsript:editRow(this)">';
-        row.insertCell(7).innerHTML= '<input type="button" value = "Delete" onClick="Javacsript:deleteRow(this)">';
+        var row = table.insertRow(1);
+        row.insertCell(0).innerHTML= '';
+        row.insertCell(1).innerHTML= '';
+        row.insertCell(2).innerHTML= '';
+        row.insertCell(3).innerHTML= '';
+        row.insertCell(4).innerHTML= '';
+        row.insertCell(5).innerHTML= '<input type="button" value = "Save" onClick="Javacsript:editRow(this)">';
+        row.insertCell(6).innerHTML= '<input type="button" value = "Delete" onClick="Javacsript:deleteRow(this)">';
+
+        document.getElementById("myTableData").rows[1].cells[0].setAttribute("contentEditable", true);
+        document.getElementById("myTableData").rows[1].cells[1].setAttribute("contentEditable", true);
+        document.getElementById("myTableData").rows[1].cells[2].setAttribute("contentEditable", true);
+        document.getElementById("myTableData").rows[1].cells[3].setAttribute("contentEditable", true);
+        document.getElementById("myTableData").rows[1].cells[4].setAttribute("contentEditable", true);
+        document.getElementById("myTableData").rows[1].style.backgroundColor = "#A4D9F5";
       }
 
 
@@ -226,7 +224,7 @@ html
       function editRow(obj) {
         var currentTD = obj.parentNode.parentNode.rowIndex;
         var table = document.getElementById("myTableData");
-        var row_length = document.getElementById("myTableData").rows[currentTD].cells.length;
+        var row_length = document.getElementById("myTableData").rows.length;
 
         if (obj.value == 'Edit') {
 
@@ -269,6 +267,8 @@ html
                      'date_range_start': start_date_picker,
                      'date_range_end': end_date_picker,
              }
+             console.log(newshift)
+
 
 
             setCSRFToken($('meta[name="csrf-token"]').attr('content'));
@@ -286,6 +286,24 @@ html
 
 
 
+  br
+  br
+  br
+  #myform
+  form.form-horizontal()
+    input(type='hidden', name='_csrf', value=_csrf)
+  .form-group
+    .col-sm-offset-3.col-sm-7
+      button.col-sm-3.btn.btn-primary(type='submit', value='Add', onClick="addRow(this)") Add a shift
+
+  br
+  br
+  #myform
+  form.form-horizontal()
+    input(type='hidden', name='_csrf', value=_csrf)
+  .form-group
+    .col-sm-offset-3.col-sm-7
+      button.col-sm-3.btn.btn-primary(type='submit', value='Add') Confirm Shifts
 
 
 

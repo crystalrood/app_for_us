@@ -96,19 +96,43 @@ exports.postUpdateSecondaryShift = (req, res, next) => {
 
   console.log(req.body.date_range_start)
   console.log(req.body.old_employee_type)
-  Secondaryshift.update(
-    {$and:[
-    { userid: req.user.id },
-    { date_range_start: req.body.date_range_start},
-    { date_range_end: req.body.date_range_end},
-    { employee_type: req.body.old_employee_type },
-    { days_worked: req.body.old_days_worked},
-    { num_employees: req.body.old_num_employees},
-    { shift_start_time: req.body.old_shift_start_time},
-    { shift_end_time: req.body.old_shift_end_time}
-    ]},
-    {$set:
-      {userid: req.user.id,
+
+  if(req.body.old_employee_type != undefined){
+    Secondaryshift.update(
+      {$and:[
+      { userid: req.user.id },
+      { date_range_start: req.body.date_range_start},
+      { date_range_end: req.body.date_range_end},
+      { employee_type: req.body.old_employee_type },
+      { days_worked: req.body.old_days_worked},
+      { num_employees: req.body.old_num_employees},
+      { shift_start_time: req.body.old_shift_start_time},
+      { shift_end_time: req.body.old_shift_end_time}
+      ]},
+      {$set:
+        {userid: req.user.id,
+        date_range_start: req.body.date_range_start,
+        date_range_end: req.body.date_range_end,
+        employee_type: req.body.employee_type,
+        days_worked: req.body.days_worked,
+        num_employees: req.body.num_employees,
+        shift_start_time: req.body.shift_start_time,
+        shift_end_time: req.body.shift_end_time}
+      },
+        function(err, result) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                console.log(result);
+            }
+        }
+      );
+  }
+
+  if(req.body.old_employee_type == undefined){
+    const sec_shift = new Secondaryshift({
+      userid: req.user.id,
       date_range_start: req.body.date_range_start,
       date_range_end: req.body.date_range_end,
       employee_type: req.body.employee_type,
@@ -116,16 +140,16 @@ exports.postUpdateSecondaryShift = (req, res, next) => {
       num_employees: req.body.num_employees,
       shift_start_time: req.body.shift_start_time,
       shift_end_time: req.body.shift_end_time}
-    },
-      function(err, result) {
-          if (err) {
-              console.log(err);
-          }
-          else {
-              console.log(result);
-          }
-      }
-    )
+    );
+
+    sec_shift.save((err) => {
+      if (err) {return next(err);}
+      console.log("SAVED!");
+    });
+  }
+
+
+
   };
 
 
