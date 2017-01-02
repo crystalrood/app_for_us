@@ -3,3 +3,43 @@ extends layout
 block content
   .page-header
     h3 All Books
+    #mydata
+      b Current data in the system ...
+      table#myTableData(border='1', cellpadding='2')
+        tr
+          th
+            b Employee type
+          th
+            b Days worked
+          th
+            b Number of employees
+          th
+            b Shift start
+          th
+            b Shift end
+          th
+            b Update
+          th
+            b Delete
+
+        each shf in spref
+
+          // build a new table row
+          tr
+
+            // insert table data
+            td #{shf.shifts_match_employee_type.employee_type}
+            td #{shf.shifts_match_employee_type.days_worked}
+            td #{shf.shifts_match_employee_type.num_employees}
+            td #{shf.shifts_match_employee_type.shift_start_time}
+            td #{shf.shifts_match_employee_type.shift_end_time}
+
+
+
+            // add the update and delete buttons
+            td
+              input(type="button" name = "btn-Edit" value = "Edit" onClick="Javacsript:editRow(this)")
+            td
+              input(type="button" name = "Delete" value = "Delete" onClick="Javacsript:deleteRow(this)")
+
+            // move to next person in the people array ...
