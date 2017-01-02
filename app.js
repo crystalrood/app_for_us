@@ -135,6 +135,7 @@ app.post('/createschedule/deleteshift', passportConfig.isAuthenticated, createsc
 app.post('/createschedule/updateshift', passportConfig.isAuthenticated, createscheduleController.postUpdateSecondaryShift);
 //added this line 11/6
 app.post('/createschedule/get', passportConfig.isAuthenticated, createscheduleController.postCreatescheduledata);
+app.post('/createschedule/final', passportConfig.isAuthenticated, createscheduleController.postCreateschedulefinal);
 app.post('/createschedule', passportConfig.isAuthenticated, createscheduleController.postCreateschedule);
 app.get('/people', passportConfig.isAuthenticated, peopleController.getPeople);
 app.get('/shift_info', passportConfig.isAuthenticated, shift_infoController.getShift_info);

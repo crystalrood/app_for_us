@@ -267,8 +267,6 @@ html
                      'date_range_start': start_date_picker,
                      'date_range_end': end_date_picker,
              }
-             console.log(newshift)
-
 
 
             setCSRFToken($('meta[name="csrf-token"]').attr('content'));
@@ -282,6 +280,23 @@ html
 
         }
 
+      }
+
+      function finalshifts_submit(){
+        var shift = {
+          date_range_start: start_date_picker,
+          date_range_end: end_date_picker
+         }
+
+        setCSRFToken($('meta[name="csrf-token"]').attr('content'));
+
+        $.ajax({
+            type: 'POST',
+            data: shift,
+            url: '/createschedule/final',
+            dataType: 'JSON'
+        });
+        console.log(shift.date_range_start)
       }
 
 
@@ -303,7 +318,7 @@ html
     input(type='hidden', name='_csrf', value=_csrf)
   .form-group
     .col-sm-offset-3.col-sm-7
-      button.col-sm-3.btn.btn-primary(type='submit', value='Add') Confirm Shifts
+      button.col-sm-3.btn.btn-primary(type='submit', value='Add', onClick="finalshifts_submit(this)") Confirm Shifts
 
 
 

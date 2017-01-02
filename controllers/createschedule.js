@@ -175,6 +175,55 @@ exports.postUpdateSecondaryShift = (req, res, next) => {
 
 
 
+  exports.postCreateschedulefinal = (req, res, next) => {
+
+    //calling secondary shift to see if there's anything in the collection...
+    Finalshift.find(
+      {$and:[{userid: req.user.id}, {date_range_start: req.body.date_range_start}, {date_range_end: req.body.date_range_end}]},
+      function (err, shifts) {
+        //if error return error message
+        if (err) return handleError(err);
+        //checking to see if the shift length is 0, if so we're going to create a new collection
+        if (shifts.length == 0){
+
+          //now since there is no record, we're going to find the shift's from
+          //manager preferences
+            Secondaryshift.find(
+            {$and:[{userid: req.user.id}, {date_range_start: req.body.date_range_start}, {date_range_end: req.body.date_range_end}]},
+            function (err, shft) {
+              if (err) return handleError(err);
+              //checking to ensure we're actually going to be adding documents
+              if (shft.length >= 1){
+                //iterating through each document and adding it to the
+                //secondary collection
+                shft.forEach(function(shft, index) {
+
+                  const sec_shift = new Finalshift({
+                    userid: req.user.id,
+                    date_range_start: req.body.date_range_start,
+                    date_range_end: req.body.date_range_end,
+                    employee_type: shft.employee_type,
+                    days_worked: shft.days_worked,
+                    num_employees: shft.num_employees,
+                    shift_start_time: shft.shift_start_time,
+                    shift_end_time: shft.shift_end_time}
+                  );
+
+                  sec_shift.save((err) => {
+                    if (err) {return next(err);}
+                    console.log("SAVED!");
+                  });
+                });
+              };
+                });
+              }
+            });
+
+    res.redirect('/createschedule');
+  };
+
+
+
 
 /*
 
