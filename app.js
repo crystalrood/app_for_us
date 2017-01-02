@@ -131,7 +131,8 @@ app.get('/', homeController.index);
 app.get('/prices', pricesController.getPrices);
 
 app.get('/createschedule', passportConfig.isAuthenticated, createscheduleController.getCreateschedule);
-
+app.post('/createschedule/deleteshift', passportConfig.isAuthenticated, createscheduleController.postDeleteSecondaryShift);
+app.post('/createschedule/updateshift', passportConfig.isAuthenticated, createscheduleController.postUpdateSecondaryShift);
 //added this line 11/6
 app.post('/createschedule/get', passportConfig.isAuthenticated, createscheduleController.postCreatescheduledata);
 app.post('/createschedule', passportConfig.isAuthenticated, createscheduleController.postCreateschedule);

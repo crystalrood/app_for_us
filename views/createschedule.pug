@@ -61,6 +61,8 @@ html
       };
 
       var secondshiftobj = [];
+      var start_date_picker
+      var end_date_picker
 
       $(function() {
         var start = moment().startOf('week').isoWeekday(1);
@@ -74,6 +76,10 @@ html
             start_date: start.format('MM-D-YYYY'),
             end_date: end.format('MM-D-YYYY')
            }
+
+           //setting some global variable so we can use them in other javascript functions
+           start_date_picker= start.format('MM-D-YYYY')
+           end_date_picker = end.format('MM-D-YYYY')
 
           setCSRFToken($('meta[name="csrf-token"]').attr('content'));
 
@@ -154,6 +160,137 @@ html
       });
 
 
+
+      function addRow() {
+      //variables
+        var myName = document.getElementById("name");
+        var type = document.getElementById("type");
+        var min_hours = document.getElementById("min_hours");
+        var max_hours = document.getElementById("max_hours");
+        var email = document.getElementById("email");
+        var phone_number = document.getElementById("phone_number");
+        var table = document.getElementById("myTableData");
+        var rowCount = table.rows.length;
+        var row = table.insertRow(rowCount);
+        row.insertCell(0).innerHTML= myName.value;
+        row.insertCell(1).innerHTML= type.value;
+        row.insertCell(2).innerHTML= min_hours.value;
+        row.insertCell(3).innerHTML= max_hours.value;
+        row.insertCell(4).innerHTML= email.value;
+        row.insertCell(5).innerHTML= phone_number.value;
+        row.insertCell(6).innerHTML= '<input type="button" value = "Update" onClick="Javacsript:editRow(this)">';
+        row.insertCell(7).innerHTML= '<input type="button" value = "Delete" onClick="Javacsript:deleteRow(this)">';
+      }
+
+
+
+      function deleteRow(obj) {
+        var index = obj.parentNode.parentNode.rowIndex;
+        var table = document.getElementById("myTableData");
+        var currentTD = obj.parentNode.parentNode.rowIndex;
+        var row_length = document.getElementById("myTableData").rows[currentTD].cells.length;
+
+        var shift = {
+          date_range_start: start_date_picker,
+          date_range_end: end_date_picker,
+          employee_type: document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML,
+          days_worked: document.getElementById("myTableData").rows[currentTD].cells[1].innerHTML,
+          num_employees: document.getElementById("myTableData").rows[currentTD].cells[2].innerHTML,
+          shift_start_time: document.getElementById("myTableData").rows[currentTD].cells[3].innerHTML,
+          shift_end_time: document.getElementById("myTableData").rows[currentTD].cells[4].innerHTML
+
+         }
+
+        setCSRFToken($('meta[name="csrf-token"]').attr('content'));
+
+        $.ajax({
+            type: 'POST',
+            data: shift,
+            url: '/createschedule/deleteshift',
+            dataType: 'JSON'
+        });
+
+        table.deleteRow(index);
+      }
+
+
+      //setting some global variables for updating shifts
+      var employee_type
+      var days_worked
+      var num_employees
+      var shift_start_time
+      var shift_end_time
+
+
+
+      function editRow(obj) {
+        var currentTD = obj.parentNode.parentNode.rowIndex;
+        var table = document.getElementById("myTableData");
+        var row_length = document.getElementById("myTableData").rows[currentTD].cells.length;
+
+        if (obj.value == 'Edit') {
+
+            document.getElementById("myTableData").rows[currentTD].cells[0].setAttribute("contentEditable", true);
+            document.getElementById("myTableData").rows[currentTD].cells[1].setAttribute("contentEditable", true);
+            document.getElementById("myTableData").rows[currentTD].cells[2].setAttribute("contentEditable", true);
+            document.getElementById("myTableData").rows[currentTD].cells[3].setAttribute("contentEditable", true);
+            document.getElementById("myTableData").rows[currentTD].cells[4].setAttribute("contentEditable", true);
+            document.getElementById("myTableData").rows[currentTD].cells[5].setAttribute("contentEditable", true);
+            document.getElementById("myTableData").rows[currentTD].style.backgroundColor = "#A4D9F5";
+            employee_type = document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML
+            days_worked = document.getElementById("myTableData").rows[currentTD].cells[1].innerHTML
+            num_employees = document.getElementById("myTableData").rows[currentTD].cells[2].innerHTML
+            shift_start_time = document.getElementById("myTableData").rows[currentTD].cells[3].innerHTML
+            shift_end_time = document.getElementById("myTableData").rows[currentTD].cells[4].innerHTML
+            obj.value = 'Save'
+          }
+
+        else {
+            document.getElementById("myTableData").rows[currentTD].cells[0].setAttribute("contentEditable", false);
+            document.getElementById("myTableData").rows[currentTD].cells[1].setAttribute("contentEditable", false);
+            document.getElementById("myTableData").rows[currentTD].cells[2].setAttribute("contentEditable", false);
+            document.getElementById("myTableData").rows[currentTD].cells[3].setAttribute("contentEditable", false);
+            document.getElementById("myTableData").rows[currentTD].cells[4].setAttribute("contentEditable", false);
+            document.getElementById("myTableData").rows[currentTD].cells[5].setAttribute("contentEditable", false);
+            document.getElementById("myTableData").rows[currentTD].style.backgroundColor = "#FFFFFF"
+            obj.value = 'Edit'
+
+            var newshift = {
+                     'employee_type': document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML ,
+                     'days_worked': document.getElementById("myTableData").rows[currentTD].cells[1].innerHTML,
+                     'num_employees':  document.getElementById("myTableData").rows[currentTD].cells[2].innerHTML,
+                     'shift_start_time':  document.getElementById("myTableData").rows[currentTD].cells[3].innerHTML,
+                     'shift_end_time':  document.getElementById("myTableData").rows[currentTD].cells[4].innerHTML,
+                     'old_employee_type':employee_type,
+                     'old_days_worked': days_worked,
+                     'old_num_employees': num_employees,
+                     'old_shift_start_time': shift_start_time,
+                     'old_shift_end_time': shift_end_time,
+                     'date_range_start': start_date_picker,
+                     'date_range_end': end_date_picker,
+             }
+
+
+            setCSRFToken($('meta[name="csrf-token"]').attr('content'));
+
+            $.ajax({
+                type: 'POST',
+                data: newshift,
+                url: '/createschedule/updateshift',
+                dataType: 'JSON'
+            });
+
+        }
+
+      }
+
+
+
+
+
+
+    br
+    br
   form.form-horizontal(action='/createschedule', method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
 

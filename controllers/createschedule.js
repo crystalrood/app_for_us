@@ -30,9 +30,9 @@ exports.getCreateschedule = (req, res, next) => {
 };
 
 
+//this one is called to just pull the data from secondary shifts to the webform
 exports.postCreatescheduledata = (req,res,next) => {
 
-  //  res.redirect('/createschedule');
   Secondaryshift.find(
   {$and:[{userid: req.user.id}, {date_range_start: req.body.start_date}, {date_range_end: req.body.end_date}]},
   function (err, docs) {
@@ -40,21 +40,13 @@ exports.postCreatescheduledata = (req,res,next) => {
     //res.render('createschedule', docs);
     //res.render('createschedule', { shift: docs.toString() });
 
-    console.log('mimsey')
-    console.log(docs.length)
     res.send(docs)
   });
-
 
 }
 
 
 exports.postCreateschedule = (req, res, next) => {
-
-
-  //testing to make sure that date range picker brings in dates selected
-  console.log(req.body.start_date);
-  console.log(req.body.end_date);
 
   //calling secondary shift to see if there's anything in the collection...
   Secondaryshift.find(
@@ -97,6 +89,68 @@ exports.postCreateschedule = (req, res, next) => {
     });
       res.redirect('/createschedule');
 };
+
+
+
+exports.postUpdateSecondaryShift = (req, res, next) => {
+
+  console.log(req.body.date_range_start)
+  console.log(req.body.old_employee_type)
+  Secondaryshift.update(
+    {$and:[
+    { userid: req.user.id },
+    { date_range_start: req.body.date_range_start},
+    { date_range_end: req.body.date_range_end},
+    { employee_type: req.body.old_employee_type },
+    { days_worked: req.body.old_days_worked},
+    { num_employees: req.body.old_num_employees},
+    { shift_start_time: req.body.old_shift_start_time},
+    { shift_end_time: req.body.old_shift_end_time}
+    ]},
+    {$set:
+      {userid: req.user.id,
+      date_range_start: req.body.date_range_start,
+      date_range_end: req.body.date_range_end,
+      employee_type: req.body.employee_type,
+      days_worked: req.body.days_worked,
+      num_employees: req.body.num_employees,
+      shift_start_time: req.body.shift_start_time,
+      shift_end_time: req.body.shift_end_time}
+    },
+      function(err, result) {
+          if (err) {
+              console.log(err);
+          }
+          else {
+              console.log(result);
+          }
+      }
+    )
+  };
+
+
+  exports.postDeleteSecondaryShift = (req, res, next) => {
+
+    Secondaryshift.remove({$and:[
+      { userid: req.user.id },
+      { date_range_start: req.body.date_range_start},
+      { date_range_end: req.body.date_range_end},
+      { employee_type: req.body.employee_type },
+      { days_worked: req.body.days_worked},
+      { num_employees: req.body.num_employees},
+      { shift_start_time: req.body.shift_start_time},
+      { shift_end_time: req.body.shift_end_time}
+      ]}, (err) =>
+        {
+          if (err) { return next(err); }
+          console.log("shift deleted");
+        }
+      );
+  };
+
+
+
+
 
 /*
 
