@@ -2,9 +2,20 @@ extends layout
 
 block content
   .page-header
+
     h3 All Books
     #mydata
       b Current data in the system ...
+
+      br
+      br
+
+      .form-group
+        .col-sm-offset-3.col-sm-7
+          button.col-sm-3.btn.btn-primary(type='submit', value='Add') Save shifts
+      br
+      br
+
       table#myTableData(border='1', cellpadding='2')
         tr
           th
@@ -18,9 +29,8 @@ block content
           th
             b Shift end
           th
-            b Update
-          th
-            b Delete
+            b Available
+
 
         each shf in spref
 
@@ -38,8 +48,8 @@ block content
 
             // add the update and delete buttons
             td
-              input(type="button" name = "btn-Edit" value = "Edit" onClick="Javacsript:editRow(this)")
-            td
-              input(type="button" name = "Delete" value = "Delete" onClick="Javacsript:deleteRow(this)")
+              input#type(type='checkbox', name='Available', value = 'yes', autofocus='autofocus')
+
+
 
             // move to next person in the people array ...
