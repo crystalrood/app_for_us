@@ -326,15 +326,25 @@ button, input, optgroup, select, textarea {
   font: inherit;
   margin: 0; }
 
+  /*#myTableData formatting (since did not alter core table, need to copy/paste changes down)*/
+  /*#myTableData*/
+
 #myTableData {
   border-collapse: collapse;
   width: 100%; }
 
 #myTableData td, #myTableData th {
   border: 1px solid #ddd;
+  border-left: transparent;
+  border-right: transparent;
   padding: 8px; }
 
-/*#myTableData tr:nth-child(even){background-color: #f2f2f2;}*/
+  table {
+    border-left: #f5f5f5;
+    border-right: #f5f5f5;
+  }
+
+
 #myTableData tr:hover {
   background-color: #ddd; }
 
@@ -342,27 +352,74 @@ button, input, optgroup, select, textarea {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: #204868;
+  background-color: #1e87e0;
   color: white; }
 
-#myTableData1 {
-  border-collapse: collapse;
-  width: 100%; }
+  /*#end myTableData*/
+  /*#myTableData1*/
 
-#myTableData1 td, #myTableData1 th {
-  border: 1px solid #ddd;
-  padding: 8px; }
 
-/*#myTableData tr:nth-child(even){background-color: #f2f2f2;}*/
-#myTableData1 tr:hover {
-  background-color: #ddd; }
+  #myTableData1 {
+    border-collapse: collapse;
+    width: 100%; }
 
-#myTableData1 th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: #204868;
-  color: white; }
+  #myTableData1 td, #myTableData1 th {
+    border: 1px solid #ddd;
+    border-left: transparent;
+    border-right: transparent;
+    padding: 8px; }
+
+    table {
+      border-left: #f5f5f5;
+      border-right: #f5f5f5;
+    }
+
+
+  #myTableData1 tr:hover {
+    background-color: #ddd; }
+
+  #myTableData1 th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #1e87e0;
+    color: white; }
+
+  /*end #myTableData1*/
+
+
+  /*#myTableData2*/
+
+  #myTableData2 {
+    border-collapse: collapse;
+    width: 100%; }
+
+  #myTableData2 td, #myTableData2 th {
+    border: 1px solid #ddd;
+    border-left: transparent;
+    border-right: transparent;
+    padding: 8px; }
+
+    table {
+      border-left: #f5f5f5;
+      border-right: #f5f5f5;
+    }
+
+
+  #myTableData2 tr:hover {
+    background-color: #ddd; }
+
+  #myTableData2 th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #1e87e0;
+    color: white; }
+
+
+  /*end #myTableData2*/
+
+
 
 button {
   overflow: visible;
@@ -1371,7 +1428,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   font-family: "HelveticaNeue-CondensedBold", "Helvetica Neue", Arial, sans-serif;
   font-weight: 500;
   line-height: 1.1;
-  color: #3c78d8; }
+  color: #1e87e0; }
 
 h1 small, h1 .small {
   font-weight: normal;
@@ -2744,8 +2801,7 @@ input[type="search"] {
   margin-bottom: 0;
   vertical-align: middle;
   font-weight: normal;
-  cursor: pointer;
-  }
+  cursor: pointer; }
 
 .radio-inline + .radio-inline, .checkbox-inline + .checkbox-inline {
   margin-top: 0;
@@ -3251,8 +3307,8 @@ fieldset[disabled] .btn-default:hover, fieldset[disabled] .btn-default:focus, fi
 
 .btn-primary {
   color: #fff;
-  background-color: #4d90fc;
-  border-color: #3d86fc; }
+  background-color: #04c37e;
+  border-color: rgba(61, 252, 126, 0.26); }
 
 .btn-primary:focus, .btn-primary.focus {
   color: #fff;
