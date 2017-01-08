@@ -7,6 +7,7 @@ const Spref = require('../models/Spref.js');
 const People = require('../models/People.js');
 const Mgr_employee_link = require('../models/Mgr_employee_link.js');
 const Shifts = require('../models/Shift.js');
+const Finalemployeeshift = require('../models/Finalemployeeshift.js');
 
 
 exports.getSpref = (req, res) => {
@@ -58,7 +59,7 @@ exports.getSpref = (req, res) => {
 
     Mgr_employee_link.aggregate([{
       $lookup: {
-        from: "shifts",
+        from: "finalshifts",
         localField: "type",
         foreignField: "employee_type",
         as: "shifts_match_employee_type"
@@ -71,6 +72,7 @@ exports.getSpref = (req, res) => {
         }],
         function (err, result) {
          if (err) {
+
             console.log('madeit72')
              console.log(err);
              return;
@@ -78,7 +80,8 @@ exports.getSpref = (req, res) => {
         // console.log(result);
         // console.log('madeit77')
          //adding some stuff here
-         var final_result = [];
+      //console.log(result);
+        var final_result = [];
 
          result.forEach(function(result, index) {
 
@@ -89,13 +92,56 @@ exports.getSpref = (req, res) => {
              // Trim the excess whitespace.
              str_array[i] = str_array[i].replace(/^\s*/, "").replace(/\s*$/, "");
 
-             var new_result = {
+             var new_result = new Finalemployeeshift({
+               userid: req.user.id,
+               date_range_start: result.date_range_start,
+               date_range_end: result.date_range_end,
                employee_type: result.shifts_match_employee_type.employee_type,
                days_worked: str_array[i],
                num_employees: result.shifts_match_employee_type.num_employees,
                shift_start_time:result.shifts_match_employee_type.shift_start_time,
-               shift_end_time: result.shifts_match_employee_type.shift_end_time
-             }
+               shift_end_time: result.shifts_match_employee_type.shift_end_time,
+               availability: 'false',
+             });
+
+             //onsole.log(str_array.length)
+             console.log(str_array[i])
+
+
+             Finalemployeeshift.update(
+               {$and:[
+                 {userid: new_result.userid},
+                 {date_range_start: new_result.date_range_start},
+                 {date_range_end: new_result.date_range_end},
+                 {employee_type: new_result.employee_type},
+                 {days_worked:  new_result.days_worked},
+                 {num_employees: new_result.num_employees},
+                 {shift_start_time: new_result.shift_start_time},
+                 {shift_end_time: new_result.shift_end_time},
+                 {availability: new_result.availability}
+               ]},
+               {$set:
+                 {userid: new_result.userid,
+                 date_range_start: new_result.date_range_start,
+                 date_range_end: new_result.date_range_end,
+                 employee_type: new_result.employee_type,
+                 days_worked:  new_result.days_worked,
+                 num_employees: new_result.num_employees,
+                 shift_start_time: new_result.shift_start_time,
+                 shift_end_time: new_result.shift_end_time,
+                 availability: new_result.availability}
+               },
+               {upsert: true},
+                 function(err, test) {
+                     if (err) {
+                         console.log(err);
+                     }
+                     else {
+                         console.log(test);
+                     }
+                 }
+               );
+
              final_result.push(new_result);
           //  console.log(new_result)
           }
@@ -104,7 +150,7 @@ exports.getSpref = (req, res) => {
            //console.log(new_result)
          });
 
-         console.log(final_result)
+        // console.log(final_result)
          res.render('spref',{ spref: final_result });
      });
 
