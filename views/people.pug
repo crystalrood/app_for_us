@@ -9,7 +9,7 @@ block content
 
   //defining employee types
   .page-header
-    h1 employee types
+    h2 Employee Types
     head
       script(type='text/javascript').
 
@@ -41,24 +41,26 @@ block content
 
 
     #myform
-    form.form-horizontal(action='/people/employeetype', method='POST')
-      input(type='hidden', name='_csrf', value=_csrf)
+    form.form-group(action='/people/employeetype', method='POST')
+      input.form-control(type='hidden', name='_csrf', value=_csrf)
       br
-      b Simple form with name and age ...
+      label.control-label Enter employee types below:
       br
+      hr
       br
-      |         Employee Type:
-      input#name(type='text', name='employee_type_define', placeholder='Employee Type', autofocus='autofocus', required='required')
+      label.col-sm-2.control-label(for='employee_type_define') Employee Type:
+      .col-sm-8
+        input#name.form-control(type='text', name='employee_type_define', placeholder='Employee Type', autofocus='autofocus', required='required')
+      br
       br
       br
       .form-group
-        .col-sm-offset-3.col-sm-7
+        .col-sm-offset-2.col-sm-7
           button.col-sm-3.btn.btn-primary(type='submit', value='Add') Add
       br
       br
-      br
       #mydata
-        b Current data in the system ...
+        b Employee types saved in the system:
         table#myTableData2(border='1', cellpadding='2')
           tr
             th
@@ -83,7 +85,6 @@ block content
 
         br
         br
-        br
 
 
 
@@ -96,7 +97,7 @@ block content
 
   //defining shifts
   .page-header
-    h1 shifts
+    h2 Shifts
     head
       script(type='text/javascript').
         function addRow() {
@@ -221,56 +222,68 @@ block content
 
 
     #myform
-    form.form-horizontal(action='/people/shift', method='POST')
-      input(type='hidden', name='_csrf', value=_csrf)
+    form.form-group(action='/people/shift', method='POST')
+      input.form-control(type='hidden',  name='_csrf', value=_csrf)
       br
-      b Simple form with name and age ...
+      label.control-label Enter recurring shifts below:
       br
-      br
-      |         Employee Type:
-      input#name(type='text', name='employee_type', placeholder='Employee Type', autofocus='autofocus', required='required')
+      hr
       br
       br
-      |         Days of week worked:
+      label.col-sm-2.control-label(for='employee_type') Employee Type
+      .col-sm-8
+        input#name.form-control(type='text', name='employee_type', placeholder='Employee Type', autofocus='autofocus', required='required')
       br
       br
-      |         Monday:
-      input#type(type='checkbox', name='days_week_worked', value = 'Monday', autofocus='autofocus')
-      |         Tuesday:
-      input#type(type='checkbox', name='days_week_worked', value = 'Tuesday', autofocus='autofocus', )
-      |         Wednesday:
-      input#type(type='checkbox', name='days_week_worked', value = 'Wednesday', autofocus='autofocus')
-      |         Thursday:
-      input#type(type='checkbox', name='days_week_worked',  value = 'Thursday', autofocus='autofocus')
-      |         Friday:
-      input#type(type='checkbox', name='days_week_worked', value = 'Friday', autofocus='autofocus')
-      |         Saturday:
-      input#type(type='checkbox', name='days_week_worked', value = 'Saturday', autofocus='autofocus')
-      |         Sunday:
-      input#type(type='checkbox', name='days_week_worked', value = 'Sunday', autofocus='autofocus')
+      br
+      label.col-sm-2.control-label(for='days_week_worked') Days of week worked:
+      .col-sm-8
+
+        |         Mon:
+        input#type.checkbox-inline(type='checkbox', name='days_week_worked', value = 'Monday', autofocus='autofocus')
+        |         Tues:
+        input#type.checkbox-inline(type='checkbox', name='days_week_worked', value = 'Tuesday', autofocus='autofocus', )
+        |         Wed:
+        input#type.checkbox-inline(type='checkbox', name='days_week_worked', value = 'Wednesday', autofocus='autofocus')
+        |         Thurs:
+        input#type.checkbox-inline(type='checkbox', name='days_week_worked',  value = 'Thursday', autofocus='autofocus')
+        |         Fri:
+        input#type.checkbox-inline(type='checkbox', name='days_week_worked', value = 'Friday', autofocus='autofocus')
+        |         Sat:
+        input#type.checkbox-inline(type='checkbox', name='days_week_worked', value = 'Saturday', autofocus='autofocus')
+        |         Sun:
+        input#type.checkbox-inline(type='checkbox', name='days_week_worked', value = 'Sunday', autofocus='autofocus')
       br
       br
-      |         Number of employees needed:
-      input#min_hours(type='number', name='num_employees', placeholder='# of Employees', autofocus='autofocus', required='required')
+      br
+      label.col-sm-2.control-label(for='num_employees') # of employees needed:
+      .col-sm-8
+        input#min_hours.form-control(type='number', name='num_employees', placeholder='# of Employees', autofocus='autofocus', required='required')
       br
       br
-      |         Shift start:
-      input#max_hours(type='text', name='start_time', placeholder='12:00', autofocus='autofocus', required='required')
       br
       br
-      |         Shift end time:
-      input#email(type='text', name='end_time', placeholder='12:00', autofocus='autofocus', required='required')
+      label.col-sm-2.control-label(for='start_time') Shift start:
+      .col-sm-8
+        input#max_hours.form-control(type='text', name='start_time', placeholder='12:00', autofocus='autofocus', required='required')
+      br
+      br
+      br
+      label.col-sm-2.control-label(for='end_time') Shift end time:
+      .col-sm-8
+        input#email.form-control(type='text', name='end_time', placeholder='12:00', autofocus='autofocus', required='required')
+      br
       br
       br
 
       .form-group
-        .col-sm-offset-3.col-sm-7
+        .col-sm-offset-2.col-sm-7
           button.col-sm-3.btn.btn-primary(type='submit', value='Add') Add
     br
     br
-    br
+
     #mydata
-      b Current data in the system ...
+      b Recurring shifts saved in the system:
       table#myTableData(border='1', cellpadding='2')
         tr
           th
@@ -325,8 +338,7 @@ block content
 
 
   .page-header
-    h1 people
-
+    h2 Employees
     head
       script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js').
       script(type='text/javascript').
@@ -464,43 +476,53 @@ block content
 
 
     #myform
-    form.form-horizontal(action='/people/people', method='POST')
+    form.form-group(action='/people/people', method='POST')
       input(type='hidden', name='_csrf', value=_csrf)
       br
-      b Simple form with name and age ...
+      label.control-label Enter employee information below:
+      br
+      hr
+      label.col-sm-2.control-label(for='Name') Name:
+      .col-sm-8
+        input#name.form-control(type='text', name='name', placeholder='Name', autofocus='autofocus', required='required')
       br
       br
-      |         Name:
-      input#name(type='text', name='name', placeholder='Name', autofocus='autofocus', required='required')
+      label.col-sm-2.control-label(for='type') Type:
+      .col-sm-8
+        input#type.form-control(type='text', name='type', placeholder='Employee Type', autofocus='autofocus', required='required')
       br
       br
-      |         Type:
-      input#type(type='text', name='type', placeholder='Employee Type', autofocus='autofocus', required='required')
+      label.col-sm-2.control-label(for='min_hours') Min Hours/Week:
+      .col-sm-8
+        input#min_hours.form-control(type='number', name='min_hours', placeholder='Min hours required', autofocus='autofocus', required='required')
       br
       br
-      |         Min Hours:
-      input#min_hours(type='number', name='min_hours', placeholder='Min hours required', autofocus='autofocus', required='required')
+      br
+      label.col-sm-2.control-label(for='max_hours') Max Hours/Week:
+      .col-sm-8
+        input#max_hours.form-control(type='number', name='max_hours', placeholder='Max hours required', autofocus='autofocus', required='required')
       br
       br
-      |         Max Hours:
-      input#max_hours(type='number', name='max_hours', placeholder='Max hours required', autofocus='autofocus', required='required')
+      br
+      label.col-sm-2.control-label(for='email') Email:
+      .col-sm-8
+        input#email.form-control(type='email', name='email', placeholder='Email', autofocus='autofocus', required='required')
       br
       br
-      |         Email:
-      input#email(type='email', name='email', placeholder='Email', autofocus='autofocus', required='required')
       br
+      label.col-sm-2.control-label(for='phone_number') Phone Number:
+      .col-sm-8
+        input#phone_number.form-control(type='text', name='phone_number', placeholder='Phone Number', autofocus='autofocus', required='required')
       br
-      |         Phone Number:
-      input#phone_number(type='text', name='phone_number', placeholder='Phone Number', autofocus='autofocus', required='required')
       br
       br
       .form-group
-        .col-sm-offset-3.col-sm-7
+        .col-sm-offset-2.col-sm-7
           button.col-sm-3.btn.btn-primary(type='submit', value='Add', onclick='addRow1()') Add
     br
     br
     #mydata
-      b Current employee data!
+      b Current employees saved in the system:
       table#myTableData1(border='1', cellpadding='2')
         tr
           th
