@@ -1,5 +1,5 @@
 doctype html
-//begin manual extend layout paste
+//********begin manual extend layout paste*****************
 html
   head
     meta(charset='utf-8')
@@ -32,316 +32,312 @@ html
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
     ga('create', 'UA-XXXXX-X', 'auto');
     ga('send', 'pageview');
-  //end manual extend layout paste
+  //*****************end manual extend layout paste*****************
+
+
 
   // Include Required Prerequisites - http://www.daterangepicker.com/#config
-  .col-sm-12.center
-    script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js').
-    script(type='text/javascript', src='//cdn.jsdelivr.net/jquery/1/jquery.min.js')
-    script(type='text/javascript', src='//cdn.jsdelivr.net/momentjs/latest/moment.min.js')
-    // Include Date Range Picker
-    script(type='text/javascript', src='//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js')
-    link(rel='stylesheet', type='text/css', href='//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css')
-    //35% of column width here to center date picker on page
-    #reportrange.center-block(style='background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 35%')
-      i.glyphicon.glyphicon-calendar.fa.fa-calendar
-      span
-      b.caret
-    script(type='text/javascript').
+  .container
+    .col-sm-12.center
+      script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js').
+      script(type='text/javascript', src='//cdn.jsdelivr.net/jquery/1/jquery.min.js')
+      script(type='text/javascript', src='//cdn.jsdelivr.net/momentjs/latest/moment.min.js')
+      // Include Date Range Picker
+      script(type='text/javascript', src='//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js')
+      link(rel='stylesheet', type='text/css', href='//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css')
+      //35% of column width here to center date picker on page
+      #reportrange.center-block(style='background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 35%')
+        i.glyphicon.glyphicon-calendar.fa.fa-calendar
+        span
+        b.caret
+      script(type='text/javascript').
 
 
-      var CSRF_HEADER = 'x-csrf-token';
+        var CSRF_HEADER = 'x-csrf-token';
 
-      var setCSRFToken = function (securityToken) {
-        jQuery.ajaxPrefilter(function (options, _, xhr) {
-          if (!xhr.crossDomain) {
-            xhr.setRequestHeader(CSRF_HEADER, securityToken);
-          }
-        });
-      };
-
-      var secondshiftobj = [];
-      var start_date_picker
-      var end_date_picker
-
-      $(function() {
-        var start = moment().startOf('week').isoWeekday(1);
-        var startmonth = moment().startOf('month');
-        var end = moment(start).add(6,'days');
-        function cb(start, end) {
-          $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-
-          //need to add ajax here
-          var date_range_picker = {
-            start_date: start.format('MM-D-YYYY'),
-            end_date: end.format('MM-D-YYYY')
-           }
-
-           //setting some global variable so we can use them in other javascript functions
-           start_date_picker= start.format('MM-D-YYYY')
-           end_date_picker = end.format('MM-D-YYYY')
-
-          setCSRFToken($('meta[name="csrf-token"]').attr('content'));
-
-          //ajax to first create new schedule
-          $.ajax({
-              type: 'POST',
-              data: date_range_picker,
-              url: '/createschedule',
-              dataType: 'JSON'
+        var setCSRFToken = function (securityToken) {
+          jQuery.ajaxPrefilter(function (options, _, xhr) {
+            if (!xhr.crossDomain) {
+              xhr.setRequestHeader(CSRF_HEADER, securityToken);
+            }
           });
+        };
 
-          //ajax call to get data from secondary schedule
-          $.ajax({
-              type: 'POST',
-              data: date_range_picker,
-              url: '/createschedule/get',
-              dataType: 'JSON',
-              success: function (data) {
-                  console.log('Success: ')
-                  var trHTML = '';
-                  secondshiftobj = data;
+        var secondshiftobj = [];
+        var start_date_picker
+        var end_date_picker
 
-                  // need to delete old rows everytime a new data range is selected
-                  var elmtTable = document.getElementById('myTableData');
-                  var tableRows = elmtTable.getElementsByTagName('tr');
-                  var rowCount = tableRows.length;
-                  for (var x=rowCount-1; x>0; x--) {
-                     elmtTable.deleteRow(x)
-                  }
+        $(function() {
+          var start = moment().startOf('week').isoWeekday(1);
+          var startmonth = moment().startOf('month');
+          var end = moment(start).add(6,'days');
+          function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
 
-
-                  //putting all the new rows from the post function together in HTML
-                  data.forEach(function(item, itemIndex){
-                    trHTML += '<tr><td>' + item.employee_type
-                      +'<td>' + item.days_worked
-                      +'<td>' + item.num_employees
-                      +'<td>' + item.shift_start_time
-                      +'<td>' + item.shift_end_time
-                      +'<td>' + '<input type="button" name="btn-Edit" value="Edit" onClick="Javacsript:editRow(this)"/>'
-                      +'<td>' + '<input type="button" name="Delete" value="Delete" onClick="Javacsript:deleteRow(this)"/>'
-                  })
-
-                  //appending all rows to the myTableData table :)
-                  $('#myTableData').append(trHTML);
-              },
-              error: function (xhr, status, error) {
-                  console.log('test')
-                  console.log('Error: ' + error.message);
-                  $('#lblResponse').html('Error connecting to the server.');
-              },
-
-          });
-
-        }
-
-        $('#reportrange').daterangepicker({
-           "autoApply": true,
-           "showCustomRangeLabel": false,
-           //picker moves left/right/center of object
-           "opens": 'center',
-
-          startDate: start,
-          endDate: end,
-          ranges: {
-
-          'Current Week': [moment().startOf('week').isoWeekday(1), moment(end)],
-          'Last 7 Days': [moment(start).subtract(6, 'days'), moment(start)],
-          'Next 7 Days': [moment(start).add(6,'days'), moment(start).add(12, 'days')],
-          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-          'Next Month': [moment().add(1, 'month').startOf('month'),moment().add(1, 'month').endOf('month')]
-
-        }
-
-        }, cb);
-        cb(start, end);
-      });
-
-
-
-      function addRow() {
-      //variables
-        var table = document.getElementById("myTableData");
-        var rowCount = table.rows.length;
-        var row = table.insertRow(1);
-        row.insertCell(0).innerHTML= '';
-        row.insertCell(1).innerHTML= '';
-        row.insertCell(2).innerHTML= '';
-        row.insertCell(3).innerHTML= '';
-        row.insertCell(4).innerHTML= '';
-        row.insertCell(5).innerHTML= '<input type="button" value = "Save" onClick="Javacsript:editRow(this)">';
-        row.insertCell(6).innerHTML= '<input type="button" value = "Delete" onClick="Javacsript:deleteRow(this)">';
-
-        document.getElementById("myTableData").rows[1].cells[0].setAttribute("contentEditable", true);
-        document.getElementById("myTableData").rows[1].cells[1].setAttribute("contentEditable", true);
-        document.getElementById("myTableData").rows[1].cells[2].setAttribute("contentEditable", true);
-        document.getElementById("myTableData").rows[1].cells[3].setAttribute("contentEditable", true);
-        document.getElementById("myTableData").rows[1].cells[4].setAttribute("contentEditable", true);
-        document.getElementById("myTableData").rows[1].style.backgroundColor = "#A4D9F5";
-      }
-
-
-
-      function deleteRow(obj) {
-        var index = obj.parentNode.parentNode.rowIndex;
-        var table = document.getElementById("myTableData");
-        var currentTD = obj.parentNode.parentNode.rowIndex;
-        var row_length = document.getElementById("myTableData").rows[currentTD].cells.length;
-
-        var shift = {
-          date_range_start: start_date_picker,
-          date_range_end: end_date_picker,
-          employee_type: document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML,
-          days_worked: document.getElementById("myTableData").rows[currentTD].cells[1].innerHTML,
-          num_employees: document.getElementById("myTableData").rows[currentTD].cells[2].innerHTML,
-          shift_start_time: document.getElementById("myTableData").rows[currentTD].cells[3].innerHTML,
-          shift_end_time: document.getElementById("myTableData").rows[currentTD].cells[4].innerHTML
-
-         }
-
-        setCSRFToken($('meta[name="csrf-token"]').attr('content'));
-
-        $.ajax({
-            type: 'POST',
-            data: shift,
-            url: '/createschedule/deleteshift',
-            dataType: 'JSON'
-        });
-
-        table.deleteRow(index);
-      }
-
-
-      //setting some global variables for updating shifts
-      var employee_type
-      var days_worked
-      var num_employees
-      var shift_start_time
-      var shift_end_time
-
-
-
-      function editRow(obj) {
-        var currentTD = obj.parentNode.parentNode.rowIndex;
-        var table = document.getElementById("myTableData");
-        var row_length = document.getElementById("myTableData").rows.length;
-
-        if (obj.value == 'Edit') {
-
-            document.getElementById("myTableData").rows[currentTD].cells[0].setAttribute("contentEditable", true);
-            document.getElementById("myTableData").rows[currentTD].cells[1].setAttribute("contentEditable", true);
-            document.getElementById("myTableData").rows[currentTD].cells[2].setAttribute("contentEditable", true);
-            document.getElementById("myTableData").rows[currentTD].cells[3].setAttribute("contentEditable", true);
-            document.getElementById("myTableData").rows[currentTD].cells[4].setAttribute("contentEditable", true);
-            document.getElementById("myTableData").rows[currentTD].cells[5].setAttribute("contentEditable", true);
-            document.getElementById("myTableData").rows[currentTD].style.backgroundColor = "#A4D9F5";
-            employee_type = document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML
-            days_worked = document.getElementById("myTableData").rows[currentTD].cells[1].innerHTML
-            num_employees = document.getElementById("myTableData").rows[currentTD].cells[2].innerHTML
-            shift_start_time = document.getElementById("myTableData").rows[currentTD].cells[3].innerHTML
-            shift_end_time = document.getElementById("myTableData").rows[currentTD].cells[4].innerHTML
-            obj.value = 'Save'
-          }
-
-        else {
-            document.getElementById("myTableData").rows[currentTD].cells[0].setAttribute("contentEditable", false);
-            document.getElementById("myTableData").rows[currentTD].cells[1].setAttribute("contentEditable", false);
-            document.getElementById("myTableData").rows[currentTD].cells[2].setAttribute("contentEditable", false);
-            document.getElementById("myTableData").rows[currentTD].cells[3].setAttribute("contentEditable", false);
-            document.getElementById("myTableData").rows[currentTD].cells[4].setAttribute("contentEditable", false);
-            document.getElementById("myTableData").rows[currentTD].cells[5].setAttribute("contentEditable", false);
-            document.getElementById("myTableData").rows[currentTD].style.backgroundColor = "#FFFFFF"
-            obj.value = 'Edit'
-
-            var newshift = {
-                     'employee_type': document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML ,
-                     'days_worked': document.getElementById("myTableData").rows[currentTD].cells[1].innerHTML,
-                     'num_employees':  document.getElementById("myTableData").rows[currentTD].cells[2].innerHTML,
-                     'shift_start_time':  document.getElementById("myTableData").rows[currentTD].cells[3].innerHTML,
-                     'shift_end_time':  document.getElementById("myTableData").rows[currentTD].cells[4].innerHTML,
-                     'old_employee_type':employee_type,
-                     'old_days_worked': days_worked,
-                     'old_num_employees': num_employees,
-                     'old_shift_start_time': shift_start_time,
-                     'old_shift_end_time': shift_end_time,
-                     'date_range_start': start_date_picker,
-                     'date_range_end': end_date_picker,
+            //need to add ajax here
+            var date_range_picker = {
+              start_date: start.format('MM-D-YYYY'),
+              end_date: end.format('MM-D-YYYY')
              }
 
+             //setting some global variable so we can use them in other javascript functions
+             start_date_picker= start.format('MM-D-YYYY')
+             end_date_picker = end.format('MM-D-YYYY')
 
             setCSRFToken($('meta[name="csrf-token"]').attr('content'));
 
+            //ajax to first create new schedule
             $.ajax({
                 type: 'POST',
-                data: newshift,
-                url: '/createschedule/updateshift',
+                data: date_range_picker,
+                url: '/createschedule',
                 dataType: 'JSON'
             });
 
+            //ajax call to get data from secondary schedule
+            $.ajax({
+                type: 'POST',
+                data: date_range_picker,
+                url: '/createschedule/get',
+                dataType: 'JSON',
+                success: function (data) {
+                    console.log('Success: ')
+                    var trHTML = '';
+                    secondshiftobj = data;
+
+                    // need to delete old rows everytime a new data range is selected
+                    var elmtTable = document.getElementById('myTableData');
+                    var tableRows = elmtTable.getElementsByTagName('tr');
+                    var rowCount = tableRows.length;
+                    for (var x=rowCount-1; x>0; x--) {
+                       elmtTable.deleteRow(x)
+                    }
+
+
+                    //putting all the new rows from the post function together in HTML
+                    data.forEach(function(item, itemIndex){
+                      trHTML += '<tr><td>' + item.employee_type
+                        +'<td>' + item.days_worked
+                        +'<td>' + item.num_employees
+                        +'<td>' + item.shift_start_time
+                        +'<td>' + item.shift_end_time
+                        +'<td>' + '<input type="button" name="btn-Edit" value="Edit" onClick="Javacsript:editRow(this)"/>'
+                        +'<td>' + '<input type="button" name="Delete" value="Delete" onClick="Javacsript:deleteRow(this)"/>'
+                    })
+
+                    //appending all rows to the myTableData table :)
+                    $('#myTableData').append(trHTML);
+                },
+                error: function (xhr, status, error) {
+                    console.log('test')
+                    console.log('Error: ' + error.message);
+                    $('#lblResponse').html('Error connecting to the server.');
+                },
+
+            });
+
+          }
+
+          $('#reportrange').daterangepicker({
+             "autoApply": true,
+             "showCustomRangeLabel": false,
+             //picker moves left/right/center of object
+             "opens": 'center',
+
+            startDate: start,
+            endDate: end,
+            ranges: {
+
+            'Current Week': [moment().startOf('week').isoWeekday(1), moment(end)],
+            'Last 7 Days': [moment(start).subtract(6, 'days'), moment(start)],
+            'Next 7 Days': [moment(start).add(6,'days'), moment(start).add(12, 'days')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+            'Next Month': [moment().add(1, 'month').startOf('month'),moment().add(1, 'month').endOf('month')]
+
+          }
+
+          }, cb);
+          cb(start, end);
+        });
+
+
+
+        function addRow() {
+        //variables
+          var table = document.getElementById("myTableData");
+          var rowCount = table.rows.length;
+          var row = table.insertRow(1);
+          row.insertCell(0).innerHTML= '';
+          row.insertCell(1).innerHTML= '';
+          row.insertCell(2).innerHTML= '';
+          row.insertCell(3).innerHTML= '';
+          row.insertCell(4).innerHTML= '';
+          row.insertCell(5).innerHTML= '<input type="button" value = "Save" onClick="Javacsript:editRow(this)">';
+          row.insertCell(6).innerHTML= '<input type="button" value = "Delete" onClick="Javacsript:deleteRow(this)">';
+
+          document.getElementById("myTableData").rows[1].cells[0].setAttribute("contentEditable", true);
+          document.getElementById("myTableData").rows[1].cells[1].setAttribute("contentEditable", true);
+          document.getElementById("myTableData").rows[1].cells[2].setAttribute("contentEditable", true);
+          document.getElementById("myTableData").rows[1].cells[3].setAttribute("contentEditable", true);
+          document.getElementById("myTableData").rows[1].cells[4].setAttribute("contentEditable", true);
+          document.getElementById("myTableData").rows[1].style.backgroundColor = "#A4D9F5";
         }
 
-      }
-
-      function finalshifts_submit(){
-        var shift = {
-          date_range_start: start_date_picker,
-          date_range_end: end_date_picker
-         }
-
-        setCSRFToken($('meta[name="csrf-token"]').attr('content'));
-
-        $.ajax({
-            type: 'POST',
-            data: shift,
-            url: '/createschedule/final',
-            dataType: 'JSON'
-        });
-        console.log(shift.date_range_start)
-      }
 
 
+        function deleteRow(obj) {
+          var index = obj.parentNode.parentNode.rowIndex;
+          var table = document.getElementById("myTableData");
+          var currentTD = obj.parentNode.parentNode.rowIndex;
+          var row_length = document.getElementById("myTableData").rows[currentTD].cells.length;
 
-  br
-  br
-  br
-  #myform
-  form.form-horizontal()
-    input(type='hidden', name='_csrf', value=_csrf)
-  .form-group
-    .col-sm-offset-3.col-sm-7
-      button.col-sm-3.btn.btn-primary(type='submit', value='Add', onClick="addRow(this)") Add a shift
+          var shift = {
+            date_range_start: start_date_picker,
+            date_range_end: end_date_picker,
+            employee_type: document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML,
+            days_worked: document.getElementById("myTableData").rows[currentTD].cells[1].innerHTML,
+            num_employees: document.getElementById("myTableData").rows[currentTD].cells[2].innerHTML,
+            shift_start_time: document.getElementById("myTableData").rows[currentTD].cells[3].innerHTML,
+            shift_end_time: document.getElementById("myTableData").rows[currentTD].cells[4].innerHTML
 
-  br
-  br
-  #myform
-  form.form-horizontal()
-    input(type='hidden', name='_csrf', value=_csrf)
-  .form-group
-    .col-sm-offset-3.col-sm-7
-      button.col-sm-3.btn.btn-primary(type='submit', value='Add', onClick="finalshifts_submit(this)") Confirm Shifts
+           }
+
+          setCSRFToken($('meta[name="csrf-token"]').attr('content'));
+
+          $.ajax({
+              type: 'POST',
+              data: shift,
+              url: '/createschedule/deleteshift',
+              dataType: 'JSON'
+          });
+
+          table.deleteRow(index);
+        }
+
+
+        //setting some global variables for updating shifts
+        var employee_type
+        var days_worked
+        var num_employees
+        var shift_start_time
+        var shift_end_time
 
 
 
-    br
-    br
-  form.form-horizontal(action='/createschedule', method='POST')
-    input(type='hidden', name='_csrf', value=_csrf)
+        function editRow(obj) {
+          var currentTD = obj.parentNode.parentNode.rowIndex;
+          var table = document.getElementById("myTableData");
+          var row_length = document.getElementById("myTableData").rows.length;
 
-    #mydata
-      b Current data in the system ...
-      table#myTableData(border='1', cellpadding='2')
-        tr
-          th
-            b Employee type
-          th
-            b Days worked
-          th
-            b Number of employees
-          th
-            b Shift start
-          th
-            b Shift end
-          th
-            b Update
-          th
-            b Delete
+          if (obj.value == 'Edit') {
+
+              document.getElementById("myTableData").rows[currentTD].cells[0].setAttribute("contentEditable", true);
+              document.getElementById("myTableData").rows[currentTD].cells[1].setAttribute("contentEditable", true);
+              document.getElementById("myTableData").rows[currentTD].cells[2].setAttribute("contentEditable", true);
+              document.getElementById("myTableData").rows[currentTD].cells[3].setAttribute("contentEditable", true);
+              document.getElementById("myTableData").rows[currentTD].cells[4].setAttribute("contentEditable", true);
+              document.getElementById("myTableData").rows[currentTD].cells[5].setAttribute("contentEditable", true);
+              document.getElementById("myTableData").rows[currentTD].style.backgroundColor = "#A4D9F5";
+              employee_type = document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML
+              days_worked = document.getElementById("myTableData").rows[currentTD].cells[1].innerHTML
+              num_employees = document.getElementById("myTableData").rows[currentTD].cells[2].innerHTML
+              shift_start_time = document.getElementById("myTableData").rows[currentTD].cells[3].innerHTML
+              shift_end_time = document.getElementById("myTableData").rows[currentTD].cells[4].innerHTML
+              obj.value = 'Save'
+            }
+
+          else {
+              document.getElementById("myTableData").rows[currentTD].cells[0].setAttribute("contentEditable", false);
+              document.getElementById("myTableData").rows[currentTD].cells[1].setAttribute("contentEditable", false);
+              document.getElementById("myTableData").rows[currentTD].cells[2].setAttribute("contentEditable", false);
+              document.getElementById("myTableData").rows[currentTD].cells[3].setAttribute("contentEditable", false);
+              document.getElementById("myTableData").rows[currentTD].cells[4].setAttribute("contentEditable", false);
+              document.getElementById("myTableData").rows[currentTD].cells[5].setAttribute("contentEditable", false);
+              document.getElementById("myTableData").rows[currentTD].style.backgroundColor = "#FFFFFF"
+              obj.value = 'Edit'
+
+              var newshift = {
+                       'employee_type': document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML ,
+                       'days_worked': document.getElementById("myTableData").rows[currentTD].cells[1].innerHTML,
+                       'num_employees':  document.getElementById("myTableData").rows[currentTD].cells[2].innerHTML,
+                       'shift_start_time':  document.getElementById("myTableData").rows[currentTD].cells[3].innerHTML,
+                       'shift_end_time':  document.getElementById("myTableData").rows[currentTD].cells[4].innerHTML,
+                       'old_employee_type':employee_type,
+                       'old_days_worked': days_worked,
+                       'old_num_employees': num_employees,
+                       'old_shift_start_time': shift_start_time,
+                       'old_shift_end_time': shift_end_time,
+                       'date_range_start': start_date_picker,
+                       'date_range_end': end_date_picker,
+               }
+
+
+              setCSRFToken($('meta[name="csrf-token"]').attr('content'));
+
+              $.ajax({
+                  type: 'POST',
+                  data: newshift,
+                  url: '/createschedule/updateshift',
+                  dataType: 'JSON'
+              });
+
+          }
+
+        }
+
+        function finalshifts_submit(){
+          var shift = {
+            date_range_start: start_date_picker,
+            date_range_end: end_date_picker
+           }
+
+          setCSRFToken($('meta[name="csrf-token"]').attr('content'));
+
+          $.ajax({
+              type: 'POST',
+              data: shift,
+              url: '/createschedule/final',
+              dataType: 'JSON'
+          });
+          console.log(shift.date_range_start)
+        }
+
+
+      .col-sm-12.center
+        form.form-group(action='/createschedule', method='POST')
+          input(type='hidden', name='_csrf', value=_csrf)
+          #mydata
+            br
+            b Current data in the system ...
+            table#myTableData(border='1', cellpadding='2')
+              tr
+                th
+                  b Employee type
+                th
+                  b Days worked
+                th
+                  b Number of employees
+                th
+                  b Shift start
+                th
+                  b Shift end
+                th
+                  b Update
+                th
+                  b Delete
+    #myform
+    form.form-group()
+      input(type='hidden', name='_csrf', value=_csrf)
+    .form-group
+      .col-sm-offset-10.col-sm-6
+        button.col-sm-3.btn.btn-primary(type='submit', value='Add', onClick="addRow(this)") Add a shift
+        br
+        br
+
+
+    #myform
+    form.form-group()
+      input(type='hidden', name='_csrf', value=_csrf)
+    .form-group
+      .col-sm-offset-10.col-sm-6
+        button.col-sm-3.btn.btn-primary(type='submit', value='Add', onClick="finalshifts_submit(this)") Confirm Shifts
