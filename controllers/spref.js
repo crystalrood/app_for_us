@@ -82,9 +82,8 @@ exports.getSpref = (req, res) => {
          //adding some stuff here
       //console.log(result);
         var final_result = [];
-
+        //console.log(result)
          result.forEach(function(result, index) {
-
            var str = result.shifts_match_employee_type.days_worked
            var str_array = str.split(',')
 
@@ -94,8 +93,8 @@ exports.getSpref = (req, res) => {
 
              var new_result = new Finalemployeeshift({
                userid: req.user.id,
-               date_range_start: result.date_range_start,
-               date_range_end: result.date_range_end,
+               date_range_start: result.shifts_match_employee_type.date_range_start,
+               date_range_end: result.shifts_match_employee_type.date_range_end,
                employee_type: result.shifts_match_employee_type.employee_type,
                days_worked: str_array[i],
                num_employees: result.shifts_match_employee_type.num_employees,
@@ -103,9 +102,9 @@ exports.getSpref = (req, res) => {
                shift_end_time: result.shifts_match_employee_type.shift_end_time,
                availability: 'false',
              });
-
+             //console.log(new_result)
              //onsole.log(str_array.length)
-             console.log(str_array[i])
+             //console.log(str_array[i])
 
 
              Finalemployeeshift.update(
@@ -137,7 +136,7 @@ exports.getSpref = (req, res) => {
                          console.log(err);
                      }
                      else {
-                         console.log(test);
+                         //console.log(test);
                      }
                  }
                );
