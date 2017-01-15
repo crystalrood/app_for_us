@@ -6,6 +6,11 @@ block content
     h3 All Books
     head
       script(type='text/javascript').
+        function test(value) {
+
+          };
+
+
         function configureDropDownLists(ddl1,ddl2) {
           var colours = ['Black', 'White', 'Blue'];
           var shapes = ['Square', 'Circle', 'Triangle'];
@@ -52,12 +57,43 @@ block content
       br
       br
 
-      select#ddl(onchange="configureDropDownLists(this,document.getElementById('ddl2'))")
+      input(type='hidden', id="spref_json", value= JSON.stringify(spref))
+
+      select#ddl(onchange="test()")
         option(value='')
-        option(value='Colours') Colours
-        option(value='Shapes') Shapes
-        option(value='Names') Names
-      select#ddl2
+        script.
+         var spref_json = document.getElementById("spref_json").value;
+         var spref_json_value = JSON.parse( spref_json );
+         var listItems = [];
+
+         //putting items into initial ist
+         for (var i = 0; i < spref_json_value.length; i++){
+           itemTest= spref_json_value[i].date_range_start + " to " + spref_json_value[i].date_range_end ;
+           listItems[i]=itemTest
+          }
+
+          //removing duplicates
+          var seen = {};
+          var out = [];
+          var j = 0;
+          for(var i = 0; i < listItems.length; i++) {
+              var item = listItems[i];
+              if(seen[item] !== 1) {
+                    seen[item] = 1;
+                    out[j++] = item;
+              }
+         }
+
+         //putting values form de-deuped list into dropdown
+         var dropdown = document.getElementById("ddl");
+         for (var i = 0; i<out.length; i++){
+           var itemTest= out[i]
+           dropdown[dropdown.length] = new Option(itemTest, itemTest);
+         }
+
+         console.log(out)
+
+
 
 
       .form-group
