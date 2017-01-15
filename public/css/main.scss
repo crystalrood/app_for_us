@@ -1328,13 +1328,16 @@ body {
   font-family: "Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   font-size: 14px;
   line-height: 1.42857;
-  color: #333333;
+  color:rgba(51, 51, 51, 0.8);
   background-color: #fff; }
 
 input, button, select, textarea {
   font-family: inherit;
   font-size: inherit;
-  line-height: inherit; }
+  line-height: inherit;
+  background-color: rgba(77, 144, 252, 0.28);
+  border-color: rgba(61, 93, 252, 0.26);
+ }
 
 a {
   color: #4d90fc;
