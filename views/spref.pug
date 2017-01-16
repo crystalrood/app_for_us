@@ -41,13 +41,11 @@ block content
               row.insertCell(3).innerHTML= spref_json_value[i].shift_start_time;
               row.insertCell(4).innerHTML= spref_json_value[i].shift_end_time;
               console.log(spref_json_value[i].availability)
-              if(spref_json_value[i].availability=="false"){
-                row.insertCell(5).innerHTML= '<input id="type" type="checkbox" name="Available"  autofocus="autofocus" onClick="Javacsript:on_check_click(this)">';
-              };
               if(spref_json_value[i].availability=="true"){
-
                 row.insertCell(5).innerHTML= '<input id="type" type="checkbox" name="Available" autofocus="autofocus" checked="checked" onClick="Javacsript:on_check_click(this)">';
-              };
+              } else {
+                row.insertCell(5).innerHTML= '<input id="type" type="checkbox" name="Available"  autofocus="autofocus" onClick="Javacsript:on_check_click(this)">';
+              }
             };
           };
         };

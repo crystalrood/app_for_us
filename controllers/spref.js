@@ -100,7 +100,7 @@ exports.getSpref = (req, res) => {
                num_employees: result.shifts_match_employee_type.num_employees,
                shift_start_time:result.shifts_match_employee_type.shift_start_time,
                shift_end_time: result.shifts_match_employee_type.shift_end_time,
-               availability: 'false',
+               availability: 'false'
              });
              //console.log(new_result)
              //onsole.log(str_array.length)
@@ -116,8 +116,7 @@ exports.getSpref = (req, res) => {
                  {days_worked:  new_result.days_worked},
                  {num_employees: new_result.num_employees},
                  {shift_start_time: new_result.shift_start_time},
-                 {shift_end_time: new_result.shift_end_time},
-                 {availability: new_result.availability}
+                 {shift_end_time: new_result.shift_end_time}
                ]},
                {$set:
                  {userid: new_result.userid,
@@ -127,8 +126,7 @@ exports.getSpref = (req, res) => {
                  days_worked:  new_result.days_worked,
                  num_employees: new_result.num_employees,
                  shift_start_time: new_result.shift_start_time,
-                 shift_end_time: new_result.shift_end_time,
-                 availability: new_result.availability}
+                 shift_end_time: new_result.shift_end_time}
                },
                {upsert: true},
                  function(err, test) {
@@ -146,11 +144,16 @@ exports.getSpref = (req, res) => {
           }
 
 
-           //console.log(new_result)
+
          });
 
-        // console.log(final_result)
-         res.render('spref',{ spref: final_result });
+
+        //console.log(final_result)
+         //res.render('spref',{ spref: final_result });
+     });
+     Finalemployeeshift.find({ 'userid': req.user.id }, function (err, docs) {
+       if (err) { return callback(err); }
+       res.render('spref', { spref: docs });
      });
 
 
@@ -171,8 +174,7 @@ exports.postSprefUpdate = (req, res, next) => {
       	{ days_worked: req.body.days_worked},
       	{ num_employees: req.body.num_employees},
       	{ shift_start_time: req.body.shift_start_time},
-        { shift_end_time: req.body.shift_end_time},
-        { availability: req.body.availability_old}
+        { shift_end_time: req.body.shift_end_time}
     	]},
       {$set:{
           userid: req.user.id,
