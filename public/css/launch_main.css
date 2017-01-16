@@ -78,7 +78,13 @@
 }
 .ctas-button {
 	color: rgba(57, 129, 247, 0.84);
-}@import url('https://fonts.googleapis.com/css?family=Karla:400,700');
+}
+
+#prices.ctas-button {
+    color: #ffffff;
+		background: rgba(57, 129, 247, 0.84);
+}
+@import url('https://fonts.googleapis.com/css?family=Karla:400,700');
 *,
 *:before,
 *:after {
@@ -223,12 +229,22 @@ p.paragraph {
 .centerdevices,
 .sidedevices {
   position: relative;
-}.header {
+}
+#prices.header {
+    padding: 20px 0 10px 0;
+    overflow: hidden;
+		background: rgba(56, 187, 108, 0.8);
+}
+
+.header {
 	padding: 20px 0 90px 0;
 	overflow: hidden;
 }
 .header .heading {
 	margin: 120px 0 0 0;
+}
+#prices.header .heading {
+	margin: 20px 0 0 0;
 }
 .header .centerdevices {
 	margin: 90px 0 0 0;
@@ -291,9 +307,8 @@ p.paragraph {
 	text-decoration: none;
 }
 .ctas-button-2 {
-	background: transparent;
-	color: white;
-	margin: 0 0 0 10px;
+	color: #ffffff;
+	background: rgba(57, 129, 247, 0.84);
 }
 @media (max-width: 440px) {
 	.ctas-button,
@@ -314,7 +329,10 @@ p.paragraph {
 .footer .nav-link {
 	display: inline-block;
 	margin: 0 10px;
-}.ctas-button {
+}
+
+
+.ctas-button {
 	display: inline-block;
 	height: 40px;
 	line-height: 38px;
