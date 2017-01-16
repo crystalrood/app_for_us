@@ -154,7 +154,8 @@ app.get('/people/shift', passportConfig.isAuthenticated, peopleController.getShi
 app.post('/people/employeetype', passportConfig.isAuthenticated, peopleController.postEmployeetype);
 app.get('/people/employeetype', passportConfig.isAuthenticated, peopleController.getEmployeetype);
 app.post('/people/deleteemployeetype', passportConfig.isAuthenticated, peopleController.postDeleteEmployeetype);
-app.get('/spref', sprefController.getSpref);
+app.get('/spref', passportConfig.isAuthenticated, sprefController.getSpref);
+app.post('/spref/update', passportConfig.isAuthenticated, sprefController.postSprefUpdate);
 
 
 app.get('/login', userController.getLogin);

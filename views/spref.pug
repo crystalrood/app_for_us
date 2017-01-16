@@ -6,8 +6,17 @@ block content
     h3 All Books
     head
       script(type='text/javascript').
+        var CSRF_HEADER = 'x-csrf-token';
+
+        var setCSRFToken = function (securityToken) {
+          jQuery.ajaxPrefilter(function (options, _, xhr) {
+            if (!xhr.crossDomain) {
+              xhr.setRequestHeader(CSRF_HEADER, securityToken);
+            }
+          });
+        };
+
         function change_table() {
-          console.log('mimsey!')
           //gettting json values
           var spref_json = document.getElementById("spref_json").value;
           var spref_json_value = JSON.parse( spref_json );
@@ -16,11 +25,72 @@ block content
           var table = document.getElementById("myTableData");
           table.getElementsByTagName("tbody")[0].innerHTML = table.rows[0].innerHTML;
 
+          var ddl_value = document.getElementById("ddl").value;
 
+          var listItems = [];
 
+          //putting items from json into list
+          for (var i = 0; i < spref_json_value.length; i++){
+            itemTest= spref_json_value[i].date_range_start + " to " + spref_json_value[i].date_range_end ;
+            if (itemTest == ddl_value){
+              var rowCount = table.rows.length;
+              var row = table.insertRow(rowCount);
+              row.insertCell(0).innerHTML= spref_json_value[i].employee_type;
+              row.insertCell(1).innerHTML= spref_json_value[i].days_worked;
+              row.insertCell(2).innerHTML= spref_json_value[i].num_employees;
+              row.insertCell(3).innerHTML= spref_json_value[i].shift_start_time;
+              row.insertCell(4).innerHTML= spref_json_value[i].shift_end_time;
+              console.log(spref_json_value[i].availability)
+              if(spref_json_value[i].availability=="false"){
+                row.insertCell(5).innerHTML= '<input id="type" type="checkbox" name="Available"  autofocus="autofocus" onClick="Javacsript:on_check_click(this)">';
+              };
+              if(spref_json_value[i].availability=="true"){
+
+                row.insertCell(5).innerHTML= '<input id="type" type="checkbox" name="Available" autofocus="autofocus" checked="checked" onClick="Javacsript:on_check_click(this)">';
+              };
+            };
           };
+        };
 
+        function on_check_click(obj){
+          //this checks to see if the
+          //console.log(obj.checked);
+          //this checks
+          var ddl_value = document.getElementById("ddl").value;
 
+          if (obj.checked == true) {var old_checked = false};
+
+          if (obj.checked == false) {var old_checked = true};
+
+          var index = obj.parentNode.parentNode.rowIndex;
+
+          var table = document.getElementById("myTableData");
+          var currentTD = obj.parentNode.parentNode.rowIndex;
+          var row_length = document.getElementById("myTableData").rows[currentTD].cells.length;
+
+          var date_array = ddl_value.split(/ to /);
+
+          var newshift = {
+                   'employee_type': document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML ,
+                   'days_worked': document.getElementById("myTableData").rows[currentTD].cells[1].innerHTML,
+                   'num_employees': document.getElementById("myTableData").rows[currentTD].cells[2].innerHTML,
+                   'shift_start_time': document.getElementById("myTableData").rows[currentTD].cells[3].innerHTML,
+                   'shift_end_time': document.getElementById("myTableData").rows[currentTD].cells[4].innerHTML,
+                   'availability': obj.checked,
+                   'availability_old': old_checked,
+                   'date_range_start': date_array[0],
+                   'date_range_end': date_array[1]
+           }
+           setCSRFToken($('meta[name="csrf-token"]').attr('content'));
+
+           $.ajax({
+               type: 'POST',
+               data: newshift,
+               url: '/spref/update',
+               dataType: 'JSON'
+           });
+
+        }
 
 
 
@@ -35,13 +105,13 @@ block content
         option(value='')
         script.
          var spref_json = document.getElementById("spref_json").value;
-         var spref_json_value = JSON.parse( spref_json );
+         var spref_json_value = JSON.parse(spref_json);
          var listItems = [];
 
          //putting items into initial ist
          for (var i = 0; i < spref_json_value.length; i++){
-           itemTest= spref_json_value[i].date_range_start + " to " + spref_json_value[i].date_range_end ;
-           listItems[i]=itemTest
+           itemTest = spref_json_value[i].date_range_start + " to " + spref_json_value[i].date_range_end;
+           listItems[i] = itemTest;
           }
 
           //removing duplicates
@@ -59,11 +129,11 @@ block content
          //putting values form de-deuped list into dropdown
          var dropdown = document.getElementById("ddl");
          for (var i = 0; i<out.length; i++){
-           var itemTest= out[i]
+           var itemTest= out[i];
            dropdown[dropdown.length] = new Option(itemTest, itemTest);
-         }
+         };
 
-         console.log(out)
+
 
 
 
@@ -88,25 +158,6 @@ block content
             b Shift end
           th
             b Available
-
-
-        each shf in spref
-
-          // build a new table row
-          tr
-
-            // insert table data
-            td #{shf.employee_type}
-            td #{shf.days_worked}
-            td #{shf.num_employees}
-            td #{shf.shift_start_time}
-            td #{shf.shift_end_time}
-
-
-
-            // add the update and delete buttons
-            td
-              input#type(type='checkbox', name='Available', value = 'yes', autofocus='autofocus')
 
 
 
