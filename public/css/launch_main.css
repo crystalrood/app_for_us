@@ -233,6 +233,7 @@ p.paragraph {
 #prices.header {
     padding: 20px 0 10px 0;
     overflow: hidden;
+		font-weight: 400;
 		background: rgba(56, 187, 108, 0.8);
 }
 
@@ -245,6 +246,8 @@ p.paragraph {
 }
 #prices.header .heading {
 	margin: 20px 0 0 0;
+	font-weight: 400;
+
 }
 .header .centerdevices {
 	margin: 90px 0 0 0;
