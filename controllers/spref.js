@@ -162,8 +162,6 @@ exports.postSprefUpdate = (req, res, next) => {
 
   /* this is removing the old employee .. in the future maybe we
   should change this to update*/
-    console.log(req.body)
-
     Finalemployeeshift.update(
       {$and:[
       	{ userid: req.user.id},
@@ -187,13 +185,11 @@ exports.postSprefUpdate = (req, res, next) => {
           shift_end_time: req.body.shift_end_time,
           availability: req.body.availability}
         },
-
         function(err, result) {
             if (err) {
                 console.log(err);
             }
             else {
-                console.log('saved')
                 console.log(result);
             }
         }
