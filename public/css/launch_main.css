@@ -230,13 +230,19 @@ p.paragraph {
 .sidedevices {
   position: relative;
 }
-#prices.header {
+#prices.footer {
+		background: rgba(56, 187, 108, 0.8);
+}
+#signup.header {
     padding: 20px 0 10px 0;
     overflow: hidden;
 		font-weight: 400;
 		background: rgba(56, 187, 108, 0.8);
 }
 
+#signup.subheading {
+    color: #ffffff;
+}
 .header {
 	padding: 20px 0 90px 0;
 	overflow: hidden;
@@ -247,6 +253,11 @@ p.paragraph {
 #prices.header .heading {
 	margin: 20px 0 0 0;
 	font-weight: 400;
+
+}
+#prices.header {
+ padding: 20px 0 0px 0;
+ background: rgba(30, 193, 114, 0.84);
 
 }
 .header .centerdevices {
