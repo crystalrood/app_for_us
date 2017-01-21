@@ -214,5 +214,51 @@ exports.postSprefUpdate = (req, res, next) => {
 
 
 exports.postfinalSprefUpdate = (req, res, next) => {
+  //calling secondary shift to see if there's anything in the collection...
+  console.log(req.body.date_range_start)
+  console.log(req.body.date_range_end)
+  Actualfinalemployeeshift.find(
+    {$and:[{userid: req.user.email}, {date_range_start: req.body.date_range_start}, {date_range_end: req.body.date_range_end}]},
+    function (err, shifts) {
+    if (err) return handleError(err);
 
+      if (shifts.length == 0){
+
+        Finalemployeeshift.find(
+        {$and:[{userid: req.user.email}, {date_range_start: req.body.date_range_start}, {date_range_end: req.body.date_range_end}]},
+        function (err, shft) {
+          if (err) return handleError(err);
+          //checking to ensure we're actually going to be adding documents
+          if (shft.length >= 1){
+            shft.forEach(function(shft, index) {
+
+              const fin_shift = new Actualfinalemployeeshift({
+                userid: req.user.id,
+                date_range_start: shft.date_range_start,
+                date_range_end: shft.date_range_end,
+                employee_type: shft.employee_type,
+                days_worked: shft.days_worked,
+                num_employees: shft.num_employees,
+                shift_start_time: shft.shift_start_time,
+                shift_end_time: shft.shift_end_time,
+                availability: shft.availability}
+              );
+
+              if (shft.availability == 'true'){
+                fin_shift.save((err) => {
+                  if (err) {return next(err);}
+                  console.log("SAVED!");
+                });
+              }
+            }
+          );
+          };
+        });
+
+
+      }
+    }
+  );
+
+  res.redirect('/spref');
 };

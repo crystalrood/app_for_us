@@ -69,7 +69,7 @@ block content
           var date_array = ddl_value.split(/ to /);
 
           var newshift = {
-                   'employee_type': document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML ,
+                   'employee_type': document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML,
                    'days_worked': document.getElementById("myTableData").rows[currentTD].cells[1].innerHTML,
                    'num_employees': document.getElementById("myTableData").rows[currentTD].cells[2].innerHTML,
                    'shift_start_time': document.getElementById("myTableData").rows[currentTD].cells[3].innerHTML,
@@ -89,6 +89,30 @@ block content
            });
 
         }
+
+
+        function finalshifts_submit(){
+
+          var ddl_value = document.getElementById("ddl").value;
+          var date_array = ddl_value.split(/ to /);
+
+          var shift = {
+            date_range_start: date_array[0],
+            date_range_end: date_array[1]
+           }
+
+          setCSRFToken($('meta[name="csrf-token"]').attr('content'));
+
+          $.ajax({
+              type: 'POST',
+              data: shift,
+              url: '/spref/save',
+              dataType: 'JSON'
+          });
+          console.log(shift.date_range_start)
+          console.log(shift.date_range_end)
+        }
+
 
 
 
@@ -138,7 +162,7 @@ block content
 
       .form-group
         .col-sm-offset-3.col-sm-7
-          button.col-sm-3.btn.btn-primary(type='submit', value='Add') Save shifts
+          button.col-sm-3.btn.btn-primary(type='submit', value='Add', onClick="finalshifts_submit()") Save shifts
       br
       br
 
