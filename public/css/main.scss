@@ -3,6 +3,9 @@
 /*end calendar formatting*/
 /* MailChimp Form Embed Code - Classic - 12/17/2015 v10.7 */
 /*Use this to shift sign-up form from left to center*/
+.text--center {
+  text-align: center !important; }
+
 #reportrange-container {
   text-align: center; }
 
@@ -326,9 +329,8 @@ button, input, optgroup, select, textarea {
   font: inherit;
   margin: 0; }
 
-  /*#myTableData formatting (since did not alter core table, need to copy/paste changes down)*/
-  /*#myTableData*/
-
+/*#myTableData formatting (since did not alter core table, need to copy/paste changes down)*/
+/*#myTableData*/
 #myTableData {
   border-collapse: collapse;
   width: 100%; }
@@ -339,11 +341,9 @@ button, input, optgroup, select, textarea {
   border-right: transparent;
   padding: 8px; }
 
-  table {
-    border-left: #f5f5f5;
-    border-right: #f5f5f5;
-  }
-
+table {
+  border-left: #f5f5f5;
+  border-right: #f5f5f5; }
 
 #myTableData tr:hover {
   background-color: #ddd; }
@@ -355,72 +355,59 @@ button, input, optgroup, select, textarea {
   background-color: #1e87e0;
   color: white; }
 
-  /*#end myTableData*/
-  /*#myTableData1*/
+/*#end myTableData*/
+/*#myTableData1*/
+#myTableData1 {
+  border-collapse: collapse;
+  width: 100%; }
 
+#myTableData1 td, #myTableData1 th {
+  border: 1px solid #ddd;
+  border-left: transparent;
+  border-right: transparent;
+  padding: 8px; }
 
-  #myTableData1 {
-    border-collapse: collapse;
-    width: 100%; }
+table {
+  border-left: #f5f5f5;
+  border-right: #f5f5f5; }
 
-  #myTableData1 td, #myTableData1 th {
-    border: 1px solid #ddd;
-    border-left: transparent;
-    border-right: transparent;
-    padding: 8px; }
+#myTableData1 tr:hover {
+  background-color: #ddd; }
 
-    table {
-      border-left: #f5f5f5;
-      border-right: #f5f5f5;
-    }
+#myTableData1 th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #1e87e0;
+  color: white; }
 
+/*end #myTableData1*/
+/*#myTableData2*/
+#myTableData2 {
+  border-collapse: collapse;
+  width: 100%; }
 
-  #myTableData1 tr:hover {
-    background-color: #ddd; }
+#myTableData2 td, #myTableData2 th {
+  border: 1px solid #ddd;
+  border-left: transparent;
+  border-right: transparent;
+  padding: 8px; }
 
-  #myTableData1 th {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: left;
-    background-color: #1e87e0;
-    color: white; }
+table {
+  border-left: #f5f5f5;
+  border-right: #f5f5f5; }
 
-  /*end #myTableData1*/
+#myTableData2 tr:hover {
+  background-color: #ddd; }
 
+#myTableData2 th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #1e87e0;
+  color: white; }
 
-  /*#myTableData2*/
-
-  #myTableData2 {
-    border-collapse: collapse;
-    width: 100%; }
-
-  #myTableData2 td, #myTableData2 th {
-    border: 1px solid #ddd;
-    border-left: transparent;
-    border-right: transparent;
-    padding: 8px; }
-
-    table {
-      border-left: #f5f5f5;
-      border-right: #f5f5f5;
-    }
-
-
-  #myTableData2 tr:hover {
-    background-color: #ddd; }
-
-  #myTableData2 th {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: left;
-    background-color: #1e87e0;
-    color: white; }
-
-
-  /*end #myTableData2*/
-
-
-
+/*end #myTableData2*/
 button {
   overflow: visible;
   text-transform: none; }
@@ -1344,13 +1331,15 @@ body {
   font-family: "Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   font-size: 14px;
   line-height: 1.42857;
-  color: #333333;
+  color: rgba(51, 51, 51, 0.8);
   background-color: #fff; }
 
 input, button, select, textarea {
   font-family: inherit;
   font-size: inherit;
-  line-height: inherit; }
+  line-height: inherit;
+  background-color: rgba(77, 144, 252, 0.28);
+  border-color: rgba(61, 93, 252, 0.26); }
 
 a {
   color: #4d90fc;
@@ -1430,6 +1419,10 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   line-height: 1.1;
   color: #1e87e0; }
 
+#price_header.h1 text--center {
+  font-weight: 300;
+  font-size: 65px; }
+
 h1 small, h1 .small {
   font-weight: normal;
   line-height: 1;
@@ -1491,7 +1484,7 @@ h6 small, h6 .small {
   color: #777777; }
 
 h1, .h1, h2, .h2, h3, .h3 {
-  margin-top: 20px;
+  margin-top: 10px;
   margin-bottom: 10px; }
 
 h1 small, h1 .small {
@@ -3307,7 +3300,7 @@ fieldset[disabled] .btn-default:hover, fieldset[disabled] .btn-default:focus, fi
 
 .btn-primary {
   color: #fff;
-  background-color: #04c37e;
+  background-color: #38bb6c;
   border-color: rgba(61, 252, 126, 0.26); }
 
 .btn-primary:focus, .btn-primary.focus {
