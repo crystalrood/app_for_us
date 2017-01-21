@@ -8,6 +8,7 @@ const People = require('../models/People.js');
 const Mgr_employee_link = require('../models/Mgr_employee_link.js');
 const Shifts = require('../models/Shift.js');
 const Finalemployeeshift = require('../models/Finalemployeeshift.js');
+const Actualfinalemployeeshift = require('../models/Actualfinalemployeeshift.js');
 
 
 exports.getSpref = (req, res) => {
@@ -210,3 +211,8 @@ exports.postSprefUpdate = (req, res, next) => {
 
       )
     };
+
+
+exports.postfinalSprefUpdate = (req, res, next) => {
+
+};
