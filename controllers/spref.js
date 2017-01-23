@@ -12,6 +12,7 @@ const Actualfinalemployeeshift = require('../models/Actualfinalemployeeshift.js'
 
 
 exports.getSpref = (req, res) => {
+  console.log(req.user.id);
 
   People.aggregate(
     [
