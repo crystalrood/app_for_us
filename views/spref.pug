@@ -3,7 +3,13 @@ extends layout
 block content
   .page-header
 
-    h3 All Books
+    .heading
+      link(rel='stylesheet', type='text/css', href='css/launch_main.css')
+      link(rel='stylesheet', type='text/css', href='css/launch_devices.css')
+      .container-sml.text-center
+        .col-12
+          #login.heading
+            | Upcoming shifts
     head
       script(type='text/javascript').
         var CSRF_HEADER = 'x-csrf-token';
@@ -117,10 +123,12 @@ block content
 
 
     #mydata
-      b Current data in the system ...
       br
       br
-
+      #helper.label.control-label Select a data range from the dropdown to view upcoming shifts.
+      #helper.label.control-label Indicate your availability by checking the box and pressing save.
+      br
+      br
       input(type='hidden', id="spref_json", value= JSON.stringify(spref))
 
       select#ddl(onchange="change_table()")
@@ -157,14 +165,10 @@ block content
 
 
 
-
-
-
-      .form-group
-        .col-sm-offset-3.col-sm-7
-          button.col-sm-3.btn.btn-primary(type='submit', value='Add', onClick="finalshifts_submit()") Save shifts
       br
       br
+
+
 
       table#myTableData(border='1', cellpadding='2')
         tr
@@ -182,5 +186,10 @@ block content
             b Available
 
 
-
+    .form-group
+      .col-sm-offset-9.col-sm-7
+        br
+        br
+        br
+        button.col-sm-3.btn.btn-primary(type='submit', value='Add', onClick="finalshifts_submit()") Save shifts
             // move to next person in the people array ...
