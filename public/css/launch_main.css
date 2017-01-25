@@ -243,6 +243,21 @@ p.paragraph {
 #signup.subheading {
     color: #ffffff;
 }
+
+#login.header{
+  padding: 12px 0 12px 0 !important;
+
+
+}
+#login.header .heading {
+    margin: 0px 0 0 0;
+    font-weight: 100;
+}
+
+#prices.header{
+  padding: 15px 0 0px;
+
+}
 .header {
 	padding: 20px 0 90px 0;
 	overflow: hidden;
@@ -253,13 +268,18 @@ p.paragraph {
 #prices.header .heading {
 	margin: 20px 0 0 0;
 	font-weight: 400;
-
 }
 #prices.header {
- padding: 20px 0 0px 0;
  background: rgba(30, 193, 114, 0.84);
 
 }
+
+
+
+#login.header {
+background: rgba(30, 193, 114, 0.84);
+}
+
 .header .centerdevices {
 	margin: 90px 0 0 0;
 }
@@ -337,6 +357,22 @@ p.paragraph {
 }.footer {
 	padding: 90px 0 45px;
 }
+
+#signup.footer {
+    padding: 15px 0 0px;
+}
+
+
+
+#login.footer {
+	padding: 30px 0 50px;
+}
+#login.heading {
+    font-weight: 100;
+    font-size: 35px;
+    line-height: 40px;
+}
+
 .footer .footer-nav {
 	padding-top: 90px;
 }
