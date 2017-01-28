@@ -1338,8 +1338,10 @@ input, button, select, textarea {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
-  background-color: rgba(77, 144, 252, 0.28);
-  border-color: rgba(61, 93, 252, 0.26); }
+  background-color: #fdf8e2;
+  border-color: #ccc;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.11), 1px 1px 0 rgba(255, 255, 255, 0.21) inset;
+}
 
 a {
   color: #4d90fc;
@@ -1652,6 +1654,11 @@ a.bg-warning:hover, a.bg-warning:focus {
 
 a.bg-danger:hover, a.bg-danger:focus {
   background-color: #e4b9b9; }
+
+  #people.page-header {
+    padding-bottom: 9px;
+    margin: 40px 0 20px;
+    border-bottom: 3px dashed rgba(30, 193, 114, 0.84); }
 
 .page-header {
   padding-bottom: 9px;
@@ -2605,6 +2612,18 @@ legend {
   border: 0;
   border-bottom: 1px solid #e5e5e5; }
 
+  #helper.label.control-label {
+
+      display: inline-block;
+      max-width: 100%;
+      margin-bottom: 10px;
+      font-weight: normal;
+      font-style: italic;
+      font-size: 1.2em;
+      color: inherit;
+
+    }
+
 label {
   display: inline-block;
   max-width: 100%;
@@ -2781,8 +2800,14 @@ input[type="search"] {
 
 .radio input[type="radio"], .radio-inline input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
   position: absolute;
-  margin-left: -20px;
-  margin-top: 4px \9; }
+  margin-left: -45%;
+  width: 15%;
+   height: 1.1em;
+  margin-top: 5px !important; }
+
+  #signup-form.radio input[type="radio"], .radio-inline input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
+  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.11), 0px 0px 0 rgba(255, 255, 255, 0.21) inset !important;
+}
 
 .radio + .radio, .checkbox + .checkbox {
   margin-top: -5px; }
@@ -3300,7 +3325,7 @@ fieldset[disabled] .btn-default:hover, fieldset[disabled] .btn-default:focus, fi
 
 .btn-primary {
   color: #fff;
-  background-color: #38bb6c;
+  background-color: rgba(56, 187, 108, 0.79);
   border-color: rgba(61, 252, 126, 0.26); }
 
 .btn-primary:focus, .btn-primary.focus {
@@ -3355,10 +3380,27 @@ fieldset[disabled] .btn-primary:hover, fieldset[disabled] .btn-primary:focus, fi
   color: #4d90fc;
   background-color: #fff; }
 
-.btn-success {
+/*.btn-success {
   color: #fff;
-  background-color: #60bf60;
-  border-color: #54ba54; }
+  background-color: rgba(96, 191, 96, 0.78);
+  border-color: #60bf60; }*/
+button.btn-success {
+  color: #fff;
+  background-color: rgba(96, 191, 96, 0.78) !important;
+  border-color: #60bf60 !important;
+  width: 60% !important;
+  height: 50px !important;
+  font-size: 1.2em !important;
+
+  font-weight: bold;
+  font-style: inherit;
+}
+
+button.btn-success:hover, button.btn-success:active, button.btn-success.active {
+  color: #fff;
+  background-color: #44a844;
+  border-color: #3c953c;
+}
 
 .btn-success:focus, .btn-success.focus {
   color: #fff;
@@ -4988,6 +5030,19 @@ fieldset[disabled] .navbar-inverse .btn-link:hover, fieldset[disabled] .navbar-i
   white-space: nowrap;
   vertical-align: baseline;
   border-radius: .25em; }
+
+  #signup.label {
+  display: inline;
+  padding: .2em .6em .3em;
+  font-size: 115%;
+  font-weight: bold;
+  line-height: 1.2;
+  color: rgba(51, 51, 51, 0.8);
+  text-align: right;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25em;
+  }
 
 .label:empty {
   display: none; }
