@@ -13,7 +13,7 @@
 exports.index = (req, res, next) => {
 
   //find it if it's a manager
-
+   try{
     if (req.user.user_type == 'schedule_type') {
       Modeledshift.find({manager_userid: req.user.id},
       function (err, docs) {
@@ -25,16 +25,20 @@ exports.index = (req, res, next) => {
     }
 
   //find if it's an employees
-    if (req.user.user_type == 'employee_type') {
+   if (req.user.user_type == 'employee_type') {
 
       res.render('home', {
         title: 'Home'
       });
 
     }
-
-
-
+  }catch(e){
+    if(e){
+      res.render('home', {
+        title: 'Home'
+      });
+    }
+  }
 
 };
 
