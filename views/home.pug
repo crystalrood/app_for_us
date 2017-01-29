@@ -169,76 +169,62 @@ block content
           ga('send', 'pageview');
 
       head
-        meta(charset='utf-8')
-        link(rel='stylesheet', href='https://fullcalendar.io/js/fullcalendar-3.0.1/fullcalendar.css')
-        script(src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js')
-        script(src='//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
-        script(src='https://fullcalendar.io/js/fullcalendar-3.0.1/fullcalendar.min.js')
-        script.
-          $(document).ready(function() {
-          $('#calendar').fullCalendar({
-          header: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'month,agendaWeek,agendaDay'
-          },
-          defaultDate: new Date(),
-          defaultView: 'basicWeek',
-          editable: true,
-          events: [
-          {
-          title: 'All Day Event',
-          start: '2014-06-01'
-          },
-          {
-          title: 'Long Event',
-          start: '2014-06-07',
-          end: '2014-06-10'
-          },
-          {
-          id: 999,
-          title: 'Repeating Event',
-          start: '2014-06-09T16:00:00'
-          },
-          {
-          id: 999,
-          title: 'Repeating Event',
-          start: '2014-06-16T16:00:00'
-          },
-          {
-          title: 'Meeting',
-          start: '2014-06-12T10:30:00',
-          end: '2014-06-12T12:30:00'
-          },
-          {
-          title: 'Lunch',
-          start: '2014-06-12T12:00:00'
-          },
-          {
-          title: 'Birthday Party',
-          start: '2014-06-13T07:00:00'
-          },
-          {
-          title: 'Click for Google',
-          url: 'http://google.com/',
-          start: '2014-06-28'
-          }
-          ]
-          });
-          });
-        style(type='text/css').
-          body {
-          margin-top: 40px;
-          text-align: center;
-          font-size: 14px;
-          font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
-          }
-          #calendar {
-          width: 900px;
-          margin: 0 auto;
-          }
-      body
-        #calendar
+        h1 Current schedule
+        br
+        br
+
+
+        button.col-sm-3.btn.btn-primary(type='submit', value='Add', onClick="") View by employee type
+        br
+        br
+
+        button.col-sm-3.btn.btn-primary(type='submit', value='Add', onClick="") View by employee name
+        br
+        br
+        br
+        br
+        br
+
+        #mydata
+          b Employee types saved in the system:
+          table#myTableData2(border='1', cellpadding='2')
+            tr
+              th
+                b Employee type
+              th
+                b Delete
+
+            each doc in docs
+
+              // build a new table row
+              tr
+
+                // insert table data
+                td #{doc.employee_type}
+
+                // add the update and delete buttons
+                td
+                  .type1(style='width:100px;height:100px;border:5px solid #16CA99;background-colo #16CA99;background-color: #16CA99;border-radius: 25px;') This is a rectangle!
+
+                td
+                  input(type="button" name = "Delete" value = "Delete" onClick="Javacsript:deleteRow2(this)")
+
+                // move to next person in the people array ...
+
+          br
+          br
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   else if user.user_type == 'employee_type'

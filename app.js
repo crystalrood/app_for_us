@@ -157,6 +157,7 @@ app.post('/people/deleteemployeetype', passportConfig.isAuthenticated, peopleCon
 app.get('/spref', passportConfig.isAuthenticated, sprefController.getSpref);
 app.post('/spref/update', passportConfig.isAuthenticated, sprefController.postSprefUpdate);
 app.post('/spref/save', passportConfig.isAuthenticated, sprefController.postfinalSprefUpdate);
+app.get('/home', passportConfig.isAuthenticated, homeController.getFinalschedules);
 
 
 app.get('/login', userController.getLogin);

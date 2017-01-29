@@ -11,10 +11,10 @@ const modeledshiftSchema = new mongoose.Schema({
   date: String,
   shift_time_start: String,
   shift_time_end: String,
-  shift_date_range: String,
-  num_employees_working: String,
-  { timestamps: true }
-);
+  shift_date_range_start: String,
+  shift_date_range_end: String,
+  num_employees_working: String},
+  { timestamps: true });
 
 const Modeledshift = mongoose.model('modeledshift', modeledshiftSchema);
 module.exports = Modeledshift;
