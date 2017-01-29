@@ -53,7 +53,7 @@ block content
             | Create an online schedule for your team
           br
           br
-  .container
+  .col-lg-10.text-center
     form.form-horizontal(id='signup-form', method='POST')
       input(type='hidden', name='_csrf', value=_csrf)
       br
@@ -71,19 +71,19 @@ block content
       br
 
       .form-group
-        #signup.label.col-sm-4.control-label(for='email') Email
+        #signup.label.col-sm-4.control-label(for='email') Email:
         .col-sm-7
           input.form-control(type='email', name='email', id='email', placeholder='Email', autofocus, required)
       .form-group
-        #signup.label.col-sm-4.control-label(for='password') Password
+        #signup.label.col-sm-4.control-label(for='password') Password:
         .col-sm-7
           input.form-control(type='password', name='password', id='password', placeholder='Password', required)
       .form-group
-        #signup.label.col-sm-4.control-label(for='confirmPassword') Confirm Password
+        #signup.label.col-sm-4.control-label(for='confirmPassword') Confirm Password:
         .col-sm-7
           input.form-control(type='password', name='confirmPassword', id='confirmPassword', placeholder='Confirm Password', required)
       .form-group
-        .col-sm-offset-3.col-sm-7
+        .col-sm-offset-3.col-sm-9
           br
           button.btn.btn-success(type='submit')
             i.fa.fa-user-plus

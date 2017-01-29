@@ -8,9 +8,14 @@ block content
 
 
   //defining employee types
-  .page-header
-    h2 Employee Types
-    head
+  #people.page-header
+    .heading
+      link(rel='stylesheet', type='text/css', href='css/launch_main.css')
+      link(rel='stylesheet', type='text/css', href='css/launch_devices.css')
+      .container-sml.text-center
+        .col-12
+          #login.heading
+            | Employee Types
       script(type='text/javascript').
 
         function deleteRow2(obj) {
@@ -44,9 +49,8 @@ block content
     form.form-group(action='/people/employeetype', method='POST')
       input.form-control(type='hidden', name='_csrf', value=_csrf)
       br
-      label.control-label Enter employee types below:
+      #helper.label.control-label Enter employee types below:
       br
-      hr
       br
       label.col-sm-2.control-label(for='employee_type_define') Employee Type:
       .col-sm-8
@@ -60,7 +64,6 @@ block content
       br
       br
       #mydata
-        b Employee types saved in the system:
         table#myTableData2(border='1', cellpadding='2')
           tr
             th
@@ -96,9 +99,15 @@ block content
 
 
   //defining shifts
-  .page-header
-    h2 Shifts
-    head
+  #people.page-header
+    .heading
+      link(rel='stylesheet', type='text/css', href='css/launch_main.css')
+      link(rel='stylesheet', type='text/css', href='css/launch_devices.css')
+      .container-sml.text-center
+        .col-12
+          #login.heading
+            | Shifts
+      head
       script(type='text/javascript').
         function addRow() {
         //variables
@@ -174,7 +183,7 @@ block content
               document.getElementById("myTableData").rows[currentTD].cells[3].setAttribute("contentEditable", true);
               document.getElementById("myTableData").rows[currentTD].cells[4].setAttribute("contentEditable", true);
               document.getElementById("myTableData").rows[currentTD].cells[5].setAttribute("contentEditable", true);
-              document.getElementById("myTableData").rows[currentTD].style.backgroundColor = "#A4D9F5";
+              document.getElementById("myTableData").rows[currentTD].style.backgroundColor = "#d2f9e3";
               employee_type = document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML
               days_worked = document.getElementById("myTableData").rows[currentTD].cells[1].innerHTML
               num_employees = document.getElementById("myTableData").rows[currentTD].cells[2].innerHTML
@@ -225,9 +234,9 @@ block content
     form.form-group(action='/people/shift', method='POST')
       input.form-control(type='hidden',  name='_csrf', value=_csrf)
       br
-      label.control-label Enter recurring shifts below:
+      #helper.label.control-label Enter recurring shifts below:
       br
-      hr
+
       br
       br
       label.col-sm-2.control-label(for='employee_type') Employee Type
@@ -283,7 +292,6 @@ block content
     br
 
     #mydata
-      b Recurring shifts saved in the system:
       table#myTableData(border='1', cellpadding='2')
         tr
           th
@@ -337,8 +345,14 @@ block content
 
 
 
-  .page-header
-    h2 Employees
+  #people.page-header
+    .heading
+      link(rel='stylesheet', type='text/css', href='css/launch_main.css')
+      link(rel='stylesheet', type='text/css', href='css/launch_devices.css')
+      .container-sml.text-center
+        .col-12
+          #login.heading
+            | Employees
     head
       script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js').
       script(type='text/javascript').
@@ -425,7 +439,7 @@ block content
             document.getElementById("myTableData1").rows[currentTD].cells[4].setAttribute("contentEditable", true);
             document.getElementById("myTableData1").rows[currentTD].cells[5].setAttribute("contentEditable", true);
 
-            document.getElementById("myTableData1").rows[currentTD].style.backgroundColor = "#A4D9F5";
+            document.getElementById("myTableData1").rows[currentTD].style.backgroundColor = "#d2f9e3";
 
              var_name = document.getElementById("myTableData1").rows[currentTD].cells[0].innerHTML
              var_type =  document.getElementById("myTableData1").rows[currentTD].cells[1].innerHTML
@@ -479,9 +493,9 @@ block content
     form.form-group(action='/people/people', method='POST')
       input(type='hidden', name='_csrf', value=_csrf)
       br
-      label.control-label Enter employee information below:
+      #helper.label.control-label Enter employee information below:
       br
-      hr
+
       label.col-sm-2.control-label(for='Name') Name:
       .col-sm-8
         input#name.form-control(type='text', name='name', placeholder='Name', autofocus='autofocus', required='required')
@@ -522,7 +536,6 @@ block content
     br
     br
     #mydata
-      b Current employees saved in the system:
       table#myTableData1(border='1', cellpadding='2')
         tr
           th
