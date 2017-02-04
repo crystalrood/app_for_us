@@ -133,6 +133,9 @@ block content
 
 
   else if user.user_type == 'schedule_type'
+    //******
+    //header information that was copied and pasted
+    //******
     doctype html
     html
       head
@@ -168,9 +171,75 @@ block content
           ga('create', 'UA-XXXXX-X', 'auto');
           ga('send', 'pageview');
 
+
+
+
+
+        // ********
+        // ********
+        // ********
+        //adding my own script to load in table
+        // ********
+        // ********
+        // ********
+        script(type='text/javascript').
+
+          var CSRF_HEADER = 'x-csrf-token';
+          var setCSRFToken = function (securityToken) {
+            jQuery.ajaxPrefilter(function (options, _, xhr) {
+              if (!xhr.crossDomain) {
+                xhr.setRequestHeader(CSRF_HEADER, securityToken);
+              }
+            });
+          };
+
+
+          function change_table() {
+            //gettting json values
+            var docs_json = document.getElementById("docs_json").value;
+            var docs_json_value = JSON.parse( docs_json );
+
+            //clearing table
+            var table = document.getElementById("myTableData2")
+            var ddl_value = document.getElementById("ddl").value;
+
+            var listItems = [];
+            console.log(docs_json_value)
+
+            //putting items from json into list
+            for (var i = 0; i < docs_json_value.length; i++){
+              itemTest= docs_json_value[i].shift_date_range_start + " to " + docs_json_value[i].shift_date_range_end;
+              if (itemTest == ddl_value){
+                var rowCount = table.rows.length;
+                var row = table.insertRow(rowCount);
+                row.insertCell(0).innerHTML= docs_json_value[i].employee_type;
+                row.insertCell(1).innerHTML= docs_json_value[i].days_worked;
+                row.insertCell(2).innerHTML= docs_json_value[i].num_employees;
+                row.insertCell(3).innerHTML= docs_json_value[i].shift_start_time;
+                row.insertCell(4).innerHTML= docs_json_value[i].shift_end_time;
+                console.log(docs_json_value[i].availability)
+                if(docs_json_value[i].availability=="true"){
+                  row.insertCell(5).innerHTML= '<input id="type" type="checkbox" name="Available" autofocus="autofocus" checked="checked" onClick="Javacsript:on_check_click(this)">';
+                } else {
+                  row.insertCell(5).innerHTML= '<input id="type" type="checkbox" name="Available"  autofocus="autofocus" onClick="Javacsript:on_check_click(this)">';
+                }
+              };
+            };
+          };
+          // ********
+          // ********
+          // ********
+          //adding my own script to load in table
+          // ********
+          // ********
+          // ********
+
+
       head
         h1 Current schedule
         br
+        br
+        input(type='hidden', id="docs_json", value= JSON.stringify(docs))
         br
 
 
@@ -182,6 +251,43 @@ block content
         br
         br
         br
+        select#ddl(onchange="change_table()")
+          option(value='')
+          script.
+            //
+            //
+            // defining dropdown
+            //
+            //
+           var docs_json = document.getElementById("docs_json").value;
+           var docs_json_value = JSON.parse(docs_json);
+           var listItems = [];
+
+           //putting items into initial ist
+           for (var i = 0; i < docs_json_value.length; i++){
+             itemTest = docs_json_value[i].shift_date_range_start + " to " + docs_json_value[i].shift_date_range_end;
+             listItems[i] = itemTest;
+            }
+            //removing duplicates
+            var seen = {};
+            var out = [];
+            var j = 0;
+            for(var i = 0; i < listItems.length; i++) {
+                var item = listItems[i];
+                if(seen[item] !== 1) {
+                      seen[item] = 1;
+                      out[j++] = item;
+                }
+           }
+
+           //putting values form de-deuped list into dropdown
+           var dropdown = document.getElementById("ddl");
+           for (var i = 0; i<out.length; i++){
+             var itemTest= out[i];
+             dropdown[dropdown.length] = new Option(itemTest, itemTest);
+           };
+
+
         br
         br
 
@@ -204,7 +310,7 @@ block content
 
                 // add the update and delete buttons
                 td
-                  .type1(style='width:100px;height:100px;border:5px solid #16CA99;background-colo #16CA99;background-color: #16CA99;border-radius: 25px;') This is a rectangle!
+                  .type1(style='width:100px;height:100px;border:5px solid #16CA99;background-colo #16CA99;background-color: #16CA99;border-radius: 7px;') This is a rectangle!
 
                 td
                   input(type="button" name = "Delete" value = "Delete" onClick="Javacsript:deleteRow2(this)")
@@ -213,9 +319,6 @@ block content
 
           br
           br
-
-
-
 
 
 
