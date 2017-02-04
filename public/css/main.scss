@@ -1,4 +1,28 @@
 @charset "UTF-8";
+.stripe-button-el {
+  display: inline-block !important;
+  height: 40px !important;
+  line-height: 38px !important;
+  padding: 0 30px !important;
+  background: #fff !important;
+  border-radius: 3px !important;
+  font-size: 15px !important;
+  text-transform: uppercase !important;
+  letter-spacing: .3px !important;
+  border: 0px solid white !important;
+  text-decoration: none !important;
+  color: #ffffff !important;
+  background: rgba(57, 129, 247, 0.84) !important;
+  font-weight: bold !important;
+  font-family: 'karla', sans-serif !important;
+  padding: 0 12px 3px 12px !important; }
+
+.stripe-button-el span {
+  background: transparent !important;
+  box-shadow: inset 0 0px 0 rgba(255, 255, 255, 0.25) !important;
+  font-size: 15px !important;
+  font-family: 'karla', sans-serif !important; }
+
 /*calendar formatting*/
 /*end calendar formatting*/
 /* MailChimp Form Embed Code - Classic - 12/17/2015 v10.7 */
@@ -1340,8 +1364,7 @@ input, button, select, textarea {
   line-height: inherit;
   background-color: #fdf8e2;
   border-color: #ccc;
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.11), 1px 1px 0 rgba(255, 255, 255, 0.21) inset;
-}
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.11), 1px 1px 0 rgba(255, 255, 255, 0.21) inset; }
 
 a {
   color: #4d90fc;
@@ -1655,10 +1678,10 @@ a.bg-warning:hover, a.bg-warning:focus {
 a.bg-danger:hover, a.bg-danger:focus {
   background-color: #e4b9b9; }
 
-  #people.page-header {
-    padding-bottom: 9px;
-    margin: 40px 0 20px;
-    border-bottom: 3px dashed rgba(30, 193, 114, 0.84); }
+#people.page-header {
+  padding-bottom: 9px;
+  margin: 40px 0 20px;
+  border-bottom: 3px dashed rgba(30, 193, 114, 0.84); }
 
 .page-header {
   padding-bottom: 9px;
@@ -2612,17 +2635,14 @@ legend {
   border: 0;
   border-bottom: 1px solid #e5e5e5; }
 
-  #helper.label.control-label {
-
-      display: inline-block;
-      max-width: 100%;
-      margin-bottom: 10px;
-      font-weight: normal;
-      font-style: italic;
-      font-size: 1.2em;
-      color: inherit;
-
-    }
+#helper.label.control-label {
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 10px;
+  font-weight: normal;
+  font-style: italic;
+  font-size: 1.2em;
+  color: inherit; }
 
 label {
   display: inline-block;
@@ -2802,12 +2822,11 @@ input[type="search"] {
   position: absolute;
   margin-left: -45%;
   width: 15%;
-   height: 1.1em;
+  height: 1.1em;
   margin-top: 5px !important; }
 
-  #signup-form.radio input[type="radio"], .radio-inline input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
-  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.11), 0px 0px 0 rgba(255, 255, 255, 0.21) inset !important;
-}
+#signup-form.radio input[type="radio"], .radio-inline input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
+  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.11), 0px 0px 0 rgba(255, 255, 255, 0.21) inset !important; }
 
 .radio + .radio, .checkbox + .checkbox {
   margin-top: -5px; }
@@ -3391,16 +3410,13 @@ button.btn-success {
   width: 60% !important;
   height: 50px !important;
   font-size: 1.2em !important;
-
   font-weight: bold;
-  font-style: inherit;
-}
+  font-style: inherit; }
 
 button.btn-success:hover, button.btn-success:active, button.btn-success.active {
   color: #fff;
   background-color: #44a844;
-  border-color: #3c953c;
-}
+  border-color: #3c953c; }
 
 .btn-success:focus, .btn-success.focus {
   color: #fff;
@@ -4641,11 +4657,11 @@ tbody.collapse.in {
     margin-right: 0; } }
 
 .navbar-default {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(2, 9, 99, 0.8);
   border-color: rgba(238, 238, 238, 0.9); }
 
 .navbar-default .navbar-brand {
-  color: #252525; }
+  color: #ffffff; }
 
 .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
   color: #4da5f4;
@@ -4655,7 +4671,7 @@ tbody.collapse.in {
   color: #fafafa; }
 
 .navbar-default .navbar-nav > li > a {
-  color: #252525; }
+  color: #ffffff; }
 
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
   color: #4da5f4;
@@ -5031,7 +5047,7 @@ fieldset[disabled] .navbar-inverse .btn-link:hover, fieldset[disabled] .navbar-i
   vertical-align: baseline;
   border-radius: .25em; }
 
-  #signup.label {
+#signup.label {
   display: inline;
   padding: .2em .6em .3em;
   font-size: 115%;
@@ -5041,8 +5057,7 @@ fieldset[disabled] .navbar-inverse .btn-link:hover, fieldset[disabled] .navbar-i
   text-align: right;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: .25em;
-  }
+  border-radius: .25em; }
 
 .label:empty {
   display: none; }

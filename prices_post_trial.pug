@@ -63,20 +63,33 @@ block content
         h3.subheading From 1-25 Employees
         .price $9/month
         .ctas
-          a.ctas-button-2(href='/signup')
-            b Sign Up
+          form(action='/charge', method="post")
+            script(
+              src="//checkout.stripe.com/v2/checkout.js",
+              data-label = "Sign up",
+              class="stripe-button",
+              data-key="pk_test_lB99dEOIUK57XPxw7dt3Vbxc",
+              data-locale="auto",
+              data-description="1-25 Employees",
+              data-amount="900")
       #pack_26_50.package
         h3.subheading Up to 50 Employees
         .price $19/month
         .ctas
-          a.ctas-button-2(href='/signup')
-            b Sign Up
+          form(action='/charge', method="post")
+            script(
+              src="//checkout.stripe.com/v2/checkout.js",
+              data-label = "Sign up",
+              class="stripe-button",
+              data-key="pk_test_lB99dEOIUK57XPxw7dt3Vbxc",
+              data-locale="auto",
+              data-description="1-25 Employees",
+              data-amount="1900")
       #pack_51_up.package
         h3.subheading Over 50 Employees
         .price Custom Pricing
         .ctas
-          a.ctas-button-2(href='/contact')
-            b Contact Us
+          a.button.stripe-button-el(href='/contact') Contact Us
 
       .heading.text--center
         br

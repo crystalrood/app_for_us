@@ -20,6 +20,44 @@ const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
 const multer = require('multer');
 const upload = multer({ dest: path.join(__dirname, 'uploads') });
+const app = express();
+
+
+//stripe
+const keyPublishable = "pk_test_lB99dEOIUK57XPxw7dt3Vbxc";
+const keySecret = "sk_test_PTa9SODmGNyCF4XKl5yAHdH7";
+//const app = require("express")();
+const stripe = require("stripe")(keySecret);
+
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+
+
+//docs: https://stripe.com/docs/recipes/subscription-signup
+app.post('/charge', (req, res) => {
+  //let amount = 500;
+
+  stripe.customers.create({
+    email: req.body.stripeEmail,
+    card: req.body.stripeToken,
+    plan: "1_25_monthly",
+  })
+//to do single charges, remove 'plan' from above and uncomment below  
+//  .then(customer =>
+//    stripe.charges.create({
+//      //amount,
+//      description: "Sample Charge",
+//      currency: "usd",
+//      customer: customer.id
+//    }))
+  .catch(err => console.log("Error:", err))
+  .then(charge => res.render("charge.pug"));
+});
+
+//app.listen(4567);
+
+//end stripe
+
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -48,7 +86,6 @@ const passportConfig = require('./config/passport');
 /**
  * Create Express server.
  */
-const app = express();
 
 /**
  * Connect to MongoDB.

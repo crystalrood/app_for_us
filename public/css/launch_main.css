@@ -1,5 +1,11 @@
 /*neutral rgba(57, 129, 247, 0.84)*/
 /*promo wrapper begin*/
+#home.promo {
+
+    background: #d9edf7;
+    padding: 32px 20px 32px;
+    }
+    
 .promo {
     background: white;
     padding: 0px 20px 35px;
@@ -118,7 +124,7 @@ body {
   }
 }
 .paragraph {
-  font-size: 17px;
+  font-size: 20px;
   line-height: 32px;
   font-weight: 100;
 }
