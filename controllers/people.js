@@ -19,7 +19,7 @@ exports.getPeople = (req, res, next) => {
   var locals = {};
   var tasks = [
       function(callback){
-        People.find({ 'userid': req.user.id }, function (err, docs) {
+        People.find({ 'mgr_userid': req.user.id }, function (err, docs) {
           if (err) { return callback(err); }
           if (docs != null){
             locals.people = docs;
@@ -105,7 +105,7 @@ exports.postPeople = (req, res, next) => {
     }
     /* define what needs to be saved*/
     const people = new People({
-      userid: req.user.id,
+      mgr_userid: req.user.id,
       name: req.body.name,
       type: req.body.type,
       min_hours: req.body.min_hours,
@@ -155,7 +155,7 @@ exports.postUpdatePeople = (req, res, next) => {
   should change this to update*/
     People.update(
       {$and:[
-      	{ userid: req.user.id, },
+      	{ mgr_userid: req.user.id, },
       	{ name: req.body.old_name},
       	{ type: req.body.old_type},
       	{ min_hours: req.body.old_min_hours},
@@ -164,7 +164,7 @@ exports.postUpdatePeople = (req, res, next) => {
       	{ phone_number: req.body.old_phone_number}
     	]},
       {$set:{
-          userid: req.user.id,
+          mgr_userid: req.user.id,
           name: req.body.name,
           type: req.body.type,
           min_hours: req.body.min_hours,
@@ -198,7 +198,7 @@ exports.postUpdatePeople = (req, res, next) => {
 exports.postDeletePeople = (req, res, next) => {
 
   People.remove({$and:[
-    { userid: req.user.id},
+    { mgr_userid: req.user.id},
     { name: req.body.name},
     { type: req.body.type},
     { min_hours: req.body.min_hours},

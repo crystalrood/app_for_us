@@ -26,13 +26,13 @@ exports.getSpref = (req, res) => {
       },
       {
         $unwind: {
-          path: "$userid",
+          path: "$mgr_userid",
         }
       },
       {
         $lookup: {
           from: "shifts",
-          localField: "userid",
+          localField: "mgr_userid",
           foreignField: "userid",
           as: "test2",
         }
@@ -40,7 +40,7 @@ exports.getSpref = (req, res) => {
      {
       $project: {
         type: 1,
-        userid: 1,
+        mgr_userid: 1,
         email: 1,
       },
     },
@@ -93,7 +93,7 @@ exports.getSpref = (req, res) => {
              str_array[i] = str_array[i].replace(/^\s*/, "").replace(/\s*$/, "");
 
              var new_result = new Finalemployeeshift({
-               userid: req.user.email,
+               userid: req.user.id,
                date_range_start: result.shifts_match_employee_type.date_range_start,
                date_range_end: result.shifts_match_employee_type.date_range_end,
                employee_type: result.shifts_match_employee_type.employee_type,
@@ -156,7 +156,7 @@ exports.getSpref = (req, res) => {
        //syntax for calling docs array
        var usertype = docs[0].type
        Finalemployeeshift.find(  {$and:[
-         	{ userid: req.user.email},
+         	{ userid: req.user.id},
          	{ employee_type: usertype},
 
 
@@ -180,7 +180,7 @@ exports.postSprefUpdate = (req, res, next) => {
   should change this to update*/
     Finalemployeeshift.update(
       {$and:[
-      	{ userid: req.user.email},
+      	{ userid: req.user.id},
       	{ date_range_start: req.body.date_range_start},
       	{ date_range_end: req.body.date_range_end},
       	{ employee_type: req.body.employee_type},
@@ -190,7 +190,7 @@ exports.postSprefUpdate = (req, res, next) => {
         { shift_end_time: req.body.shift_end_time}
     	]},
       {$set:{
-          userid: req.user.email,
+          userid: req.user.id,
           date_range_start: req.body.date_range_start,
           date_range_end: req.body.date_range_end,
           employee_type: req.body.employee_type,
@@ -219,14 +219,14 @@ exports.postfinalSprefUpdate = (req, res, next) => {
   console.log(req.body.date_range_start)
   console.log(req.body.date_range_end)
   Actualfinalemployeeshift.find(
-    {$and:[{userid: req.user.email}, {date_range_start: req.body.date_range_start}, {date_range_end: req.body.date_range_end}]},
+    {$and:[{emp_userid: req.user.id}, {date_range_start: req.body.date_range_start}, {date_range_end: req.body.date_range_end}]},
     function (err, shifts) {
     if (err) return handleError(err);
 
       if (shifts.length == 0){
 
         Finalemployeeshift.find(
-        {$and:[{userid: req.user.email}, {date_range_start: req.body.date_range_start}, {date_range_end: req.body.date_range_end}]},
+        {$and:[{userid: req.user.id}, {date_range_start: req.body.date_range_start}, {date_range_end: req.body.date_range_end}]},
         function (err, shft) {
           if (err) return handleError(err);
           //checking to ensure we're actually going to be adding documents
@@ -234,7 +234,7 @@ exports.postfinalSprefUpdate = (req, res, next) => {
             shft.forEach(function(shft, index) {
 
               const fin_shift = new Actualfinalemployeeshift({
-                userid: req.user.id,
+                emp_userid: req.user.id,
                 date_range_start: shft.date_range_start,
                 date_range_end: shft.date_range_end,
                 employee_type: shft.employee_type,

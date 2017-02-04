@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const actualfinalemployeeshiftSchema = new mongoose.Schema({
-  userid: String,
+  emp_userid: String,
   date_range_start: String,
   date_range_end: String,
   employee_type: String,
