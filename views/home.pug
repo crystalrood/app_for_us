@@ -220,16 +220,16 @@ block content
               if (itemTest == ddl_value){
                 var rowCount = table.rows.length;
                 var row = table.insertRow(rowCount);
-                row.insertCell(0).innerHTML= docs_json_value[i].employee_type;
-                row.insertCell(1).innerHTML= docs_json_value[i].days_worked;
-                row.insertCell(2).innerHTML= docs_json_value[i].num_employees;
-                row.insertCell(3).innerHTML= docs_json_value[i].shift_start_time;
-                row.insertCell(4).innerHTML= docs_json_value[i].shift_end_time;
+                //row.insertCell(0).innerHTML= docs_json_value[i].employee_type;
+                //row.insertCell(1).innerHTML= docs_json_value[i].days_worked;
+                //row.insertCell(2).innerHTML= docs_json_value[i].num_employees;
+                //row.insertCell(3).innerHTML= docs_json_value[i].shift_start_time;
+                //row.insertCell(4).innerHTML= docs_json_value[i].shift_end_time;
                 console.log(docs_json_value[i].availability)
                 if(docs_json_value[i].availability=="true"){
-                  row.insertCell(5).innerHTML= '<input id="type" type="checkbox" name="Available" autofocus="autofocus" checked="checked" onClick="Javacsript:on_check_click(this)">';
+                  //row.insertCell(5).innerHTML= '<input id="type" type="checkbox" name="Available" autofocus="autofocus" checked="checked" onClick="Javacsript:on_check_click(this)">';
                 } else {
-                  row.insertCell(5).innerHTML= '<input id="type" type="checkbox" name="Available"  autofocus="autofocus" onClick="Javacsript:on_check_click(this)">';
+                  //row.insertCell(5).innerHTML= '<input id="type" type="checkbox" name="Available"  autofocus="autofocus" onClick="Javacsript:on_check_click(this)">';
                 }
               };
             };
@@ -294,10 +294,11 @@ block content
              var itemTest= out[i];
              dropdown[dropdown.length] = new Option(itemTest, itemTest);
            };
-
+           console.log(docs_json_value)
 
         br
         br
+
 
         #mydata
           b Employee types saved in the system:
@@ -306,7 +307,20 @@ block content
               th
                 b Employee type
               th
-                b Delete
+                b Monday
+              th
+                b Tuesday
+              th
+                b Wednesday
+              th
+                b Thursday
+              th
+                b Friday
+              th
+                b Saturday
+              th
+                b Sunday
+
 
             each doc in docs
 
@@ -318,10 +332,29 @@ block content
 
                 // add the update and delete buttons
                 td
-                  .type1(style='width:100px;height:100px;border:5px solid #16CA99;background-colo #16CA99;background-color: #16CA99;border-radius: 7px;') This is a rectangle!
+                  .type1(style='width:100px;height:60px;border:5px solid #16CA99;background-colo #16CA99;background-color: #16CA99;border-radius: 7px;') This is a rectangle!
+                  br
+                  .type1(style='width:100px;height:60px;border:5px solid #16CA99;background-colo #16CA99;background-color: #16CA99;border-radius: 7px;') This is a rectangle!
+                // add the update and delete buttons
+                td
+                  .type1(style='width:100px;height:60px;border:5px solid #16CA99;background-colo #16CA99;background-color: #16CA99;border-radius: 7px;') This is a rectangle!
+                  // add the update and delete buttons
+                td
+                  .type1(style='width:100px;height:60px;border:5px solid #16CA99;background-colo #16CA99;background-color: #16CA99;border-radius: 7px;') This is a rectangle!
+
+                  // add the update and delete buttons
+                td
+                  .type1(style='width:100px;height:60px;border:5px solid #16CA99;background-colo #16CA99;background-color: #16CA99;border-radius: 7px;') This is a rectangle!
+
+                  // add the update and delete buttons
+                td
+                  .type1(style='width:100px;height:60px;border:5px solid #16CA99;background-colo #16CA99;background-color: #16CA99;border-radius: 7px;') This is a rectangle!
 
                 td
-                  input(type="button" name = "Delete" value = "Delete" onClick="Javacsript:deleteRow2(this)")
+                  .type1(style='width:100px;height:60px;border:5px solid #16CA99;background-colo #16CA99;background-color: #16CA99;border-radius: 7px;') This is a rectangle!
+
+                td
+                  .type1(style='width:100px;height:60px;border:5px solid #16CA99;background-colo #16CA99;background-color: #16CA99;border-radius: 7px;') This is a rectangle!
 
                 // move to next person in the people array ...
 
