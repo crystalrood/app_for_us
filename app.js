@@ -42,7 +42,7 @@ app.post('/charge', (req, res) => {
     card: req.body.stripeToken,
     plan: "1_25_monthly",
   })
-//to do single charges, remove 'plan' from above and uncomment below  
+//to do single charges, remove 'plan' from above and uncomment below
 //  .then(customer =>
 //    stripe.charges.create({
 //      //amount,
@@ -77,6 +77,7 @@ const createscheduleController = require('./controllers/createschedule');
 const peopleController = require('./controllers/people');
 const shift_infoController = require('./controllers/shift_info');
 const sprefController = require('./controllers/spref');
+const cron_testController = require('./controllers/cron_test');
 
 /**
  * API keys and Passport configuration.
