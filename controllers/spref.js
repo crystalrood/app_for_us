@@ -235,6 +235,7 @@ exports.postfinalSprefUpdate = (req, res, next) => {
 
               const fin_shift = new Actualfinalemployeeshift({
                 emp_userid: req.user.id,
+                emp_email: req.user.email,
                 date_range_start: shft.date_range_start,
                 date_range_end: shft.date_range_end,
                 employee_type: shft.employee_type,
