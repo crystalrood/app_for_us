@@ -6,7 +6,7 @@ const async = require('async');
 const People = require('../models/People.js');
 const Shift = require('../models/Shift.js');
 const Employeetype = require('../models/Employeetype.js');
-
+const Schedulestart_manager = require('../models/Schedulestart_manager.js');
 
 
 /*
@@ -61,7 +61,22 @@ exports.getPeople = (req, res, next) => {
           }
 
         });
-      }
+      },
+
+      function(callback){
+        Schedulestart_manager.find({ 'manager_userid': req.user.id }, function (err, docs3) {
+          if (err) { return next(err); }
+          if (docs3 != null){
+            locals.schedule = docs3;
+            callback();
+          }
+          else{
+            locals.schedule = docs3;
+            callback();
+          }
+          console.log(docs3)
+        });
+      },
   ];
 
   async.parallel(tasks, function(err) {
@@ -434,3 +449,103 @@ exports.postDeleteEmployeetype = (req, res, next) => {
       }
     );
 };
+
+
+
+
+
+
+/*
+-----------------------------------------------------
+-----------------------------------------------------
+-----------------------------------------------------
+-------Schedule Start day [Getting, Posting, Editing, and Deleteing]
+-----------------------------------------------------
+-----------------------------------------------------
+*/
+
+
+
+
+/*
+------- [Getting] Shift informaiton
+*/
+
+exports.getSchedulestart = (req, res) => {
+  res.render('/people', {
+    title: 'Account Management'
+  });
+};
+
+
+
+
+/*
+------- [Posting] shift information from webform
+*/
+
+exports.postSchedulestart = (req, res, next) => {
+
+    const errors = req.validationErrors();
+
+    if (errors) {
+      req.flash('errors', errors);
+      return res.redirect('/people');
+    }
+
+    Schedulestart_manager.find({ 'manager_userid': req.user.id }, function (err,docs){
+      if (err) { return callback(err); }
+
+      //if there is not schedule start
+      if (docs.length == 0){
+
+          /* define what needs to be saved*/
+        const schedulestart_manager = new Schedulestart_manager({
+            manager_userid: req.user.id,
+            manager_email: req.user.email,
+            day_schedule_start: req.body.days_week_worked
+          });
+
+        schedulestart_manager.save((err) => {
+          if (err) {
+            return next(err);
+          }
+          console.log("SAVED!");
+          res.redirect('/people');
+        });
+
+
+      }
+
+
+
+      //this piece of code will only run if something already exists
+      if(docs.length >0){
+        if (err) {
+          return next(err);
+        }
+        Schedulestart_manager.update(
+          {$and:[
+            {manager_userid: req.user.id},
+            {manager_email: req.user.email},
+            {day_schedule_start: docs[0].day_schedule_start}
+        	]},
+          {$set:{
+              manager_userid: req.user.id,
+              manager_email: req.user.email,
+              day_schedule_start: req.body.days_week_worked}
+            },
+
+            function(err, result) {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    console.log(result);
+                }
+            }
+
+          )
+        res.redirect('/people');
+      }
+})};

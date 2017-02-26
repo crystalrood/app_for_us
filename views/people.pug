@@ -3,6 +3,110 @@ extends layout
 block content
 
 
+  //defining schedule start day
+  #people.page-header
+    .heading
+      link(rel='stylesheet', type='text/css', href='css/launch_main.css')
+      link(rel='stylesheet', type='text/css', href='css/launch_devices.css')
+      .container-sml.text-center
+        .col-12
+          #login.heading
+            | Schedule Start Day
+
+    head
+      script(type='text/javascript').
+
+        window.onload = function change_table() {
+          //gettting json values
+          var schedule_start = document.getElementById("schedule_start").value;
+          var schedule_start_json = JSON.parse( schedule_start );
+          var schedule_start_value = (schedule_start_json[0].day_schedule_start).toLowerCase()
+
+          //var dropdown = document.getElementById('myselect')
+          //putting items from json into list
+
+          var x = document.getElementById("myselect");
+           var monday = document.createElement("option");
+           var tuesday = document.createElement("option");
+           var wednesday = document.createElement("option");
+           var thursday = document.createElement("option");
+           var friday = document.createElement("option");
+           var saturday = document.createElement("option");
+           var sunday = document.createElement("option");
+
+           monday.text = 'Monday';
+           tuesday.text = 'Tuesday';
+           wednesday.text = 'Wednesday';
+           thursday.text = 'Thursday';
+           friday.text = 'Friday';
+           saturday.text = 'Saturday';
+           sunday.text = 'Sunday';
+
+           if (schedule_start_value == 'monday'){
+             monday.selected = 'true'
+           }
+           if (schedule_start_value == 'tuesday'){
+             tuesday.selected = 'true'
+           }
+           if (schedule_start_value == 'thursday'){
+             thursday.selected = 'true'
+           }
+           if (schedule_start_value == 'wednesday'){
+             wednesday.selected = 'true'
+           }
+           if (schedule_start_value == 'friday'){
+             friday.selected = 'true'
+           }
+           if (schedule_start_value == 'saturday'){
+             saturday.selected = 'true'
+           }
+           if (schedule_start_value == 'sunday'){
+             sunday.selected = 'true'
+           }
+           x.add(monday);
+           x.add(tuesday);
+           x.add(wednesday);
+           x.add(thursday);
+           x.add(friday);
+           x.add(saturday);
+           x.add(sunday);
+
+
+        };
+
+
+    br
+    #myform
+    form.form-group(action='/people/schedulestart', method='POST')
+      input.form-control(type='hidden', name='_csrf', value=_csrf)
+      br
+      #helper.label.control-label Select the day you want your 1 week schedule to start:
+      br
+      br
+      input(type='hidden', id="schedule_start", value= JSON.stringify(schedule))
+
+      select(id='myselect', name='days_week_worked')
+
+      br
+      br
+
+      .form-group
+        .col-sm-offset-2.col-sm-7
+          button.col-sm-3.btn.btn-primary(type='submit', value='Add') Save
+      br
+      br
+      br
+
+
+
+
+
+
+
+
+
+
+
 
 
 
