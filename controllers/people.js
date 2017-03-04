@@ -546,6 +546,10 @@ exports.postSchedulestart = (req, res, next) => {
             }
 
           )
+
+
+      //in here i can populate another collection that wil lhave all the
+      //information regarding schedule output
         res.redirect('/people');
       }
 })};
