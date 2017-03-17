@@ -74,17 +74,32 @@ block content
 
         };
 
-        function change_table1() {
+        function popup() {
+          console.log('hello')
+          var x = document.getElementById("myPopup");
+
+          if (x.style.display === 'none') {
+            x.style.display = 'block';
+          } else {
+            x.style.display = 'none';
+          }
+
 
         };
 
 
+        function close_span() {
+            document.getElementById("myPopup").style.display = "none";
+        }
+
         function change_table1() {
 
         };
+
 
 
     br
+
 
     #myform
     form.form-group()
@@ -102,19 +117,26 @@ block content
 
       .form-group
         .col-sm-offset-2.col-sm-7
-          input(type="button" name = "Delete" value = "Delete" onClick="")
+          input(type="button" name = "Delete" value = "Delete" onClick="Javacsript:popup(this)")
 
       br
       br
-      T Based on your selection the earliest schedule will be for the week of X and it will go out to your employees on Y  are you okay with this timeline? If not the other option you have is to extend? What date would you like your schedule to start?
-      br
-      select(id='myselect1', name='days_week_worked')
-
-      br
       br
 
-
-
+    #myPopup.ui-content(data-role='popup', style='display: none;')
+      div
+      #myModal.modal
+      // Modal content
+      //example modal code: https://www.w3schools.com/howto/howto_css_modals.asp
+      .modal-content
+        .modal-header
+          span.close(onClick = "Javascript:close_span()") ×
+          h2 Modal Header
+        .modal-body
+          p Based on your selection the earliest schedule will be for the week of X and it will go out to your employees on Y
+          p are you okay with this timeline? If not the other option you have is to extend? What date would you like your schedule to start?
+        .modal-footer
+          h3 Modal Footer
 
 
 
