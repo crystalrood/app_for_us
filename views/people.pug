@@ -75,8 +75,10 @@ block content
         };
 
         function popup() {
-          console.log('hello')
           var x = document.getElementById("myPopup");
+
+          var y = document.getElementsByClassName("modal-body")[0].innerHTML
+          console.log(y)
 
           if (x.style.display === 'none') {
             x.style.display = 'block';
@@ -131,10 +133,10 @@ block content
       .modal-content
         .modal-header
           span.close(onClick = "Javascript:close_span()") ×
-          h2 Modal Header
+          h2 Next schedules start date
         .modal-body
-          p Based on your selection the earliest schedule will be for the week of X and it will go out to your employees on Y
-          p are you okay with this timeline? If not the other option you have is to extend? What date would you like your schedule to start?
+          p Based on your selection the earliest schedule will be for the week of X and it will go out to your employees on Y are you okay with this timeline? If not the other option you have is to extend? What date would you like your schedule to start?
+
         .modal-footer
           h3 Modal Footer
 
