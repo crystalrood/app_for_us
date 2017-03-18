@@ -78,7 +78,83 @@ block content
           var x = document.getElementById("myPopup");
 
           var y = document.getElementsByClassName("modal-body")[0].innerHTML
-          console.log(y)
+          var text = "Based on your selection the earliest schedule will be for the week of X and it will go out to your employees on Y are you okay with this timeline? If not the other option you have is to extend? What date would you like your schedule to start?"
+          
+          //changes inner html
+          //document.getElementsByClassName("modal-body")[0].innerHTML = "<p> Hello </p>"
+          //console.log(y)
+          
+          //pulling in the value from the drop down
+          var schedule_start_value = document.getElementById("myselect").value;
+          
+          //setting up a variable that has the numeric day the of the dropdown
+          var day_schedule_start_value = 0  
+          
+          //going through all of these if's to see what value to set the numeric day to
+          if (schedule_start_value == 'Monday'){
+            day_schedule_start_value = 1
+          }
+          if (schedule_start_value == 'Tuesday'){
+            day_schedule_start_value = 2
+          }
+          if (schedule_start_value == 'Thursday'){
+            day_schedule_start_value = 4
+          }
+          if (schedule_start_value == 'Wednesday'){
+            day_schedule_start_value = 3
+          }
+          if (schedule_start_value == 'Friday'){
+            day_schedule_start_value = 5
+          }
+          if (schedule_start_value == 'Saturday'){
+            day_schedule_start_value = 6
+          }
+          if (schedule_start_value == 'Sunday'){
+            day_schedule_start_value = 7
+          }  
+          
+          
+          
+          //getting the date information brough in 
+          //via http://stackoverflow.com/questions/1531093/how-do-i-get-the-current-date-in-javascript
+          var today = new Date();
+          var dd = today.getDate();
+          var mm = today.getMonth()+1; //January is 0!
+          var yyyy = today.getFullYear();
+
+          if(dd<10) {
+              dd='0'+dd
+          } 
+
+          if(mm<10) {
+              mm='0'+mm
+          } 
+
+          today = mm+'/'+dd+'/'+yyyy;
+          
+          
+          // Get the current time as Unix time
+          var currentUnixTime = new Date().getTime()/1000;
+          var currentUnixTimePlus13 = currentUnixTime + (13*60*60*24)
+          
+          
+          var xx = new Date();
+          xx.setTime(currentUnixTimePlus13*1000); // javascript timestamps are in milliseconds
+          console.log(xx.getDay()); // the Day`
+          
+          
+          while (i <> day_schedule_start_value ) {
+              text += "The number is " + i;
+              i++;
+          }
+           
+
+
+        //  var date = new Date(unix_timestamp*1000);
+    
+          console.log(currentUnixTimePlus13)
+          
+          document.getElementsByClassName("modal-body")[0].innerHTML = "<p>"+ today+ "</p>"
 
           if (x.style.display === 'none') {
             x.style.display = 'block';
@@ -90,9 +166,17 @@ block content
         };
 
 
+
+
+
+
+
         function close_span() {
             document.getElementById("myPopup").style.display = "none";
         }
+        
+        
+        
 
         function change_table1() {
 
