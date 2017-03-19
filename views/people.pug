@@ -139,16 +139,34 @@ block content
           
           
           var xx = new Date();
-          xx.setTime(currentUnixTimePlus13*1000); // javascript timestamps are in milliseconds
-          console.log(xx.getDay()); // the Day`
+          var firstScheduleStartDate
+          var multipleVariable = (24*60*60)
           
           
-          while (i <> day_schedule_start_value ) {
-              text += "The number is " + i;
-              i++;
+          //need to compare day_schedule_start_value to the currentUnixTimePlus13
+          //0 checkes to see if the currentUnixTimePlus13 time is 
+          
+          console.log(day_schedule_start_value)
+          
+          for (i = 0; i <= 7; i++) {
+              if (xx.getDay() == day_schedule_start_value) {
+                console.log("day in the loop " + xx.getDay());
+                console.log("day for in the selector " +day_schedule_start_value)
+                 break; 
+               }
+               multipleVariable = i * multipleVariable
+               
+            
+              xx.setTime((currentUnixTimePlus13+multipleVariable)*1000); // javascript timestamps are in milliseconds
+              
+              console.log(xx.getDay()); // the Day`
+              
+              //resetting multiplication variable at the end of the loop
+              multipleVariable = (24*60*60)
           }
-           
 
+          console.log("xx.getDay()")
+          console.log("multiple variable "+ multipleVariable)
 
         //  var date = new Date(unix_timestamp*1000);
     
