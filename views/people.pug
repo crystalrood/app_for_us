@@ -78,7 +78,7 @@ block content
           var x = document.getElementById("myPopup");
 
           var y = document.getElementsByClassName("modal-body")[0].innerHTML
-          var text = "Based on your selection the earliest schedule will be for the week of X and it will go out to your employees on Y are you okay with this timeline? If not the other option you have is to extend? What date would you like your schedule to start?"
+          
           
           //changes inner html
           //document.getElementsByClassName("modal-body")[0].innerHTML = "<p> Hello </p>"
@@ -113,8 +113,6 @@ block content
             day_schedule_start_value = 7
           }  
           
-          
-          
           //getting the date information brough in 
           //via http://stackoverflow.com/questions/1531093/how-do-i-get-the-current-date-in-javascript
           var today = new Date();
@@ -132,47 +130,77 @@ block content
 
           today = mm+'/'+dd+'/'+yyyy;
           
-          
           // Get the current time as Unix time
           var currentUnixTime = new Date().getTime()/1000;
           var currentUnixTimePlus13 = currentUnixTime + (13*60*60*24)
           
-          
-          var xx = new Date();
-          var firstScheduleStartDate
+    
+          //declaring variables for loop
+          var firstScheduleStartDate = new Date();
           var multipleVariable = (24*60*60)
           
-          
           //need to compare day_schedule_start_value to the currentUnixTimePlus13
-          //0 checkes to see if the currentUnixTimePlus13 time is 
-          
-          console.log(day_schedule_start_value)
-          
+          //0 checkes to see if the currentUnixTimePlus13 time is equal to day_schedule_start_value
+          //and if it's not, it will continue through the loop
+
           for (i = 0; i <= 7; i++) {
-              if (xx.getDay() == day_schedule_start_value) {
-                console.log("day in the loop " + xx.getDay());
-                console.log("day for in the selector " +day_schedule_start_value)
+              //checking to see if the current First Schedule Start Date  is equal to the 
+              // value in the drop down
+              if (firstScheduleStartDate.getDay() == day_schedule_start_value) {
                  break; 
                }
-               multipleVariable = i * multipleVariable
                
+               //setting the multiplier which will increment by days
+               multipleVariable = i * multipleVariable
             
-              xx.setTime((currentUnixTimePlus13+multipleVariable)*1000); // javascript timestamps are in milliseconds
-              
-              console.log(xx.getDay()); // the Day`
+              //setting the first schedule start date to the 13 day window plus the multiplier
+              firstScheduleStartDate.setTime((currentUnixTimePlus13+multipleVariable)*1000); 
               
               //resetting multiplication variable at the end of the loop
               multipleVariable = (24*60*60)
           }
-
-          console.log("xx.getDay()")
-          console.log("multiple variable "+ multipleVariable)
-
-        //  var date = new Date(unix_timestamp*1000);
-    
-          console.log(currentUnixTimePlus13)
           
-          document.getElementsByClassName("modal-body")[0].innerHTML = "<p>"+ today+ "</p>"
+          
+          //additional date information we need
+          var firstScheduleReleaseDate = new Date()
+          firstScheduleReleaseDate.setTime((firstScheduleStartDate-(7*60*60*24*1000))); 
+          
+          
+          var firstScheduleOption1 = new Date(firstScheduleStartDate.getTime() + (1*7*60*60*24*1000));
+          var firstScheduleOption2 = new Date(firstScheduleStartDate.getTime() + (2*7*60*60*24*1000));
+          var firstScheduleOption3 = new Date(firstScheduleStartDate.getTime() + (3*7*60*60*24*1000));
+          var firstScheduleOption4 = new Date(firstScheduleStartDate.getTime() + (4*7*60*60*24*1000));
+          var firstScheduleOption5 = new Date(firstScheduleStartDate.getTime() + (5*7*60*60*24*1000));
+
+
+          // summary of variables for the dates 
+          //currentUnixTime = current time
+          //currentUnixTimePlus13 = current time +  13 days
+          //firstScheduleStartDate = current time + 13 days + <# of days it takes to get to the first weekday corresponding with the dropdown seletion>
+          //firstScheduleReleaseDate = firstScheduleStartDate - 7 days
+          //firstScheduleOption1-5 = firstScheduleStartDate + X weeks(s)
+          
+          var modal_text = 'Based on your selection, the earliest schedule will start on '+ firstScheduleStartDate.toDateString() + ','
+          modal_text += ' and it will go out to your employees on ' + firstScheduleReleaseDate.toDateString() + '.'
+          modal_text += ' Are you okay with this timeline? If not, the other option you have is to extend the first schedule to start on a day in the future. '
+          var modal_text3 = 'Are you okay with the timeline outline above?'          
+          var modal_text4 = 'Yes:<input type="radio" name = "radio1" value ="Yes" class="radio-inline" checked="checked" onClick="Javacsript:onclick_modal_option()"/>     '
+          var modal_text5 = '     No:<input type="radio" name = "radio1" value ="No" class="radio-inline" onClick="Javacsript:onclick_modal_option()"/>'
+          var modal_text6 = 'When would you like your schedule to start?   '
+          var modal_select = '<select id="myselect1" name="days_week_worked" disabled = "true"><option>'+ firstScheduleOption1.toDateString() + '</option>'
+          modal_select+= '<option>'+ firstScheduleOption2.toDateString() + '</option>' +'<option >'+ firstScheduleOption3.toDateString() + '</option>'
+          modal_select+='<option>'+ firstScheduleOption4.toDateString() + '</option>' +'<option>'+ firstScheduleOption5.toDateString() + '</option>'
+          modal_select+= '</select>'
+          var modal_button =  '<button type="submit" value="Add" class="col-sm-3 btn btn-primary" onClick="Javacsript:save_modal()">Save</button>' 
+                    
+          var all_modal_text =  "<p>"+ modal_text+ "</p>"  + "<br></br>" 
+          all_modal_text += "<p>"+ modal_text3 + "</p>" 
+          all_modal_text += modal_text4 + modal_text5
+          all_modal_text += "<br></br>"  + "<p>"+ modal_text6 + modal_select + "</p>" + "<br></br>"
+          all_modal_text += modal_button + "<br></br>"
+          
+         document.getElementById("modal_body1").innerHTML = all_modal_text
+          //console.log(all_modal_text)
 
           if (x.style.display === 'none') {
             x.style.display = 'block';
@@ -180,24 +208,33 @@ block content
             x.style.display = 'none';
           }
 
-
         };
 
 
-
-
-
-
+        function onclick_modal_option() {
+          var check_value = $("#myPopup input[type='radio']:checked").val();          
+          
+          if (check_value == "Yes") {
+            document.getElementById("myselect1").disabled=true;
+          } else {
+            document.getElementById("myselect1").disabled=false;
+          }
+          
+        }
 
         function close_span() {
             document.getElementById("myPopup").style.display = "none";
         }
         
         
-        
 
-        function change_table1() {
-
+        function save_modal() {
+          
+          var dropdown_value = document.getElementById("myselect").value;
+          var dropdown_value = document.getElementById("myselect").value;
+          
+          console.log(schedule_start)
+          console.log('mimsey got this to work')
         };
 
 
@@ -221,7 +258,7 @@ block content
 
       .form-group
         .col-sm-offset-2.col-sm-7
-          input(type="button" name = "Delete" value = "Delete" onClick="Javacsript:popup(this)")
+          input(type="button" name = "Delete" value = "Confirm and save" class="col-md-3 btn btn-primary" onClick="Javacsript:popup(this)")
 
       br
       br
@@ -236,11 +273,20 @@ block content
         .modal-header
           span.close(onClick = "Javascript:close_span()") ×
           h2 Next schedules start date
-        .modal-body
-          p Based on your selection the earliest schedule will be for the week of X and it will go out to your employees on Y are you okay with this timeline? If not the other option you have is to extend? What date would you like your schedule to start?
+        #modal_body1.modal-body
+          p Based on your selection the earliest schedule will be for the week of 
+          input.checkbox-inline(type='checkbox')
+
+        #modal_body2.modal-body
+          p Based on your selection the earliest schedule will be for the week of 
+          input.checkbox-inline(type='checkbox')
+            
+        #modal_body3.modal-body
+          p Based on your selection the earliest schedule will be for the week of 
+          input.checkbox-inline(type='checkbox')
 
         .modal-footer
-          h3 Modal Footer
+          h4 QuickShifts
 
 
 
