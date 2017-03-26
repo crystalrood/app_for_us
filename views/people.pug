@@ -73,6 +73,9 @@ block content
 
 
         };
+        
+        //setting global variable first schedule start date
+        var global_first_schedule_start
 
         function popup() {
           var x = document.getElementById("myPopup");
@@ -164,7 +167,7 @@ block content
           //additional date information we need
           var firstScheduleReleaseDate = new Date()
           firstScheduleReleaseDate.setTime((firstScheduleStartDate-(7*60*60*24*1000))); 
-          
+          global_first_schedule_start = firstScheduleStartDate.toDateString()
           
           var firstScheduleOption1 = new Date(firstScheduleStartDate.getTime() + (1*7*60*60*24*1000));
           var firstScheduleOption2 = new Date(firstScheduleStartDate.getTime() + (2*7*60*60*24*1000));
@@ -193,14 +196,23 @@ block content
           modal_select+= '</select>'
           var modal_button =  '<button type="submit" value="Add" class="col-sm-3 btn btn-primary" onClick="Javacsript:save_modal()">Save</button>' 
                     
-          var all_modal_text =  "<p>"+ modal_text+ "</p>"  + "<br></br>" 
-          all_modal_text += "<p>"+ modal_text3 + "</p>" 
-          all_modal_text += modal_text4 + modal_text5
-          all_modal_text += "<br></br>"  + "<p>"+ modal_text6 + modal_select + "</p>" + "<br></br>"
-          all_modal_text += modal_button + "<br></br>"
+          var modal_text_for_1
+          var modal_text_for_2
+          var modal_text_for_3 
           
-         document.getElementById("modal_body1").innerHTML = all_modal_text
+          modal_text_for_1= "<p>"+ modal_text+ "</p>"  + "<br></br>" 
+          modal_text_for_1 += "<p>"+ modal_text3 + "</p>" 
+          modal_text_for_1 += modal_text4 + modal_text5
+          modal_text_for_2 = "<p>"+ modal_text6 + modal_select + "</p>"
+          modal_text_for_3 = modal_button + "<br></br>"
+          
+         document.getElementById("modal_body1").innerHTML = modal_text_for_1
+         document.getElementById("modal_body2").innerHTML = modal_text_for_2
+         document.getElementById("modal_body3").innerHTML = modal_text_for_3
           //console.log(all_modal_text)
+          
+          //hiding div modal_body2 because the preset is Yes
+          document.getElementById("modal_body2").style.display = 'none';
 
           if (x.style.display === 'none') {
             x.style.display = 'block';
@@ -212,12 +224,15 @@ block content
 
 
         function onclick_modal_option() {
-          var check_value = $("#myPopup input[type='radio']:checked").val();          
+          var check_value = $("#modal_body1 input[type='radio']:checked").val();          
           
           if (check_value == "Yes") {
             document.getElementById("myselect1").disabled=true;
+            document.getElementById("modal_body2").style.display = 'none';
+
           } else {
             document.getElementById("myselect1").disabled=false;
+            document.getElementById("modal_body2").style.display = 'block';
           }
           
         }
@@ -230,11 +245,34 @@ block content
 
         function save_modal() {
           
-          var dropdown_value = document.getElementById("myselect").value;
-          var dropdown_value = document.getElementById("myselect").value;
+          var dropdown_main_value = document.getElementById("myselect").value;
+          var dropdown_modal_value = document.getElementById("myselect1").value;
+          var selector_value = $("#modal_body1 input[type='radio']:checked").val()
+          var first_schedule_start_date = global_first_schedule_start
           
-          console.log(schedule_start)
-          console.log('mimsey got this to work')
+          console.log(dropdown_main_value)
+          console.log(dropdown_modal_value)
+          console.log(selector_value)
+          //need to do an ajax call here
+          
+          
+          var schedule_start_info = {
+            days_week_worked: dropdown_main_value,
+            is_default_time_okay: selector_value,
+            if_no_first_start: dropdown_modal_value,
+            schedule_first_start_date: first_schedule_start_date
+           }
+
+        setCSRFToken($('meta[name="csrf-token"]').attr('content'));
+        
+        $.ajax({
+            type: 'POST',
+            data: schedule_start_info,
+            url: '/people/schedulestart',
+            dataType: 'JSON'
+        });
+        location.reload();
+          
         };
 
 
@@ -319,6 +357,15 @@ block content
            }
 
           setCSRFToken($('meta[name="csrf-token"]').attr('content'));
+          var shift = {
+
+            employee_type: document.getElementById("myTableData").rows[currentTD].cells[0].innerHTML,
+            days_worked: document.getElementById("myTableData").rows[currentTD].cells[1].innerHTML,
+            num_employees: document.getElementById("myTableData").rows[currentTD].cells[2].innerHTML,
+            shift_start_time: document.getElementById("myTableData").rows[currentTD].cells[3].innerHTML,
+            shift_end_time: document.getElementById("myTableData").rows[currentTD].cells[4].innerHTML
+
+           }
 
           $.ajax({
               type: 'POST',

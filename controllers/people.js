@@ -503,7 +503,11 @@ exports.postSchedulestart = (req, res, next) => {
         const schedulestart_manager = new Schedulestart_manager({
             manager_userid: req.user.id,
             manager_email: req.user.email,
-            day_schedule_start: req.body.days_week_worked
+            day_schedule_start: req.body.days_week_worked,
+            is_default_time_okay: req.body.is_default_time_okay,
+            if_no_first_start: req.body.if_no_first_start,
+            schedule_first_start_date: req.body.schedule_first_start_date
+
           });
 
         schedulestart_manager.save((err) => {
@@ -533,7 +537,10 @@ exports.postSchedulestart = (req, res, next) => {
           {$set:{
               manager_userid: req.user.id,
               manager_email: req.user.email,
-              day_schedule_start: req.body.days_week_worked}
+              day_schedule_start: req.body.days_week_worked,
+              is_default_time_okay: req.body.is_default_time_okay,
+              if_no_first_start: req.body.if_no_first_start,
+              schedule_first_start_date: req.body.schedule_first_start_date}
             },
 
             function(err, result) {
@@ -552,4 +559,5 @@ exports.postSchedulestart = (req, res, next) => {
       //information regarding schedule output
         res.redirect('/people');
       }
-})};
+    }
+)};
