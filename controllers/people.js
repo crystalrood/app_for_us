@@ -588,7 +588,7 @@ exports.postSchedulestart = (req, res, next) => {
 
 
       //setting up the schedule outline to put into the database
-      for (i = 0; i <= 14; i++) {
+      for (i = 0; i <= 5; i++) {
 
         schedule_start.setTime((schedule_start.getTime()+(i*7*60*60*24*1000)));
         schedule_end.setTime((schedule_end.getTime()+(i*7*60*60*24*1000)));
