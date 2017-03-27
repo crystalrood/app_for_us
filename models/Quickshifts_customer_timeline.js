@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 
 const quickshifts_customer_timelineSchema = new mongoose.Schema({
+  week_num: String,
   manager_userid: String,
-  emp_email: String,
+  manager_email: String,
   schedule_start: String,
   schedule_end: String,
   final_schedule_release: String,
-  lockout_day_all: String,
-  employee_lockout: Number,
+  employee_lockout: String,
   manager_lockout: String},
   { timestamps: true }
 );

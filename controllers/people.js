@@ -7,6 +7,7 @@ const People = require('../models/People.js');
 const Shift = require('../models/Shift.js');
 const Employeetype = require('../models/Employeetype.js');
 const Schedulestart_manager = require('../models/Schedulestart_manager.js');
+const Quickshifts_customer_timeline = require('../models/Quickshifts_customer_timeline.js');
 
 
 /*
@@ -551,12 +552,81 @@ exports.postSchedulestart = (req, res, next) => {
                     console.log(result);
                 }
             }
+        )
 
-          )
+      //****************************************************************************************
+      //****************************************************************************************
+      //****************************************************************************************
+      //*****here i need to create a function that looks out 10 weeks to plan the schedule *****//
+
+      //setting first schedule variables
+      var schedule_start;
+
+      if (req.body.is_default_time_okay = 'Yes'){
+        schedule_start = new Date(req.body.schedule_first_start_date);
+      }
+      else {
+        schedule_start = new Date(req.body.if_no_first_start);
+      }
+
+      var schedule_end = new Date(schedule_start.getTime() + (7*60*60*24*1000));
+      var schedule_release = new Date(schedule_start.getTime() - (7*60*60*24*1000));
+      var employee_lockout = new Date(schedule_start.getTime() - (8*60*60*24*1000));
+      var manager_lockout = new Date(schedule_start.getTime() - (13*60*60*24*1000));
+
+      //need to delete whatever is in the database already for a given manager
+
+      Quickshifts_customer_timeline.remove({$and:[
+        { manager_userid: req.user.id},
+        { manager_email: req.user.email}
+        ]}, (err) =>
+          {
+            if (err) { return next(err); }
+            console.log("schedule deleted");
+          }
+        );
 
 
-      //in here i can populate another collection that wil lhave all the
-      //information regarding schedule output
+      //setting up the schedule outline to put into the database
+      for (i = 0; i <= 14; i++) {
+
+        schedule_start.setTime((schedule_start.getTime()+(i*7*60*60*24*1000)));
+        schedule_end.setTime((schedule_end.getTime()+(i*7*60*60*24*1000)));
+        schedule_release.setTime((schedule_release.getTime()+(i*7*60*60*24*1000)));
+        employee_lockout.setTime((employee_lockout.getTime()+(i*7*60*60*24*1000)));
+        manager_lockout.setTime((manager_lockout.getTime()+(i*7*60*60*24*1000)));
+
+
+        /* define what needs to be saved*/
+        const quickshifts_customer_timeline = new Quickshifts_customer_timeline({
+          "week_num": i,
+          "manager_userid" : req.user.id,
+          "manager_email"  : req.user.email,
+          "schedule_start" : schedule_start.toDateString(),
+          "schedule_end"  : schedule_end.toDateString(),
+          "final_schedule_release"  : schedule_release.toDateString(),
+          "employee_lockout"  : employee_lockout.toDateString(),
+          "manager_lockout"  : manager_lockout.toDateString()
+          });
+
+        quickshifts_customer_timeline.save((err) => {
+          if (err) {
+            return next(err);
+          }
+          console.log("SAVED!");
+        });
+
+
+      }
+
+      //console.log(req.body.days_week_worked)
+      //console.log(req.body.is_default_time_okay)
+      //console.log(req.body.if_no_first_start)
+      //console.log(req.body.schedule_first_start_date)
+      //****************************************************************************************
+      //****************************************************************************************
+      //****************************************************************************************
+
         res.redirect('/people');
       }
     }
