@@ -570,7 +570,7 @@ exports.postSchedulestart = (req, res, next) => {
       }
 
       var schedule_end = new Date(schedule_start.getTime() + (7*60*60*24*1000));
-      var schedule_release = new Date(schedule_start.getTime() - (7*60*60*24*1000));
+      var schedule_release = new Date(schedule_start.getTime() - (6*60*60*24*1000));
       var employee_lockout = new Date(schedule_start.getTime() - (8*60*60*24*1000));
       var manager_lockout = new Date(schedule_start.getTime() - (13*60*60*24*1000));
 
@@ -589,12 +589,11 @@ exports.postSchedulestart = (req, res, next) => {
 
       //setting up the schedule outline to put into the database
       for (i = 0; i <= 5; i++) {
-
-        schedule_start.setTime((schedule_start.getTime()+(i*7*60*60*24*1000)));
-        schedule_end.setTime((schedule_end.getTime()+(i*7*60*60*24*1000)));
-        schedule_release.setTime((schedule_release.getTime()+(i*7*60*60*24*1000)));
-        employee_lockout.setTime((employee_lockout.getTime()+(i*7*60*60*24*1000)));
-        manager_lockout.setTime((manager_lockout.getTime()+(i*7*60*60*24*1000)));
+        schedule_start.setTime((schedule_start.getTime()+(7*60*60*24*1000)));
+        schedule_end.setTime((schedule_end.getTime()+(7*60*60*24*1000)));
+        schedule_release.setTime((schedule_release.getTime()+(7*60*60*24*1000)));
+        employee_lockout.setTime((employee_lockout.getTime()+(7*60*60*24*1000)));
+        manager_lockout.setTime((manager_lockout.getTime()+(7*60*60*24*1000)));
 
 
         /* define what needs to be saved*/
@@ -613,6 +612,7 @@ exports.postSchedulestart = (req, res, next) => {
           if (err) {
             return next(err);
           }
+          console.log(quickshifts_customer_timeline)
           console.log("SAVED!");
         });
 
