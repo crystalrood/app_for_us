@@ -19,14 +19,13 @@ block content
           //gettting json values
           var schedule_start = document.getElementById("schedule_start").value;
           var schedule_start_json = JSON.parse( schedule_start );
-          //var schedule_start_value = (schedule_start_json[0].day_schedule_start).toLowerCase()
-          var schedule_start_value 
+        
           //need to check to make sure the json string is not undefined
-          if (schedule_start_json !== undefined) {
-              schedule_start_value = 'monday'
+          if (schedule_start_json != undefined) {
+              var schedule_start_value = (schedule_start_json[0].day_schedule_start).toLowerCase();
           }
-          else {
-              schedule_start_value = (schedule_start_json[0].day_schedule_start).toLowerCase();
+          else { 
+            var schedule_start_value = 'monday'
           }
 
           
