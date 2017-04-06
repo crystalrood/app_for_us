@@ -14,14 +14,23 @@ block content
             | Schedule Start Day
 
     head
-      script(type='text/javascript').
-
+    script(type='text/javascript').
         window.onload = function change_table() {
           //gettting json values
           var schedule_start = document.getElementById("schedule_start").value;
           var schedule_start_json = JSON.parse( schedule_start );
-          var schedule_start_value = (schedule_start_json[0].day_schedule_start).toLowerCase()
+          //var schedule_start_value = (schedule_start_json[0].day_schedule_start).toLowerCase()
+          var schedule_start_value 
+          //need to check to make sure the json string is not undefined
+          if (schedule_start_json !== undefined) {
+              schedule_start_value = 'monday'
+          }
+          else {
+              schedule_start_value = (schedule_start_json[0].day_schedule_start).toLowerCase();
+          }
 
+          
+          console.log(schedule_start_value)
           //var dropdown = document.getElementById('myselect')
           //putting items from json into list
 
@@ -41,7 +50,11 @@ block content
            friday.text = 'Friday';
            saturday.text = 'Saturday';
            sunday.text = 'Sunday';
-
+        
+           if (schedule_start_value == ''){
+              monday.selected = 'true'
+           }
+           
            if (schedule_start_value == 'monday'){
              monday.selected = 'true'
            }
