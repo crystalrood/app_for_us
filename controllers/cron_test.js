@@ -3,7 +3,9 @@ var CronJob = require('cron').CronJob;
 
 const async = require('async');
 const Quickshifts_customer_timeline = require('../models/Quickshifts_customer_timeline.js');
-
+const Secondaryshift = require('../models/Secondaryshift.js');
+const Shift = require('../models/Shift.js');
+const User = require('../models/User.js');
 const EventEmitter = require('events');
 /*
 -----------------------------------------------------
@@ -15,6 +17,20 @@ const EventEmitter = require('events');
 //search for onlyUnique
 function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
+}
+
+function get_pretty_date(value){
+  var start_date = new Date(value)
+  var s_year = start_date.getFullYear();
+  var s_month = start_date.getMonth() + 1;
+  if(s_month <= 9)
+      s_month = '0'+s_month;
+  var s_day= start_date.getDate();
+  if(s_day <= 9)
+      s_day = '0'+s_day;
+
+  var s_prettyDate = s_month +'-'+ s_day + '-'+  s_year
+  return s_prettyDate
 }
 
 
@@ -122,3 +138,118 @@ new CronJob('* * * * * *', function() {
 }, null, true, 'America/Los_Angeles');
 
 */
+
+
+new CronJob('* * * * * *', function() {
+  console.log('You will see this message every second');
+  var locals = {};
+  var tasks = [
+      function(callback){
+        Secondaryshift.find(function (err, docs) {
+          if (err) { return callback(err); }
+          if (docs != null){
+            locals.shifts = docs;
+            callback();
+          }
+          else{
+            locals.shifts = docs;
+            callback();
+          }
+        });
+      },
+      function(callback){
+        Shift.find(function (err, docs) {
+          if (err) { return callback(err); }
+          if (docs != null){
+            locals.all_shifts = docs;
+            callback();
+          }
+          else{
+            locals.all_shifts = docs;
+            callback();
+          }
+        });
+      },
+
+      function(callback){
+          Quickshifts_customer_timeline.find( function (err, docs1) {
+          if (err) { return next(err); }
+          if (docs1 != null){
+            locals.schedule = docs1;
+            callback();
+          }
+          else{
+            locals.schedule = docs1;
+            callback();
+          }
+
+        });
+      },
+
+      function(callback){
+          User.find({user_type: "schedule_type"}, function (err, docs1) {
+          if (err) { return next(err); }
+          if (docs1 != null){
+            locals.manage = docs1;
+            callback();
+          }
+          else{
+            locals.manage = docs1;
+            callback();
+          }
+
+        });
+      },
+
+
+
+  ];
+
+async.parallel(tasks, function(err) {
+    if (err) return next(err);
+    //getting manager id for the first manager
+    //console.log(locals.manage[0]._id)
+
+    //iterating through all the manager_id's
+    var manager_id
+    for (var i = 0; i < locals.manage.length; i++){
+        manager_id = locals.manage[i]._id
+        console.log(manager_id)
+        console.log(locals.shifts)
+
+
+        //getting the max_date for what is currently in the secondary shifts table
+        var max_date;
+        for (var j=0 ; j<locals.shifts.length ; j++) {
+            if (!max_date || parseInt(locals.shifts[i].date_range_start) > parseInt(max_date)){
+              max_date = locals.shifts[i].date_range_start;
+            }
+         }
+         console.log( max_date);
+
+
+
+          var schedule_dates_greater_than_max= []
+
+          // iterating through all the customer timelines and comparing
+          // with the max date to understand 
+          for(var j=0; j< locals.schedule.length; j++){
+            //need to convert date to the same format
+            var s_prettyDate = get_pretty_date(locals.schedule[j].schedule_start)
+
+            if (s_prettyDate >max_date){
+              schedule_dates_greater_than_max.push(s_prettyDate)
+            }
+
+          }
+
+
+
+
+
+
+     }
+
+});
+
+}, null, true, 'America/Los_Angeles');

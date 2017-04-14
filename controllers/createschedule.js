@@ -1,49 +1,63 @@
 const async = require('async');
 const passport = require('passport');
-//const Createschedule = require('../models/Createschedule');
-/**
- * GET /books
- * List all books.
- */
+
 const Createschedule = require('../models/Createschedule.js');
 const People = require('../models/People.js');
 const Shift = require('../models/Shift.js');
 const Employeetype = require('../models/Employeetype.js');
 const Finalshift = require('../models/Finalshift.js');
 const Secondaryshift = require('../models/Secondaryshift.js');
-
+const Quickshifts_customer_timeline = require('../models/Quickshifts_customer_timeline.js');
 
 
 
 
 exports.getCreateschedule = (req, res, next) => {
 
-  Secondaryshift.find(
-  {$and:[{userid: req.user.id}, {date_range_start: req.body.start_date}, {date_range_end: req.body.end_date}]},
-  function (err, docs) {
-    if (err) return handleError(err);
-    res.render('createschedule', { shift: docs });
-    console.log(docs.length)
+    var locals = {};
+    var tasks = [
+        function(callback){
+          Secondaryshift.find({userid: req.user.id}, function (err, docs) {
+            if (err) { return callback(err); }
+            if (docs != null){
+              locals.shifts = docs;
+              callback();
+            }
+            else{
+              locals.shifts = docs;
+              callback();
+            }
+          });
+        },
+
+
+        function(callback){
+            Quickshifts_customer_timeline.find({manager_userid: req.user.id}, function (err, docs1) {
+            if (err) { return next(err); }
+            if (docs1 != null){
+              locals.schedule = docs1;
+              callback();
+            }
+            else{
+              locals.schedule = docs1;
+              callback();
+            }
+
+          });
+        },
+
+
+
+    ];
+
+  async.parallel(tasks, function(err) {
+      if (err) return next(err);
+      res.render('createschedule', locals);
   });
 
-    //console.log(req.body.cb)
 };
 
 
-//this one is called to just pull the data from secondary shifts to the webform
-exports.postCreatescheduledata = (req,res,next) => {
-
-  Secondaryshift.find(
-  {$and:[{userid: req.user.id}, {date_range_start: req.body.start_date}, {date_range_end: req.body.end_date}]},
-  function (err, docs) {
-    if (err) return handleError(err);
-    //res.render('createschedule', docs);
-    //res.render('createschedule', { shift: docs.toString() });
-
-    res.send(docs)
-  });
-
-}
 
 
 exports.postCreateschedule = (req, res, next) => {
