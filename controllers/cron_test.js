@@ -33,6 +33,11 @@ function get_pretty_date(value){
   return s_prettyDate
 }
 
+function addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+}
 
 /*
 new CronJob('* * * * * *', function() {
@@ -210,46 +215,103 @@ async.parallel(tasks, function(err) {
     //getting manager id for the first manager
     //console.log(locals.manage[0]._id)
 
+    //******
+    //******
     //iterating through all the manager_id's
     var manager_id
     for (var i = 0; i < locals.manage.length; i++){
         manager_id = locals.manage[i]._id
-        console.log(manager_id)
-        console.log(locals.shifts)
+        //console.log(manager_id)
+        //console.log(locals.shifts)
 
 
+        //******
+        //******
         //getting the max_date for what is currently in the secondary shifts table
         var max_date;
         for (var j=0 ; j<locals.shifts.length ; j++) {
-            if (!max_date || parseInt(locals.shifts[i].date_range_start) > parseInt(max_date)){
-              max_date = locals.shifts[i].date_range_start;
+            if (!max_date || parseInt(locals.shifts[j].date_range_start) > parseInt(max_date)){
+              max_date = locals.shifts[j].date_range_start;
             }
          }
-         console.log( max_date);
+
+         //if there is no data in shifts the set date to a random date very
+         //far in pass
+         if(locals.shifts.length == 0){
+           max_date = '01-01-1972'
+         }
 
 
+         //******
+         //******
+         // iterating through all the customer timelines and comparing
+         // with the max date to understand if
+        var schedule_dates_greater_than_max= []
 
-          var schedule_dates_greater_than_max= []
+        for(var j=0; j< locals.schedule.length; j++){
+          //need to convert date to the same format
+          var s_prettyDate = get_pretty_date(locals.schedule[j].schedule_start)
 
-          // iterating through all the customer timelines and comparing
-          // with the max date to understand 
-          for(var j=0; j< locals.schedule.length; j++){
-            //need to convert date to the same format
-            var s_prettyDate = get_pretty_date(locals.schedule[j].schedule_start)
-
-            if (s_prettyDate >max_date){
-              schedule_dates_greater_than_max.push(s_prettyDate)
-            }
-
+          //comparing to see if the current max date is smaller than
+          //anything in the schedule array
+          if (s_prettyDate >max_date){
+            schedule_dates_greater_than_max.push(s_prettyDate)
           }
+        }
 
 
+        //******
+        //******
+        //checking to ensure there were things added to the array above, if not
+        //i don't want to send any data processing to next steps outlined below
+        if(schedule_dates_greater_than_max.length >0){
+
+          //need to add code so i can push the dates from schedule_dates_greater_than_max
+          //into a json and build information about schedules around that
+          for(var j=0; j<schedule_dates_greater_than_max.length; j++){
+
+            //ensuring that the there are shifts in the data
+            if (locals.all_shifts.length >= 1){
+
+              //for any given shift add the corresponding schedule start
+              // and end date to the secondary shifts json
+              //then i will add it to the database
+              for(var p=0; p< locals.all_shifts.length; p++){
+
+                var thedate = addDays(schedule_dates_greater_than_max[j], 6)
+                var theprettydate = get_pretty_date(thedate)
+
+                var start_date = schedule_dates_greater_than_max[j]
+                var end_date = theprettydate
+
+                const sec_shift = new Secondaryshift({
+                  userid: manager_id,
+                  date_range_start: start_date,
+                  date_range_end: end_date,
+                  employee_type: locals.all_shifts[p].employee_type,
+                  days_worked: locals.all_shifts[p].days_worked,
+                  num_employees: locals.all_shifts[p].num_employees,
+                  shift_start_time: locals.all_shifts[p].shift_start_time,
+                  shift_end_time: locals.all_shifts[p].shift_end_time}
+                );
+
+                //saving the shfit :)
+                sec_shift.save((err) => {
+                  if (err) {return next(err);}
+                  console.log("SAVED!");
+                });
+              }
+            }
+          }
+        }
 
 
 
 
      }
 
-});
 
+
+//ending async parallel call
+});
 }, null, true, 'America/Los_Angeles');
