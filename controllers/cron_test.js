@@ -230,9 +230,11 @@ async.parallel(tasks, function(err) {
         //getting the max_date for what is currently in the secondary shifts table
         var max_date;
         for (var j=0 ; j<locals.shifts.length ; j++) {
+          if (manager_id == locals.shifts[j].user_id) {
             if (!max_date || parseInt(locals.shifts[j].date_range_start) > parseInt(max_date)){
               max_date = locals.shifts[j].date_range_start;
             }
+          }
          }
 
          //if there is no data in shifts the set date to a random date very
@@ -249,14 +251,17 @@ async.parallel(tasks, function(err) {
         var schedule_dates_greater_than_max= []
 
         for(var j=0; j< locals.schedule.length; j++){
-          //need to convert date to the same format
-          var s_prettyDate = get_pretty_date(locals.schedule[j].schedule_start)
+          if(manager_id == locals.schedule[j].manager_userid){
 
-          //comparing to see if the current max date is smaller than
-          //anything in the schedule array
-          if (s_prettyDate >max_date){
-            schedule_dates_greater_than_max.push(s_prettyDate)
-          }
+            //need to convert date to the same format
+            var s_prettyDate = get_pretty_date(locals.schedule[j].schedule_start)
+
+            //comparing to see if the current max date is smaller than
+            //anything in the schedule array
+            if (s_prettyDate >max_date){
+              schedule_dates_greater_than_max.push(s_prettyDate)
+            }
+        }
         }
 
 
@@ -277,29 +282,30 @@ async.parallel(tasks, function(err) {
               // and end date to the secondary shifts json
               //then i will add it to the database
               for(var p=0; p< locals.all_shifts.length; p++){
+                if(manager_id == locals.all_shifts[p].userid){
+                  var thedate = addDays(schedule_dates_greater_than_max[j], 6)
+                  var theprettydate = get_pretty_date(thedate)
 
-                var thedate = addDays(schedule_dates_greater_than_max[j], 6)
-                var theprettydate = get_pretty_date(thedate)
+                  var start_date = schedule_dates_greater_than_max[j]
+                  var end_date = theprettydate
 
-                var start_date = schedule_dates_greater_than_max[j]
-                var end_date = theprettydate
+                  const sec_shift = new Secondaryshift({
+                    userid: manager_id,
+                    date_range_start: start_date,
+                    date_range_end: end_date,
+                    employee_type: locals.all_shifts[p].employee_type,
+                    days_worked: locals.all_shifts[p].days_worked,
+                    num_employees: locals.all_shifts[p].num_employees,
+                    shift_start_time: locals.all_shifts[p].shift_start_time,
+                    shift_end_time: locals.all_shifts[p].shift_end_time}
+                  );
 
-                const sec_shift = new Secondaryshift({
-                  userid: manager_id,
-                  date_range_start: start_date,
-                  date_range_end: end_date,
-                  employee_type: locals.all_shifts[p].employee_type,
-                  days_worked: locals.all_shifts[p].days_worked,
-                  num_employees: locals.all_shifts[p].num_employees,
-                  shift_start_time: locals.all_shifts[p].shift_start_time,
-                  shift_end_time: locals.all_shifts[p].shift_end_time}
-                );
-
-                //saving the shfit :)
-                sec_shift.save((err) => {
-                  if (err) {return next(err);}
-                  console.log("SAVED!");
-                });
+                  //saving the shfit :)
+                  sec_shift.save((err) => {
+                    if (err) {return next(err);}
+                    console.log("SAVED!");
+                  });
+                }
               }
             }
           }
