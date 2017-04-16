@@ -17,6 +17,21 @@ block content
     var start_date_picker
     var end_date_picker
 
+
+    function get_pretty_date(value){
+      var start_date = new Date(value)
+      var s_year = start_date.getFullYear();
+      var s_month = start_date.getMonth() + 1;
+      if(s_month <= 9)
+          s_month = '0'+s_month;
+      var s_day= start_date.getDate();
+      if(s_day <= 9)
+          s_day = '0'+s_day;
+
+      var s_prettyDate = s_month +'-'+ s_day + '-'+  s_year
+      return s_prettyDate
+    }
+    
     window.onload = function bring_in_da_data() {
       
         //getting the data from the initial pull upon page load
@@ -32,35 +47,29 @@ block content
         var listItems = [];
 
         //putting items into initial list
+        console.log(schedule_data)
         
         for (var i = 0; i < schedule_data.length; i++){
           
           //start date
-          var start_date = new Date(schedule_data[i].schedule_start)
-          var s_year = start_date.getFullYear();
-          var s_month = start_date.getMonth() + 1;
-          if(s_month <= 9)
-              s_month = '0'+s_month;
-          var s_day= start_date.getDate();
-          if(s_day <= 9)
-              s_day = '0'+s_day;
+          var s_prettyDate = get_pretty_date(schedule_data[i].schedule_start)
 
-          var s_prettyDate = s_month +'-'+ s_day + '-'+  s_year
-          
           //end date
-          var end_date = new Date(schedule_data[i].schedule_end)
-          var e_year = end_date.getFullYear();
-          var e_month = end_date.getMonth() + 1;
-          if(e_month <= 9)
-              e_month = '0'+e_month;
-          var e_day= end_date.getDate();
-          if(e_day <= 9)
-              e_day = '0'+e_day;
-
-          var e_prettyDate = e_month +'-'+ e_day + '-'+  e_year
+          var e_prettyDate = get_pretty_date(schedule_data[i].schedule_end)
           
+          var manager_lockout = get_pretty_date(schedule_data[i].manager_lockout)
+          var today_date = new Date()
+          today_date = get_pretty_date(today_date)
+          
+          //console.log(manager_lockout)
+          //console.log(today_date)
           itemTest = s_prettyDate+ " to " + e_prettyDate;
-          listItems[i] = itemTest;
+          
+          if(manager_lockout > today_date){
+            listItems.push(itemTest);
+          }
+          
+          
          }
 
          //removing duplicates
@@ -287,9 +296,13 @@ block content
     }
 
     function finalshifts_submit(){
+    var dropdown = document.getElementById('ddl').options[document.getElementById('ddl').selectedIndex].text;
+    var dropdownstart = dropdown.substring(0,10)
+    var dropdownend = dropdown.substring(14,24)
+    
       var shift = {
-        date_range_start: start_date_picker,
-        date_range_end: end_date_picker
+        date_range_start: dropdownstart,
+        date_range_end: dropdownend
        }
 
       setCSRFToken($('meta[name="csrf-token"]').attr('content'));
