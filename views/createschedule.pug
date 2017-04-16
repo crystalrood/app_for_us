@@ -25,8 +25,8 @@ block content
 
         var shifts_data = data_for_db_value.shifts;
         var schedule_data = data_for_db_value.schedule
-        console.log(data_for_db_value.schedule)
-        console.log(data_for_db_value.shifts)
+        //console.log(data_for_db_value.schedule)
+        //console.log(data_for_db_value.shifts)
 
         //doing work to fill in the drop down
         var listItems = [];
@@ -85,7 +85,6 @@ block content
         dropdown.selectedIndex = 1;
         
         //doing work to fill in the table
-        var trHTML = '';
         
         // need to delete old rows everytime a new data range is selected
         var elmtTable = document.getElementById('myTableData');
@@ -95,9 +94,12 @@ block content
            elmtTable.deleteRow(x)
         }
 
-
+        var date_selected_in_dropdown = out[1].substring(0,10)
+        var trHTML = '';
+        
         //putting all the new rows from the post function together in HTML
         shifts_data.forEach(function(item, itemIndex){
+        if(item.date_range_start == date_selected_in_dropdown) {
           trHTML += '<tr><td>' + item.employee_type
             +'<td>' + item.days_worked
             +'<td>' + item.num_employees
@@ -105,6 +107,7 @@ block content
             +'<td>' + item.shift_end_time
             +'<td>' + '<input type="button" name="btn-Edit" value="Edit" onClick="Javacsript:editRow(this)"/>'
             +'<td>' + '<input type="button" name="Delete" value="Delete" onClick="Javacsript:deleteRow(this)"/>'
+        }
         })
 
         //appending all rows to the myTableData table :)
@@ -115,10 +118,42 @@ block content
 
     //this function is suppose to change the manager table once the date picker is in place
     function change_table() {
-    
-    
-    
+    //delete current elements
+      var elmtTable = document.getElementById('myTableData');
+      var tableRows = elmtTable.getElementsByTagName('tr');
+      var rowCount = tableRows.length;
+      for (var x=rowCount-1; x>0; x--) {
+         elmtTable.deleteRow(x)
+      }
+      
+      var data_for_db = document.getElementById("data_for_db").value;
+      var data_for_db_value = JSON.parse( data_for_db );
+
+      var shifts_data = data_for_db_value.shifts;
+      
+      var dropdown = document.getElementById('ddl').options[document.getElementById('ddl').selectedIndex].text;
+      dropdown = dropdown.substring(0,10)
+      var trHTML = '';
+      
+      
+      shifts_data.forEach(function(item, itemIndex){
+        if(item.date_range_start == dropdown) {
+          trHTML += '<tr><td>' + item.employee_type
+            +'<td>' + item.days_worked
+            +'<td>' + item.num_employees
+            +'<td>' + item.shift_start_time
+            +'<td>' + item.shift_end_time
+            +'<td>' + '<input type="button" name="btn-Edit" value="Edit" onClick="Javacsript:editRow(this)"/>'
+            +'<td>' + '<input type="button" name="Delete" value="Delete" onClick="Javacsript:deleteRow(this)"/>'
+        }
+      })
+
+      //appending all rows to the myTableData table :)
+      $('#myTableData').append(trHTML);        
+      
+      
     }
+
 
     function addRow() {
     //variables
@@ -186,6 +221,12 @@ block content
       var currentTD = obj.parentNode.parentNode.rowIndex;
       var table = document.getElementById("myTableData");
       var row_length = document.getElementById("myTableData").rows.length;
+      var dropdown = document.getElementById('ddl').options[document.getElementById('ddl').selectedIndex].text;
+      var dropdownstart = dropdown.substring(0,10)
+      var dropdownend = dropdown.substring(14,24)
+      
+      //console.log(dropdownstart)
+      //console.log(dropdownend)
 
       if (obj.value == 'Edit') {
 
@@ -225,11 +266,12 @@ block content
                    'old_num_employees': num_employees,
                    'old_shift_start_time': shift_start_time,
                    'old_shift_end_time': shift_end_time,
-                   'date_range_start': start_date_picker,
-                   'date_range_end': end_date_picker,
+                   'date_range_start': dropdownstart,
+                   'date_range_end': dropdownend,
            }
 
-
+           console.log(newshift)
+           
           setCSRFToken($('meta[name="csrf-token"]').attr('content'));
 
           $.ajax({
@@ -238,6 +280,7 @@ block content
               url: '/createschedule/updateshift',
               dataType: 'JSON'
           });
+          
 
       }
 

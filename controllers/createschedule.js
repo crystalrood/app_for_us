@@ -155,7 +155,7 @@ exports.postUpdateSecondaryShift = (req, res, next) => {
       shift_start_time: req.body.shift_start_time,
       shift_end_time: req.body.shift_end_time}
     );
-
+    console.log(sec_shift)
     sec_shift.save((err) => {
       if (err) {return next(err);}
       console.log("SAVED!");

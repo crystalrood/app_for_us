@@ -143,7 +143,7 @@ new CronJob('* * * * * *', function() {
 }, null, true, 'America/Los_Angeles');
 
 */
-
+/*
 
 new CronJob('* * * * * *', function() {
   console.log('You will see this message every second');
@@ -321,3 +321,4 @@ async.parallel(tasks, function(err) {
 //ending async parallel call
 });
 }, null, true, 'America/Los_Angeles');
+*/
