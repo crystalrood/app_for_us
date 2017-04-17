@@ -67,7 +67,6 @@ exports.index = (req, res, next) => {
 
   //find if it's an employees
    if (req.user.user_type == 'employee_type') {
-
       res.render('home', {
         title: 'Home'
       });

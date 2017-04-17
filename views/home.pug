@@ -230,53 +230,53 @@ block content
           }
           
 
+          function remove_dups(value){
+          var seen = {};
+          var out_cal_dates = [];
+          var j = 0;
+          for(var i = 0; i < value.length; i++) {
+              var item = value[i];
+              if(seen[item] !== 1) {
+                    seen[item] = 1;
+                    out_cal_dates[j++] = item;
+              }
+              }
+          return out_cal_dates;
+          }
+          
           window.onload = function bring_in_da_data() {
             
               //getting the data from the initial pull upon page load
               var data_for_db = document.getElementById("docs_json").value;
               var data_for_db_value = JSON.parse( data_for_db );
               
-              var shifts_data = data_for_db_value.shifts;
+              var shifts_data = data_for_db_value.modeledshifts;
               var schedule_data = data_for_db_value.schedule;
 
+              // **********
+              //filling in the dropdown
               //doing work to fill in the drop down
               var listItems = [];
 
               //putting items into initial list
-              for (var i = 0; i < schedule_data.length; i++){
-                              
-              //start date
+              for (var i = 0; i < schedule_data.length; i++){  
+              //getting all the dates together
               var s_prettyDate = get_pretty_date(schedule_data[i].schedule_start)
-
-              //end date
               var e_prettyDate = get_pretty_date(schedule_data[i].schedule_end)
-              
               var manager_lockout = get_pretty_date(schedule_data[i].manager_lockout)
               var today_date = new Date()
               today_date = get_pretty_date(today_date)
-              
-              //console.log(manager_lockout)
-              //console.log(today_date)
+            
               itemTest = s_prettyDate+ " to " + e_prettyDate;
               
               if(manager_lockout <= today_date){
                 listItems.push(itemTest);
               }
-              
-              
              }
-
-             //removing duplicates
-             var seen = {};
-             var out = [];
-             var j = 0;
-             for(var i = 0; i < listItems.length; i++) {
-                 var item = listItems[i];
-                 if(seen[item] !== 1) {
-                       seen[item] = 1;
-                       out[j++] = item;
-                 }
-            }
+             //removing duplicates from the listitems function
+             var out = remove_dups(listItems)
+             
+             out.sort()
 
             //putting values form de-deuped list into dropdown
             var dropdown = document.getElementById("ddl");
@@ -285,15 +285,140 @@ block content
               dropdown[dropdown.length] = new Option(itemTest, itemTest);
             };
             
-            dropdown.selectedIndex = 1;
-                        
-
-
-        
-        
-        
-        
+            dropdown.selectedIndex = 0;
+            
+            
+            // *****
+            // populating table or presenting message that the schedule is being
+            //created
+            
+            var current_selected_date = out[0].substring(0,10)
+            var message_to_manager = document.getElementById("message_to_manager");
+          
+            for (var i = 0; i < schedule_data.length; i++){  
+            //getting all the dates together
+            var s_prettyDate = get_pretty_date(schedule_data[i].schedule_start)
+            var schedule_release = get_pretty_date(schedule_data[i].final_schedule_release)
+            var today_date = new Date()
+            today_date = get_pretty_date(today_date)
+          
+            //compare the current selection of the dropdown to the start date
+            //within the schedule data, if dates are equal lets take a deeper look
+            if (current_selected_date == s_prettyDate){
+              //if the schedule relese date is in the future
+              // show the message to the manager
+              if(schedule_release>=today_date){
+                message_to_manager.type = ''
+              }  
             }
+           }
+           
+           if (message_to_manager.type == 'hidden'){
+             console.log('message')
+               var listItems = [];
+               //here i need to add code to populate table
+               //getting all the date information for the calendar
+               for (var i = 0; i < shifts_data.length; i++){
+                   itemTest= shifts_data[i].shift_date_range_start + " to " + shifts_data[i].shift_date_range_end;
+                   if (itemTest == out[0]){
+                     listItems.push(shifts_data[i].date + "," + shifts_data[i].day_of_week)
+                  };
+               }
+               
+               //removing duplicates
+               var out_cal_dates = remove_dups(listItems)
+               out_cal_dates.sort()
+                 
+
+                //clearing list
+                var listItems = [];
+
+                //now it's time to pull unique employee types
+                for (var i = 0; i < shifts_data.length; i++){
+                  itemTest= shifts_data[i].shift_date_range_start + " to " + shifts_data[i].shift_date_range_end;
+                  if (itemTest == out[0]){
+                    listItems[i] = shifts_data[i].employee_type
+                  };
+                };
+
+                //getting only the unique employee type for the calendar
+                var out_emp_types = remove_dups(listItems)
+                out_emp_types.sort()
+
+                //
+                //adding the date shit to an html string to put into the table
+                var trHTML;
+                trHTML += '<tr><td>' + 'Employee Type'
+
+                for (var i = 0; i < out_cal_dates.length; i++){
+                  var  title = out_cal_dates[i].split(",")
+                  trHTML += '<td>' + title[1] + '<br>' + '<br>' + title[0]
+
+                };
+
+
+                $('#myTableData1').append(trHTML);
+
+
+                trHTML = ''
+                //buidling employee types and shifts for employee schedule
+
+                var table = document.getElementById("myTableData1");
+                for(var j = 0; j< out_emp_types.length; j++){
+                  var emp_type = out_emp_types[j]
+                  trHTML += '<tr><td>'+ emp_type + '<br><br><br>'
+
+                  //getting the calendar dates in order so i can add them to the schedule in order :)
+                  for (var i = 0; i < out_cal_dates.length; i++){
+                    var  title = out_cal_dates[i].split(",")
+
+                    //i need to reset list items and the varaible m so i can re-add to shifts for a given date to 1 list
+                    listItems = []
+                    var m = 0
+
+                    //iterating through the json
+                    for (var k = 0; k < shifts_data.length; k++){
+
+                      //if the date in in the json thing matches the calendar date in the calendar then i enter here
+                      if (shifts_data[k].date == title[0] && shifts_data[k].employee_type == emp_type){
+                        //if it equaly i add it to the list here
+                        var value = shifts_data[k].shift_time_start + ' to ' + shifts_data[k].shift_time_end
+                        //ensuring i don't add a duplicate value
+                        if (listItems.indexOf(value)==-1) {
+                          listItems[m] = value
+                          m += 1
+                        }
+                      };
+                    };
+
+                    if(listItems.length == 0){
+                      trHTML += '<td>'
+                    }
+
+                    if(listItems.length > 0){
+                      trHTML += '<td>'
+                      for (var n = 0; n < listItems.length; n++){
+                        trHTML += '<div style="width:100px;height:60px;border:5px solid #a1a8e0;background-colo #a1a8e0;background-color: #a1a8e0;border-radius: 7px;" class="type1">'+ listItems[n] + '</div><br>'
+
+                      }
+
+                    }
+
+                  };
+
+                }
+
+                $('#myTableData1').append(trHTML);
+
+             
+             
+            }
+            
+            
+            
+            
+            
+          }
 
 
 
@@ -372,9 +497,6 @@ block content
                  }
             }
             out_emp_types.sort()
-            //console.log(out_emp_types)
-            //console.log(out_cal_dates)
-
 
             //
             //adding the date shit to an html string to put into the table
@@ -419,8 +541,6 @@ block content
                       listItems[m] = value
                       m += 1
                     }
-
-
                   };
                 };
 
@@ -477,6 +597,8 @@ block content
         br
         select#ddl(onchange="change_table()")
         br
+        br
+        input(type='hidden', id="message_to_manager", value= 'This schedule is currently being created')  
         br
 
 
