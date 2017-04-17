@@ -134,6 +134,19 @@ block content
               br
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
   else if user.user_type == 'schedule_type'
     //******
     //header information that was copied and pasted
@@ -202,11 +215,95 @@ block content
           };
 
 
+          function get_pretty_date(value){
+            var start_date = new Date(value)
+            var s_year = start_date.getFullYear();
+            var s_month = start_date.getMonth() + 1;
+            if(s_month <= 9)
+                s_month = '0'+s_month;
+            var s_day= start_date.getDate();
+            if(s_day <= 9)
+                s_day = '0'+s_day;
+
+            var s_prettyDate = s_month +'-'+ s_day + '-'+  s_year
+            return s_prettyDate
+          }
+          
+
+          window.onload = function bring_in_da_data() {
+            
+              //getting the data from the initial pull upon page load
+              var data_for_db = document.getElementById("docs_json").value;
+              var data_for_db_value = JSON.parse( data_for_db );
+              
+              var shifts_data = data_for_db_value.shifts;
+              var schedule_data = data_for_db_value.schedule;
+
+              //doing work to fill in the drop down
+              var listItems = [];
+
+              //putting items into initial list
+              for (var i = 0; i < schedule_data.length; i++){
+                              
+              //start date
+              var s_prettyDate = get_pretty_date(schedule_data[i].schedule_start)
+
+              //end date
+              var e_prettyDate = get_pretty_date(schedule_data[i].schedule_end)
+              
+              var manager_lockout = get_pretty_date(schedule_data[i].manager_lockout)
+              var today_date = new Date()
+              today_date = get_pretty_date(today_date)
+              
+              //console.log(manager_lockout)
+              //console.log(today_date)
+              itemTest = s_prettyDate+ " to " + e_prettyDate;
+              
+              if(manager_lockout <= today_date){
+                listItems.push(itemTest);
+              }
+              
+              
+             }
+
+             //removing duplicates
+             var seen = {};
+             var out = [];
+             var j = 0;
+             for(var i = 0; i < listItems.length; i++) {
+                 var item = listItems[i];
+                 if(seen[item] !== 1) {
+                       seen[item] = 1;
+                       out[j++] = item;
+                 }
+            }
+
+            //putting values form de-deuped list into dropdown
+            var dropdown = document.getElementById("ddl");
+            for (var i = 0; i<out.length; i++){
+              var itemTest= out[i];
+              dropdown[dropdown.length] = new Option(itemTest, itemTest);
+            };
+            
+            dropdown.selectedIndex = 1;
+                        
+
+
+        
+        
+        
+        
+            }
+
+
+
+
           function change_table() {
             //gettting json values
 
             var docs_json = document.getElementById("docs_json").value;
             var docs_json_value = JSON.parse( docs_json );
+            
 
             //clearing table
             var table = document.getElementById("myTableData1")
@@ -220,7 +317,7 @@ block content
 
 
             var listItems = [];
-            console.log(docs_json_value)
+            //console.log(docs_json_value)
 
             //
             //
@@ -366,9 +463,9 @@ block content
         h1 Current schedule
         br
         br
-        input(type='hidden', id="docs_json", value= JSON.stringify(docs))
+        input(type='hidden', id="docs_json", value= JSON.stringify(locals))
         br
-
+        
 
         button.col-sm-3.btn.btn-primary(type='submit', value='Add', onClick="") View by employee type
         br
@@ -379,41 +476,6 @@ block content
         br
         br
         select#ddl(onchange="change_table()")
-          option(value='')
-          script.
-            //
-            //
-            // defining dropdown
-            //
-            //
-           var docs_json = document.getElementById("docs_json").value;
-           var docs_json_value = JSON.parse(docs_json);
-           var listItems = [];
-
-           //putting items into initial ist
-           for (var i = 0; i < docs_json_value.length; i++){
-             itemTest = docs_json_value[i].shift_date_range_start + " to " + docs_json_value[i].shift_date_range_end;
-             listItems[i] = itemTest;
-            }
-            //removing duplicates
-            var seen = {};
-            var out = [];
-            var j = 0;
-            for(var i = 0; i < listItems.length; i++) {
-                var item = listItems[i];
-                if(seen[item] !== 1) {
-                      seen[item] = 1;
-                      out[j++] = item;
-                }
-           }
-
-           //putting values form de-deuped list into dropdown
-           var dropdown = document.getElementById("ddl");
-           for (var i = 0; i<out.length; i++){
-             var itemTest= out[i];
-             dropdown[dropdown.length] = new Option(itemTest, itemTest);
-           };
-
         br
         br
 
@@ -424,6 +486,8 @@ block content
 
           br
           br
+
+
 
 
 
