@@ -56,7 +56,6 @@ exports.index = (req, res, next) => {
 
         async.parallel(tasks, function(err) {
             if (err) return next(err);
-            console.log(locals)
             res.render('home', locals);
         });
 
