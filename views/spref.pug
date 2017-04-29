@@ -21,10 +21,31 @@ block content
             }
           });
         };
+        
+        var secondshiftobj = [];
+        var start_date_picker
+        var end_date_picker
+
+
+        function get_pretty_date(value){
+          var start_date = new Date(value)
+          var s_year = start_date.getFullYear();
+          var s_month = start_date.getMonth() + 1;
+          if(s_month <= 9)
+              s_month = '0'+s_month;
+          var s_day= start_date.getDate();
+          if(s_day <= 9)
+              s_day = '0'+s_day;
+
+          var s_prettyDate = s_month +'-'+ s_day + '-'+  s_year
+          return s_prettyDate
+        }
+        
 
         function change_table() {
           //gettting json values
           var spref_json = document.getElementById("spref_json").value;
+          console.log(spref_json)
           var spref_json_value = JSON.parse( spref_json );
 
           //clearing table
@@ -131,13 +152,16 @@ block content
       #helper.label.control-label 2) Indicate your availability by checking the box and pressing save.
       br
       br
-      input(type='hidden', id="spref_json", value= JSON.stringify(spref))
+      input(type='hidden', id="spref_json", value= JSON.stringify(locals))
 
       select#ddl(onchange="change_table()")
         option(value='')
         script.
          var spref_json = document.getElementById("spref_json").value;
          var spref_json_value = JSON.parse(spref_json);
+         console.log(spref_json.timeline)
+         console.log(spref_json.people)
+           console.log(spref_json.shift)
          var listItems = [];
 
          //putting items into initial ist

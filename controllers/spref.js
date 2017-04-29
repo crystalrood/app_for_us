@@ -9,9 +9,13 @@ const Mgr_employee_link = require('../models/Mgr_employee_link.js');
 const Shifts = require('../models/Shift.js');
 const Finalemployeeshift = require('../models/Finalemployeeshift.js');
 const Actualfinalemployeeshift = require('../models/Actualfinalemployeeshift.js');
+const Quickshifts_customer_timeline = require('../models/Quickshifts_customer_timeline.js');
+const Secondaryshift = require('../models/Secondaryshift.js');
+var employee_type = 0
+var manager_user_id = 0
 
+exports.getSpref = (req, res, next) => {
 
-exports.getSpref = (req, res) => {
 
   // **** what does this code do? **** //
   //  Maps employee emails --> manager user id’s (should we change this to be a more concrete database
@@ -59,8 +63,7 @@ exports.getSpref = (req, res) => {
             return;
         }
     });
-var employee_type
-var manager_user_id
+
     // **** what does this code do? **** //
     //Manager employee ink aggregated
     // From manager employee links, will try to match shifts from manager db based on employee type
@@ -96,7 +99,6 @@ var manager_user_id
         manager_user_id = result[0].mgr_userid
         employee_type = result[0].type
 
-        console.log(manager_user_id)
          result.forEach(function(result, index) {
            var str = result.shifts_match_employee_type.days_worked
            var str_array = str.split(',')
@@ -164,12 +166,16 @@ var manager_user_id
 
 
      var locals = {};
+     console.log(manager_user_id)
+     console.log(employee_type)
+
      var tasks = [
          function(callback){
            Finalemployeeshift.find(
-             { 'mgr_userid': req.user.id }, function (err, docs) {
+             { 'userid': req.user.id }, function (err, docs) {
              if (err) { return callback(err); }
              if (docs != null){
+               console.log("final_employee_shift "+docs.length)
                locals.people = docs;
                callback();
              }
@@ -179,22 +185,42 @@ var manager_user_id
              }
            });
          },
-
 
          function(callback){
-           Shifts.find({ 'userid': req.user.id }, function (err, docs1) {
-             if (err) { return next(err); }
-             if (docs1 != null){
-               locals.shift = docs1;
+           Quickshifts_customer_timeline.find(
+             { 'manager_userid': manager_user_id },
+             function (err, docs2) {
+             if (err) { return callback(err); }
+             if (docs2 != null){
+               console.log("quickshift timelines " +docs2.length)
+               locals.timeline = docs2;
                callback();
              }
              else{
-               locals.shift = docs1;
+               locals.timeline = docs2;
                callback();
              }
-
            });
          },
+
+         function(callback){
+           Secondaryshift.find(
+             {$and:[{ 'userid': manager_user_id }, {employee_type: employee_type}]},
+             function (err, docs3) {
+             if (err) { return callback(err); }
+             if (docs3 != null){
+               console.log('secondar shifts ' +docs3.length)
+               locals.shifts = docs3;
+               callback();
+             }
+             else{
+               locals.shifts = docs3;
+               callback();
+             }
+           });
+         },
+
+
 
 
 
@@ -204,6 +230,7 @@ var manager_user_id
          if (err) return next(err);
          res.render('spref', locals);
      });
+
    };
 
 
@@ -264,7 +291,8 @@ exports.postSprefUpdate = (req, res, next) => {
 
 exports.postfinalSprefUpdate = (req, res, next) => {
   //calling secondary shift to see if there's anything in the collection...
-  console.log(req.body.date_range_start)
+
+console.log(req.body.date_range_start)
   console.log(req.body.date_range_end)
   Actualfinalemployeeshift.find(
     {$and:[{emp_userid: req.user.id}, {date_range_start: req.body.date_range_start}, {date_range_end: req.body.date_range_end}]},
