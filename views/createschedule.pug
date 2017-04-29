@@ -37,17 +37,14 @@ block content
         //getting the data from the initial pull upon page load
         var data_for_db = document.getElementById("data_for_db").value;
         var data_for_db_value = JSON.parse( data_for_db );
-
+        
         var shifts_data = data_for_db_value.shifts;
-        var schedule_data = data_for_db_value.schedule
+        var schedule_data = data_for_db_value.schedule;
         //console.log(data_for_db_value.schedule)
         //console.log(data_for_db_value.shifts)
 
         //doing work to fill in the drop down
         var listItems = [];
-
-        //putting items into initial list
-        console.log(schedule_data)
         
         for (var i = 0; i < schedule_data.length; i++){
           
@@ -83,7 +80,7 @@ block content
                    out[j++] = item;
              }
         }
-
+        out.sort()
         //putting values form de-deuped list into dropdown
         var dropdown = document.getElementById("ddl");
         for (var i = 0; i<out.length; i++){
@@ -103,9 +100,9 @@ block content
            elmtTable.deleteRow(x)
         }
 
-        var date_selected_in_dropdown = out[1].substring(0,10)
+        var date_selected_in_dropdown = out[0].substring(0,10)
         var trHTML = '';
-        
+
         //putting all the new rows from the post function together in HTML
         shifts_data.forEach(function(item, itemIndex){
         if(item.date_range_start == date_selected_in_dropdown) {
@@ -279,7 +276,7 @@ block content
                    'date_range_end': dropdownend,
            }
 
-           console.log(newshift)
+           //console.log(newshift)
            
           setCSRFToken($('meta[name="csrf-token"]').attr('content'));
 
@@ -299,7 +296,7 @@ block content
     var dropdown = document.getElementById('ddl').options[document.getElementById('ddl').selectedIndex].text;
     var dropdownstart = dropdown.substring(0,10)
     var dropdownend = dropdown.substring(14,24)
-    
+    console.log(dropdown)
       var shift = {
         date_range_start: dropdownstart,
         date_range_end: dropdownend

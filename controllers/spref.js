@@ -2,7 +2,7 @@
  * GET /spref
  * List all shift preferences (employees).
  */
-
+const async = require('async');
 const Spref = require('../models/Spref.js');
 const People = require('../models/People.js');
 const Mgr_employee_link = require('../models/Mgr_employee_link.js');
@@ -12,8 +12,10 @@ const Actualfinalemployeeshift = require('../models/Actualfinalemployeeshift.js'
 
 
 exports.getSpref = (req, res) => {
-  console.log(req.user.id);
-  console.log(req.user.email);
+
+  // **** what does this code do? **** //
+  //  Maps employee emails --> manager user id’s (should we change this to be a more concrete database
+  //  End result is a table that has manager user_id, employee type, and employee email
 
   People.aggregate(
     [
@@ -57,8 +59,15 @@ exports.getSpref = (req, res) => {
             return;
         }
     });
-
-    //var db = mongoose.connect('mongodb://localhost:3000/test');
+var employee_type
+var manager_user_id
+    // **** what does this code do? **** //
+    //Manager employee ink aggregated
+    // From manager employee links, will try to match shifts from manager db based on employee type
+      //*****If the employee shifts have at least 1 item then nothing new is added to the DB (THIS NEEDS TO BE FIXED)
+      //*******Problem 1: if the manager adds shifts to the db this list become outdated
+      //*******Problem 2:  employee won’t get new shifts added to their drop down...again another out data problem..this needs to be done better
+    // Else, all of the manager existing shifts are added to the database
 
     Mgr_employee_link.aggregate([{
       $lookup: {
@@ -73,18 +82,21 @@ exports.getSpref = (req, res) => {
           $match: { "shifts_match_employee_type.userid": {$ne:null} }
         }],
         function (err, result) {
+
          if (err) {
-            console.log('madeit72')
              console.log(err);
              return;
          }
-         //console.log(result)
-        // console.log(result);
-        // console.log('madeit77')
-         //adding some stuff here
-      //console.log(result);
+
         var final_result = [];
-        //console.log(result)
+
+        //setting manager_id for employee, and employee type
+        //based on data pulled for shifts
+        //these variables are set as global variables above
+        manager_user_id = result[0].mgr_userid
+        employee_type = result[0].type
+
+        console.log(manager_user_id)
          result.forEach(function(result, index) {
            var str = result.shifts_match_employee_type.days_worked
            var str_array = str.split(',')
@@ -102,12 +114,7 @@ exports.getSpref = (req, res) => {
                num_employees: result.shifts_match_employee_type.num_employees,
                shift_start_time:result.shifts_match_employee_type.shift_start_time,
                shift_end_time: result.shifts_match_employee_type.shift_end_time,
-             })
-
-             ;
-             //console.log(new_result)
-             //onsole.log(str_array.length)
-             //console.log(str_array[i])
+             });
 
              Finalemployeeshift.update(
                {$and:[
@@ -140,9 +147,6 @@ exports.getSpref = (req, res) => {
                      }
                  }
                );
-
-            // final_result.push(new_result);
-          //  console.log(new_result)
           }
 
 
@@ -151,28 +155,71 @@ exports.getSpref = (req, res) => {
 
      });
 
+     //**** about this code **** //
+     //  below will be used on the employee to extract employee user_type, based on this i’ll pull the final employee shifts
      //function used to reset Finalemployeeshift database to match emp type = user id type (needed to cleanse from step above)
-     People.find({ 'email': req.user.email }, function (err,docs){
-       if (err) { return callback(err); }
-       //syntax for calling docs array
-       var usertype = docs[0].type
-       Finalemployeeshift.find(  {$and:[
-         	{ userid: req.user.id},
-         	{ employee_type: usertype},
 
 
-       	]}, function (err, docs2) {
-         if (err) { return callback(err); }
-         res.render('spref', { spref: docs2 });
-       });
 
-     }
 
-     )
+
+     var locals = {};
+     var tasks = [
+         function(callback){
+           Finalemployeeshift.find(
+             { 'mgr_userid': req.user.id }, function (err, docs) {
+             if (err) { return callback(err); }
+             if (docs != null){
+               locals.people = docs;
+               callback();
+             }
+             else{
+               locals.people = docs;
+               callback();
+             }
+           });
+         },
+
+
+         function(callback){
+           Shifts.find({ 'userid': req.user.id }, function (err, docs1) {
+             if (err) { return next(err); }
+             if (docs1 != null){
+               locals.shift = docs1;
+               callback();
+             }
+             else{
+               locals.shift = docs1;
+               callback();
+             }
+
+           });
+         },
+
+
+
+     ];
+
+     async.parallel(tasks, function(err) {
+         if (err) return next(err);
+         res.render('spref', locals);
+     });
+   };
+
+
+
+
+
+
+
+
+
+
+
+
 
 //add code in here to remove all shifts that doesn't match employee type
 
-};
 
 
 

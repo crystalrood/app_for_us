@@ -195,13 +195,17 @@ exports.postUpdateSecondaryShift = (req, res, next) => {
     Finalshift.find(
       {$and:[{userid: req.user.id}, {date_range_start: req.body.date_range_start}, {date_range_end: req.body.date_range_end}]},
       function (err, shifts) {
+
         //if error return error message
         if (err) return handleError(err);
         //checking to see if the shift length is 0, if so we're going to create a new collection
         if (shifts.length == 0){
 
+
           //now since there is no record, we're going to find the shift's from
           //manager preferences
+            console.log(req.body.date_range_start.length)
+            console.log(req.body.date_range_end.length)
             Secondaryshift.find(
             {$and:[{userid: req.user.id}, {date_range_start: req.body.date_range_start}, {date_range_end: req.body.date_range_end}]},
             function (err, shft) {
@@ -222,7 +226,7 @@ exports.postUpdateSecondaryShift = (req, res, next) => {
                     shift_start_time: shft.shift_start_time,
                     shift_end_time: shft.shift_end_time}
                   );
-
+                  console.log(sec_shift)
                   sec_shift.save((err) => {
                     if (err) {return next(err);}
                     console.log("SAVED!");
