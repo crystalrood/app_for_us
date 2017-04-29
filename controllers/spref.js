@@ -176,11 +176,11 @@ exports.getSpref = (req, res, next) => {
              if (err) { return callback(err); }
              if (docs != null){
                console.log("final_employee_shift "+docs.length)
-               locals.people = docs;
+               locals.shifts = docs;
                callback();
              }
              else{
-               locals.people = docs;
+               locals.shifts = docs;
                callback();
              }
            });
@@ -210,11 +210,11 @@ exports.getSpref = (req, res, next) => {
              if (err) { return callback(err); }
              if (docs3 != null){
                console.log('secondar shifts ' +docs3.length)
-               locals.shifts = docs3;
+               locals.manager_shifts = docs3;
                callback();
              }
              else{
-               locals.shifts = docs3;
+               locals.manager_shifts = docs3;
                callback();
              }
            });

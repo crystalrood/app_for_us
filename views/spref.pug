@@ -41,13 +41,122 @@ block content
           return s_prettyDate
         }
         
+        
+        
+        
+        
+        
+        window.onload = function bring_in_da_data() {
+          
+            //getting the data from the initial pull upon page load
+            var data_for_db = document.getElementById("spref_json").value;
+            var data_for_db_value = JSON.parse( data_for_db );
+            //console.log(data_for_db_value.shifts)
+            
+            var shifts_data = data_for_db_value.shifts;
+            var schedule_data = data_for_db_value.timeline;
+            //console.log(data_for_db_value.schedule)
+            //console.log(data_for_db_value.shifts)
+
+            //doing work to fill in the drop down
+            var listItems = [];
+            
+            for (var i = 0; i < schedule_data.length; i++){
+              
+              //start date
+              var s_prettyDate = get_pretty_date(schedule_data[i].schedule_start)
+
+              //end date
+              var e_prettyDate = get_pretty_date(schedule_data[i].schedule_end)
+              
+              var manager_lockout = get_pretty_date(schedule_data[i].manager_lockout)
+              var employee_lockout = get_pretty_date(schedule_data[i].employee_lockout)
+              var today_date = new Date()
+              today_date = get_pretty_date(today_date)
+              
+              //console.log(manager_lockout)
+              //console.log(today_date)
+              itemTest = s_prettyDate+ " to " + e_prettyDate;
+              
+              if((manager_lockout < today_date) && (employee_lockout > today_date )){
+                listItems.push(itemTest);
+              }
+              
+              
+             }
+
+             //removing duplicates
+             var seen = {};
+             var out = [];
+             var j = 0;
+             for(var i = 0; i < listItems.length; i++) {
+                 var item = listItems[i];
+                 if(seen[item] !== 1) {
+                       seen[item] = 1;
+                       out[j++] = item;
+                 }
+            }
+            out.sort()
+            //putting values form de-deuped list into dropdown
+            var dropdown = document.getElementById("ddl");
+            for (var i = 0; i<out.length; i++){
+              var itemTest= out[i];
+              dropdown[dropdown.length] = new Option(itemTest, itemTest);
+            };
+            
+            dropdown.selectedIndex = 1;
+            
+            //doing work to fill in the table
+            
+            // need to delete old rows everytime a new data range is selected
+            var elmtTable = document.getElementById('myTableData');
+            var tableRows = elmtTable.getElementsByTagName('tr');
+            var rowCount = tableRows.length;
+            for (var x=rowCount-1; x>0; x--) {
+               elmtTable.deleteRow(x)
+            }
+
+            var date_selected_in_dropdown = out[0].substring(0,10)
+            var trHTML = '';
+
+            //putting all the new rows from the post function together in HTML
+            shifts_data.forEach(function(item, itemIndex){
+            if(item.date_range_start == date_selected_in_dropdown) {
+              trHTML += '<tr><td>' + item.employee_type
+                +'<td>' + item.days_worked
+                +'<td>' + item.num_employees
+                +'<td>' + item.shift_start_time
+                +'<td>' + item.shift_end_time
+                
+                //if(item[i].availability=="true"){
+                //  trHTML += '<td> <input id="type" type="checkbox" name="Available" autofocus="autofocus" checked="checked" onClick="Javacsript:on_check_click(this)">';
+              //  } else {
+                  trHTML +=  '<td> <input id="type" type="checkbox" name="Available"  autofocus="autofocus" onClick="Javacsript:on_check_click(this)">';
+                }
+                
+            
+            })
+
+            //appending all rows to the myTableData table :)
+            $('#myTableData').append(trHTML);        
+            
+        
+        }
+        
+        
+        
+        
+        
+        
+        
 
         function change_table() {
           //gettting json values
           var spref_json = document.getElementById("spref_json").value;
-          console.log(spref_json)
-          var spref_json_value = JSON.parse( spref_json );
-
+        
+          var spref_json_value1 = JSON.parse( spref_json );
+          var spref_json_value = spref_json_value1.shifts
+          console.log(spref_json_value)
           //clearing table
           var table = document.getElementById("myTableData");
           table.getElementsByTagName("tbody")[0].innerHTML = table.rows[0].innerHTML;
@@ -156,45 +265,8 @@ block content
 
       select#ddl(onchange="change_table()")
         option(value='')
-        script.
-         var spref_json = document.getElementById("spref_json").value;
-         var spref_json_value = JSON.parse(spref_json);
-         console.log(spref_json.timeline)
-         console.log(spref_json.people)
-           console.log(spref_json.shift)
-         var listItems = [];
-
-         //putting items into initial ist
-         for (var i = 0; i < spref_json_value.length; i++){
-           itemTest = spref_json_value[i].date_range_start + " to " + spref_json_value[i].date_range_end;
-           listItems[i] = itemTest;
-          }
-
-          //removing duplicates
-          var seen = {};
-          var out = [];
-          var j = 0;
-          for(var i = 0; i < listItems.length; i++) {
-              var item = listItems[i];
-              if(seen[item] !== 1) {
-                    seen[item] = 1;
-                    out[j++] = item;
-              }
-         }
-
-         //putting values form de-deuped list into dropdown
-         var dropdown = document.getElementById("ddl");
-         for (var i = 0; i<out.length; i++){
-           var itemTest= out[i];
-           dropdown[dropdown.length] = new Option(itemTest, itemTest);
-         };
-
-
-
       br
       br
-
-
 
       table#myTableData(border='1', cellpadding='2')
         tr

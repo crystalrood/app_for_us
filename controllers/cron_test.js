@@ -41,6 +41,7 @@ function addDays(date, days) {
 
 /*
 new CronJob('* * * * * *', function() {
+/// this code here is for populating quickshift customer timelines
   console.log('You will see this message every second');
   Quickshifts_customer_timeline.find(function (err,docs){
     if (err) { return callback(err); }
@@ -211,6 +212,8 @@ new CronJob('* * * * * *', function() {
   ];
 
 async.parallel(tasks, function(err) {
+// this call fills out secondary shifts
+
     if (err) return next(err);
     //getting manager id for the first manager
     //console.log(locals.manage[0]._id)
