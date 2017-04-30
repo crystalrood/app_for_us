@@ -16,6 +16,33 @@ block content
     head
     script(type='text/javascript').
         window.onload = function change_table() {
+          
+          //adding peanuts code up here
+          //erik added
+        //gettting json values
+        var employee_type_2 = document.getElementById("employee_type_2").value;
+         var employee_type_2_value = JSON.parse( employee_type_2 );
+
+         for (var i = 0; i < employee_type_2_value.length; i++){
+           //shift selector option
+           var emp_option1 = document.getElementById("emp_select");
+           //employee roster selector option
+           var emp_option2 = document.getElementById("emp_select1");
+           //shift selector option
+           var type1 = document.createElement("option");
+           //employee roster selector option
+           var type2 = document.createElement("option");
+
+           type1.text = employee_type_2_value[i].employee_type;
+           type2.text = employee_type_2_value[i].employee_type;
+
+           emp_option1.add(type1);
+           emp_option2.add(type2);
+
+           };
+          //erik added
+          
+          
           //gettting json values
           var schedule_start = document.getElementById("schedule_start").value;
           var schedule_start_json = JSON.parse( schedule_start );
@@ -586,7 +613,10 @@ block content
       br
       label.col-sm-2.control-label(for='employee_type') Employee Type
       .col-sm-8
-        input#name.form-control(type='text', name='employee_type', placeholder='Employee Type', autofocus='autofocus', required='required')
+        //erik_added 3/19
+        select#emp_select1.form-control(type='text', name='employee_type')
+        input.form-control(type='hidden', id="employee_type_2", value=  JSON.stringify(employeetype))
+        //end erik_added
       br
       br
       br
@@ -619,13 +649,17 @@ block content
       br
       label.col-sm-2.control-label(for='start_time') Shift start:
       .col-sm-8
-        input#max_hours.form-control(type='text', name='start_time', placeholder='12:00', autofocus='autofocus', required='required')
+       //erik_added 3/25/17
+       input#max_hours.form-control(type='time', name='start_time', placeholder='12:00', autofocus='autofocus', required='required')
+       //end erik_added
       br
       br
       br
       label.col-sm-2.control-label(for='end_time') Shift end time:
+      //erik_added 3/25/17
       .col-sm-8
-        input#email.form-control(type='text', name='end_time', placeholder='12:00', autofocus='autofocus', required='required')
+        input#email.form-control(type='time', name='end_time', placeholder='12:00', autofocus='autofocus', required='required')
+      //end erik_add
       br
       br
       br
@@ -838,7 +872,8 @@ block content
     form.form-group(action='/people/people', method='POST')
       input(type='hidden', name='_csrf', value=_csrf)
       br
-      #helper.label.control-label Enter employee information below:
+      #helper.label.control-label Enter employee information below:          
+
       br
 
       label.col-sm-2.control-label(for='Name') Name:
@@ -848,7 +883,10 @@ block content
       br
       label.col-sm-2.control-label(for='type') Type:
       .col-sm-8
-        input#type.form-control(type='text', name='type', placeholder='Employee Type', autofocus='autofocus', required='required')
+        //erik_added 3/18
+        select#emp_select.form-control(type='text', name='type')
+        input.form-control(type='hidden', id="employee_type_2", value=  JSON.stringify(employeetype))
+        //end erik_added
       br
       br
       label.col-sm-2.control-label(for='min_hours') Min Hours/Week:
