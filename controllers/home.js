@@ -122,11 +122,11 @@ exports.index = (req, res, next) => {
               if (err) { return callback(err); }
               if (docs2 != null){
                 console.log("quickshift timelines " +docs2.length)
-                locals.timeline = docs2;
+                locals.schedule = docs2;
                 callback();
               }
               else{
-                locals.timeline = docs2;
+                locals.schedule = docs2;
                 callback();
               }
             });
@@ -138,18 +138,6 @@ exports.index = (req, res, next) => {
         res.render('home', locals);
     });
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   //if its someone not logged in
