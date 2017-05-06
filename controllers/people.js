@@ -569,7 +569,7 @@ exports.postSchedulestart = (req, res, next) => {
         schedule_start = new Date(req.body.if_no_first_start);
       }
 
-      var schedule_end = new Date(schedule_start.getTime() + (7*60*60*24*1000));
+      var schedule_end = new Date(schedule_start.getTime() + (6*60*60*24*1000));
       var schedule_release = new Date(schedule_start.getTime() - (6*60*60*24*1000));
       var employee_lockout = new Date(schedule_start.getTime() - (8*60*60*24*1000));
       var manager_lockout = new Date(schedule_start.getTime() - (13*60*60*24*1000));

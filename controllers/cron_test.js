@@ -53,6 +53,11 @@ new CronJob('* * * * * *', function() {
       for (i = 0; i <= docs.length-1; i++) {
         manager_user_ids.push(docs[i].manager_userid)
       }
+
+      if (docs.length == 0){
+        console.log('show this')
+      }
+
       var unique_manager_user_ids = manager_user_ids.filter(onlyUnique);
 
       var max_per_manager = []
@@ -105,9 +110,9 @@ new CronJob('* * * * * *', function() {
             schedule_release.setTime((schedule_release.getTime()+(j*7*60*60*24*1000)))
             employee_lockout.setTime((employee_lockout.getTime()+(j*7*60*60*24*1000)))
             manager_lockout.setTime((manager_lockout.getTime()+(j*7*60*60*24*1000)))
-*/
-            /* define what needs to be saved*/
-/*            const quickshifts_customer_timeline = new Quickshifts_customer_timeline({
+
+
+           const quickshifts_customer_timeline = new Quickshifts_customer_timeline({
               "week_num": parseInt(max_per_manager[i].week_num) + j + 1,
               "manager_userid" : max_per_manager[i].manager_userid,
               "manager_email"  : max_per_manager[i].manager_email,
@@ -118,13 +123,13 @@ new CronJob('* * * * * *', function() {
               "manager_lockout"  : manager_lockout.toDateString()
               });
 
-            //quickshifts_customer_timeline.save((err) => {
-            //  if (err) {
-            //    return next(err);
-            //  }
-            //  console.log(quickshifts_customer_timeline)
-            //  console.log("SAVED!");
-            //});
+            quickshifts_customer_timeline.save((err) => {
+              if (err) {
+                return next(err);
+              }
+              console.log(quickshifts_customer_timeline)
+              console.log("SAVED!");
+            });
 
           }
 
@@ -142,8 +147,8 @@ new CronJob('* * * * * *', function() {
 
 
 }, null, true, 'America/Los_Angeles');
-
 */
+
 /*
 
 new CronJob('* * * * * *', function() {

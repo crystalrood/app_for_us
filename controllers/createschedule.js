@@ -9,6 +9,9 @@ const Finalshift = require('../models/Finalshift.js');
 const Secondaryshift = require('../models/Secondaryshift.js');
 const Quickshifts_customer_timeline = require('../models/Quickshifts_customer_timeline.js');
 
+var num_records_secondarshifts;
+var num_records_finalshift;
+
 
 
 
@@ -187,55 +190,97 @@ exports.postUpdateSecondaryShift = (req, res, next) => {
   };
 
 
-
-
   exports.postCreateschedulefinal = (req, res, next) => {
-
-    //calling secondary shift to see if there's anything in the collection...
-    Finalshift.find(
-      {$and:[{userid: req.user.id}, {date_range_start: req.body.date_range_start}, {date_range_end: req.body.date_range_end}]},
-      function (err, shifts) {
-
-        //if error return error message
-        if (err) return handleError(err);
-        //checking to see if the shift length is 0, if so we're going to create a new collection
-        if (shifts.length == 0){
+    //taking the secondary shifts that are in the database and pushing them to the final database
 
 
-          //now since there is no record, we're going to find the shift's from
-          //manager preferences
-            console.log(req.body.date_range_start.length)
-            console.log(req.body.date_range_end.length)
-            Secondaryshift.find(
-            {$and:[{userid: req.user.id}, {date_range_start: req.body.date_range_start}, {date_range_end: req.body.date_range_end}]},
-            function (err, shft) {
-              if (err) return handleError(err);
-              //checking to ensure we're actually going to be adding documents
-              if (shft.length >= 1){
-                //iterating through each document and adding it to the
-                //secondary collection
-                shft.forEach(function(shft, index) {
 
-                  const sec_shift = new Finalshift({
-                    userid: req.user.id,
-                    date_range_start: req.body.date_range_start,
-                    date_range_end: req.body.date_range_end,
-                    employee_type: shft.employee_type,
-                    days_worked: shft.days_worked,
-                    num_employees: shft.num_employees,
-                    shift_start_time: shft.shift_start_time,
-                    shift_end_time: shft.shift_end_time}
-                  );
-                  console.log(sec_shift)
-                  sec_shift.save((err) => {
-                    if (err) {return next(err);}
-                    console.log("SAVED!");
-                  });
-                });
-              };
-                });
+    Secondaryshift.find(
+    {$and:[{userid: req.user.id}, {date_range_start: req.body.date_range_start}, {date_range_end: req.body.date_range_end}]},
+    function (err, shft) {
+      if (err) return handleError(err);
+
+      //checking to ensure we're actually going to be adding documents
+      if (shft.length >= 1){
+        //iterating through each document and adding it to the
+        //secondary collection
+        shft.forEach(function(shft, index) {
+
+          const sec_shift = new Finalshift({
+            userid: req.user.id,
+            date_range_start: req.body.date_range_start,
+            date_range_end: req.body.date_range_end,
+            employee_type: shft.employee_type,
+            days_worked: shft.days_worked,
+            num_employees: shft.num_employees,
+            shift_start_time: shft.shift_start_time,
+            shift_end_time: shft.shift_end_time}
+          );
+          sec_shift.save((err) => {
+            if (err) {return next(err);}
+            console.log("SAVED!");
+          });
+        });
+      };
+
+      //removing the shifts i just saved from secondary shifts
+      Secondaryshift.remove({$and:[
+        {userid: req.user.id},
+        {date_range_start: req.body.date_range_start},
+        {date_range_end: req.body.date_range_end}
+        ]}, (err) =>
+          {
+            if (err) { return next(err); }
+            console.log("shift deleted");
+          }
+        );
+
+    });
+
+    //converting the schedule start date to be the same format
+    // also setting up the new manager lockout to be the current date
+    var schedule_start = new Date(req.body.date_range_start).toDateString();
+    var new_manager_lockout = new Date().toDateString();
+
+    Quickshifts_customer_timeline.findOne({$and:[
+      {manager_userid: req.user.id},
+      {schedule_start: schedule_start}
+    ]},
+    function (err, shft) {
+      if (err) return handleError(err);
+
+
+
+      //updating customer timeline
+      Quickshifts_customer_timeline.update(
+        {$and:[
+          {manager_userid: req.user.id},
+          {schedule_start: schedule_start}
+        ]},
+        {$set:{
+          week_num: shft.week_num,
+          manager_userid: shft.manager_userid,
+          manager_email: shft.manager_email,
+          schedule_start: shft.schedule_start,
+          schedule_end: shft.schedule_end,
+          final_schedule_release: shft.final_schedule_release,
+          employee_lockout: shft.employee_lockout,
+          manager_lockout: new_manager_lockout},
+          },
+
+          function(err, result) {
+              if (err) {
+                  console.log(err);
               }
-            });
+              else {
+                  console.log(result);
+              }
+          }
+      )
+
+    });
+
+
 
     res.redirect('/createschedule');
   };

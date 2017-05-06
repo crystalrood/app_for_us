@@ -293,24 +293,31 @@ block content
     }
 
     function finalshifts_submit(){
-    var dropdown = document.getElementById('ddl').options[document.getElementById('ddl').selectedIndex].text;
-    var dropdownstart = dropdown.substring(0,10)
-    var dropdownend = dropdown.substring(14,24)
-    console.log(dropdown)
+      var dropdown = document.getElementById('ddl').options[document.getElementById('ddl').selectedIndex].text;
+      var dropdownstart = dropdown.substring(0,10)
+      var dropdownend = dropdown.substring(14,24)
+    //console.log(dropdown)
       var shift = {
         date_range_start: dropdownstart,
         date_range_end: dropdownend
        }
+       var text_for_popup = "Are you sure you want to confirm this schedule?"
+      text_for_popup += " Once you confirm you cannot edit this schedule."
+       
+       if (confirm(text_for_popup) == true) {
+         //continue with pushing to database
+           
+           setCSRFToken($('meta[name="csrf-token"]').attr('content'));
 
-      setCSRFToken($('meta[name="csrf-token"]').attr('content'));
-
-      $.ajax({
-          type: 'POST',
-          data: shift,
-          url: '/createschedule/final',
-          dataType: 'JSON'
-      });
-      //console.log(shift.date_range_start)
+           $.ajax({
+               type: 'POST',
+               data: shift,
+               url: '/createschedule/final',
+               dataType: 'JSON'
+           });
+           //console.log(shift.date_range_start)
+           location.reload();
+       } 
     }
 
     
@@ -341,7 +348,7 @@ block content
             th
               b Shift start
             th
-              b Shift end
+              b Shift end 
             th
               b Update
             th
