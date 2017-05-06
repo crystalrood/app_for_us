@@ -74,11 +74,9 @@ block content
               var today_date = new Date()
               today_date = get_pretty_date(today_date)
               
-              //console.log(manager_lockout)
-              //console.log(today_date)
               itemTest = s_prettyDate+ " to " + e_prettyDate;
               
-              if((manager_lockout < today_date) && (employee_lockout > today_date )){
+              if((manager_lockout <= today_date) && (employee_lockout > today_date )){
                 listItems.push(itemTest);
               }
               
@@ -128,12 +126,12 @@ block content
                 +'<td>' + item.shift_start_time
                 +'<td>' + item.shift_end_time
                 
-                //if(item[i].availability=="true"){
-                //  trHTML += '<td> <input id="type" type="checkbox" name="Available" autofocus="autofocus" checked="checked" onClick="Javacsript:on_check_click(this)">';
-              //  } else {
+                if(item.availability=="true"){
+                  trHTML += '<td> <input id="type" type="checkbox" name="Available" autofocus="autofocus" checked="checked" onClick="Javacsript:on_check_click(this)">';
+                } else {
                   trHTML +=  '<td> <input id="type" type="checkbox" name="Available"  autofocus="autofocus" onClick="Javacsript:on_check_click(this)">';
-                }
-                
+                }}
+                //console.log(item)
             
             })
 
@@ -223,7 +221,7 @@ block content
                url: '/spref/update',
                dataType: 'JSON'
            });
-
+          location.reload();
         }
 
 
