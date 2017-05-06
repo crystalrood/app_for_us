@@ -291,7 +291,6 @@ block content
             // *****
             // populating table or presenting message that the schedule is being
             //created
-            console.log(out[0].substring(0,10))
             var current_selected_date = out[0].substring(0,10)
             var message_to_manager = document.getElementById("message_to_manager");
           
@@ -494,7 +493,20 @@ block content
                //removing duplicates
                var out_cal_dates = remove_dups(listItems)
                out_cal_dates.sort()
-                 console.log(out_cal_dates)
+                 
+                 
+                 //setting first date of shift calendar
+               var first_day_of_shift = new Date(current_selected_date);
+               //setting up list of dates
+               listDatesToShow = [];
+               listDaysToShow = [];
+               listDatesToShow.push(get_pretty_date(first_day_of_shift))
+               listDaysToShow.push(["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][first_day_of_shift.getDay()])
+               for (var i = 0; i < 6; i++){
+                 first_day_of_shift.setDate(first_day_of_shift.getDate() + 1); 
+                 listDatesToShow.push(get_pretty_date(first_day_of_shift))
+                 listDaysToShow.push(["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][first_day_of_shift.getDay()])
+               }
 
                 //clearing list
                 var listItems = [];
@@ -516,11 +528,12 @@ block content
                 var trHTML;
                 trHTML += '<tr><td>' + 'Employee Type'
 
-                for (var i = 0; i < out_cal_dates.length; i++){
-                  var  title = out_cal_dates[i].split(",")
-                  trHTML += '<td>' + title[1] + '<br>' + '<br>' + title[0]
-
+                for (var i = 0; i < listDatesToShow.length; i++){
+                  var date = listDatesToShow[i]
+                  var day = listDaysToShow[i]
+                  trHTML += '<td>' + day + '<br>' + '<br>' + date
                 };
+
 
 
                 $('#myTableData1').append(trHTML);
@@ -535,8 +548,7 @@ block content
                   trHTML += '<tr><td>'+ emp_type + '<br><br><br>'
 
                   //getting the calendar dates in order so i can add them to the schedule in order :)
-                  for (var i = 0; i < out_cal_dates.length; i++){
-                    var  title = out_cal_dates[i].split(",")
+                  for (var i = 0; i < listDatesToShow.length; i++){
 
                     //i need to reset list items and the varaible m so i can re-add to shifts for a given date to 1 list
                     listItems = []
@@ -546,7 +558,7 @@ block content
                     for (var k = 0; k < shifts_data.length; k++){
 
                       //if the date in in the json thing matches the calendar date in the calendar then i enter here
-                      if (shifts_data[k].date == title[0] && shifts_data[k].employee_type == emp_type){
+                      if (shifts_data[k].date == listDatesToShow[i] && shifts_data[k].employee_type == emp_type){
                         //if it equaly i add it to the list here
                         var value = shifts_data[k].shift_time_start + ' to ' + shifts_data[k].shift_time_end
                         //ensuring i don't add a duplicate value
@@ -957,7 +969,7 @@ block content
                //removing duplicates
                var out_cal_dates = remove_dups(listItems)
                out_cal_dates.sort()
-                 console.log(out_cal_dates)
+              
 
                 //clearing list
                 var listItems = [];
