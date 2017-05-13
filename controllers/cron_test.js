@@ -6,6 +6,7 @@ const Quickshifts_customer_timeline = require('../models/Quickshifts_customer_ti
 const Secondaryshift = require('../models/Secondaryshift.js');
 const Shift = require('../models/Shift.js');
 const User = require('../models/User.js');
+const Finalshift = require('../models/Finalshift.js');
 const EventEmitter = require('events');
 /*
 -----------------------------------------------------
@@ -149,8 +150,8 @@ new CronJob('* * * * * *', function() {
 }, null, true, 'America/Los_Angeles');
 */
 
-/*
 
+/*
 new CronJob('* * * * * *', function() {
   console.log('You will see this message every second');
   var locals = {};
@@ -330,3 +331,159 @@ async.parallel(tasks, function(err) {
 });
 }, null, true, 'America/Los_Angeles');
 */
+
+
+
+new CronJob('* * * * * *', function() {
+/// this code here is for populating quickshift customer timelines
+  console.log('Peanuts ROCKS my SOCKS');
+  Quickshifts_customer_timeline.find(function (err,docs){
+    if (err) { return callback(err); }
+      //setting an array up to collect distinct manager user_id
+      var manager_user_ids = []
+      //console.log(docs)
+      //collating all the manager user id's then using a function defined above
+      //to get unique manager user ids'
+      for (i = 0; i <= docs.length-1; i++) {
+        manager_user_ids.push(docs[i].manager_userid)
+      }
+
+      if (docs.length == 0){
+        console.log('show this')
+      }
+
+      //getting unique manager userid's
+      var unique_manager_user_ids = manager_user_ids.filter(onlyUnique);
+
+
+      // **** code logic shift
+      //here should be all the logic behind getting the info for the
+      // secondary shift and final shift databases
+
+
+      //setting a variable for today's date
+      var date_today = new Date().getTime()
+      var date_manager_lockout
+      var date_schedule_start
+
+      //going through each manager user id
+      for (i = 0; i<= unique_manager_user_ids.length-1; i++){
+
+        //creating array to push all manager lockouts too
+        var manager_is_lockedout = []
+
+        //looping though everything in the database
+        for(j = 0; j<= docs.length-1; j++){
+          //checking to ensure that i'm looking at the manager specific
+          //document from database
+          if (unique_manager_user_ids[i] == docs[j].manager_userid ){
+            //checking to see if schedule start date
+
+            //needed to create varible to convert date to unix time for comparison
+            date_manager_lockout = new Date(docs[j].manager_lockout).getTime()
+
+            if(date_manager_lockout <= date_today){
+              date_schedule_start = new Date(docs[j].schedule_start).toDateString()
+              manager_is_lockedout.push(date_schedule_start)
+            //end of manager lockout date comparision within docs
+            }
+          //the if to match docs with manager user_id
+          }
+
+        //end of docs loop
+        }
+
+        //here i'm trying to pull in all the final shift information to
+        //check if the final shift was added to the schedule start array
+
+        var shifts_not_in_final = []
+        var date_range_start
+
+        for(var j=0; j< manager_is_lockedout.length; j++){
+          date_range_start = get_pretty_date(manager_is_lockedout[j])
+          Finalshift.find(
+            {$and:[
+              {userid: unique_manager_user_ids[i]},
+              {date_range_start: date_range_start}]},
+            function (err, shifts) {
+                        console.log(j)
+
+              //if nothing is found in final shifts this means it needs to be added
+              if (shifts.length == 0){
+                console.log('made it')
+
+                //finding secondary shifts that match the criteria
+                //from the secondary shifts
+                //console.log(unique_manager_user_ids[i])
+                //console.log(date_range_start)
+                Secondaryshift.find(
+                {$and:[
+                  {userid: unique_manager_user_ids[i]},
+                  {date_range_start: date_range_start}
+                ]},
+                function (err, shft) {
+                  if (err) return handleError(err);
+                  console.log(shft)
+                  //checking to ensure we're actually going to be adding documents
+                  if (shft.length >= 1){
+                    //iterating through each document and adding it to the
+                    //secondary collection
+                    shft.forEach(function(shft, index) {
+
+                      const sec_shift = new Finalshift({
+                        userid: req.user.id,
+                        date_range_start: req.body.date_range_start,
+                        date_range_end: req.body.date_range_end,
+                        employee_type: shft.employee_type,
+                        days_worked: shft.days_worked,
+                        num_employees: shft.num_employees,
+                        shift_start_time: shft.shift_start_time,
+                        shift_end_time: shft.shift_end_time}
+                      );
+                      sec_shift.save((err) => {
+                        if (err) {return next(err);}
+                        console.log("SAVED!");
+                      });
+                    });
+                  };
+
+                  //removing the shifts i just saved from secondary shifts
+/*
+                  Secondaryshift.remove({$and:[
+                    {userid: req.user.id},
+                    {date_range_start: req.body.date_range_start},
+                    {date_range_end: req.body.date_range_end}
+                    ]}, (err) =>
+                      {
+                        if (err) { return next(err); }
+                        console.log("shift deleted");
+                      }
+                    );
+                    */
+                //end of finding secondary shifts
+                });
+
+              //end of checking the shifts length
+              }
+
+            //end of final shifts search
+            })
+        //searching through manager lock out dates
+        }
+
+
+
+
+
+
+      //end of manager loop
+      }
+
+    //where Quickshifts_customer_timeline.find ends
+    }
+
+  // where cronjob ends
+  )
+
+
+}, null, true, 'America/Los_Angeles');
