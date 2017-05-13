@@ -8,6 +8,7 @@ const Shift = require('../models/Shift.js');
 const User = require('../models/User.js');
 const Finalshift = require('../models/Finalshift.js');
 const EventEmitter = require('events');
+//const asyncLoop = require('node-async-loop');
 /*
 -----------------------------------------------------
 -------GETTING ALL INFORMATION NEEDED FOR PAGE LOAD
@@ -39,6 +40,115 @@ function addDays(date, days) {
     result.setDate(result.getDate() + days);
     return result;
 }
+
+
+
+//got this function from a search
+//http://stackoverflow.com/questions/4288759/asynchronous-for-cycle-in-javascript
+function asyncLoop(iterations, func, callback) {
+    var index = 0;
+    var done = false;
+    var loop = {
+        next: function() {
+            if (done) {
+                return;
+            }
+
+            if (index < iterations) {
+                index++;
+                func(loop);
+
+            } else {
+                done = true;
+                callback();
+            }
+        },
+
+        iteration: function() {
+            return index - 1;
+        },
+
+        break: function() {
+            done = true;
+            callback();
+        }
+    };
+    loop.next();
+    return loop;
+}
+
+
+function manager_final_shifts(a, b, callback) {
+  Finalshift.find(
+    {$and:[
+      {userid: a},
+      {date_range_start: b}]},
+    function (err, shifts) {
+      if (err) { return callback(err); }
+
+      //if nothing is found in final shifts this means it needs to be added
+      if (shifts.length == 0){
+
+        //finding secondary shifts that match the criteria
+
+        var datetouse = get_pretty_date(b)
+
+        Secondaryshift.find(
+        {$and:[
+          {userid: a},
+          {date_range_start: datetouse}
+        ]},
+        function (err, shft) {
+          if (err) return handleError(err);
+
+          //checking to ensure we're actually going to be adding documents
+          if (shft.length >= 1){
+            //iterating through each document and adding it to the
+            //secondary collection
+            shft.forEach(function(shft, index) {
+              const sec_shift = new Finalshift({
+                userid: a,
+                date_range_start: shft.date_range_start,
+                date_range_end: shft.date_range_end,
+                employee_type: shft.employee_type,
+                days_worked: shft.days_worked,
+                num_employees: shft.num_employees,
+                shift_start_time: shft.shift_start_time,
+                shift_end_time: shft.shift_end_time}
+              );
+
+              sec_shift.save((err) => {
+                if (err) {return next(err);}
+              });
+
+            });
+
+          };
+
+          //removing the shifts i just saved from secondary shifts
+
+          Secondaryshift.remove({$and:[
+            {userid: a},
+            {date_range_start: datetouse}
+            ]}, (err) =>
+              {
+                if (err) { return next(err); }
+              }
+            );
+
+        //end of finding secondary shifts
+        });
+
+      //end of checking the shifts length
+      }
+
+    //end of final shifts search
+        callback();
+    })
+
+}
+
+
 
 /*
 new CronJob('* * * * * *', function() {
@@ -153,6 +263,7 @@ new CronJob('* * * * * *', function() {
 
 /*
 new CronJob('* * * * * *', function() {
+//this cron popualtes secondary shifts for the manager side of things
   console.log('You will see this message every second');
   var locals = {};
   var tasks = [
@@ -334,9 +445,12 @@ async.parallel(tasks, function(err) {
 
 
 
+/*
+
 new CronJob('* * * * * *', function() {
+//this cron is to push from manager secondary shifts to manager final shifts
+// and also deletes all secondary shifts that was pushed
 /// this code here is for populating quickshift customer timelines
-  console.log('Peanuts ROCKS my SOCKS');
   Quickshifts_customer_timeline.find(function (err,docs){
     if (err) { return callback(err); }
       //setting an array up to collect distinct manager user_id
@@ -362,7 +476,7 @@ new CronJob('* * * * * *', function() {
 
 
       //setting a variable for today's date
-      var date_today = new Date().getTime()
+      var date_today = new Date().getTime() + (29*60*60*24*1000);
       var date_manager_lockout
       var date_schedule_start
 
@@ -398,83 +512,21 @@ new CronJob('* * * * * *', function() {
 
         var shifts_not_in_final = []
         var date_range_start
+        var manager_userid = unique_manager_user_ids[i]
 
-        for(var j=0; j< manager_is_lockedout.length; j++){
-          date_range_start = get_pretty_date(manager_is_lockedout[j])
-          Finalshift.find(
-            {$and:[
-              {userid: unique_manager_user_ids[i]},
-              {date_range_start: date_range_start}]},
-            function (err, shifts) {
-                        console.log(j)
+        //got this code from a search
+        //due to how async works with node and mongodb, can't run a loop with nested find functions
+        //this code below allows me to do so
+        asyncLoop(manager_is_lockedout.length, function(loop){
+          manager_final_shifts(manager_userid, manager_is_lockedout[loop.iteration()], function(result) {
 
-              //if nothing is found in final shifts this means it needs to be added
-              if (shifts.length == 0){
-                console.log('made it')
+            // Okay, for cycle could continue
+            loop.next();
 
-                //finding secondary shifts that match the criteria
-                //from the secondary shifts
-                //console.log(unique_manager_user_ids[i])
-                //console.log(date_range_start)
-                Secondaryshift.find(
-                {$and:[
-                  {userid: unique_manager_user_ids[i]},
-                  {date_range_start: date_range_start}
-                ]},
-                function (err, shft) {
-                  if (err) return handleError(err);
-                  console.log(shft)
-                  //checking to ensure we're actually going to be adding documents
-                  if (shft.length >= 1){
-                    //iterating through each document and adding it to the
-                    //secondary collection
-                    shft.forEach(function(shft, index) {
+          })},
+              function(){console.log('')}
 
-                      const sec_shift = new Finalshift({
-                        userid: req.user.id,
-                        date_range_start: req.body.date_range_start,
-                        date_range_end: req.body.date_range_end,
-                        employee_type: shft.employee_type,
-                        days_worked: shft.days_worked,
-                        num_employees: shft.num_employees,
-                        shift_start_time: shft.shift_start_time,
-                        shift_end_time: shft.shift_end_time}
-                      );
-                      sec_shift.save((err) => {
-                        if (err) {return next(err);}
-                        console.log("SAVED!");
-                      });
-                    });
-                  };
-
-                  //removing the shifts i just saved from secondary shifts
-/*
-                  Secondaryshift.remove({$and:[
-                    {userid: req.user.id},
-                    {date_range_start: req.body.date_range_start},
-                    {date_range_end: req.body.date_range_end}
-                    ]}, (err) =>
-                      {
-                        if (err) { return next(err); }
-                        console.log("shift deleted");
-                      }
-                    );
-                    */
-                //end of finding secondary shifts
-                });
-
-              //end of checking the shifts length
-              }
-
-            //end of final shifts search
-            })
-        //searching through manager lock out dates
-        }
-
-
-
-
-
+        );
 
       //end of manager loop
       }
@@ -487,3 +539,5 @@ new CronJob('* * * * * *', function() {
 
 
 }, null, true, 'America/Los_Angeles');
+
+*/
