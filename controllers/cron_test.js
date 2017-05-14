@@ -7,6 +7,8 @@ const Secondaryshift = require('../models/Secondaryshift.js');
 const Shift = require('../models/Shift.js');
 const User = require('../models/User.js');
 const Finalshift = require('../models/Finalshift.js');
+const People = require('../models/People.js');
+const Finalemployeeshift = require('../models/Finalemployeeshift.js');
 const EventEmitter = require('events');
 //const asyncLoop = require('node-async-loop');
 /*
@@ -14,6 +16,14 @@ const EventEmitter = require('events');
 -------GETTING ALL INFORMATION NEEDED FOR PAGE LOAD
 -----------------------------------------------------
 */
+
+
+//this fucntion round to the nearest day
+function roundDate(timeStamp){
+    timeStamp -= timeStamp % (24 * 60 * 60 * 1000);//subtract amount of time since midnight
+    timeStamp += new Date().getTimezoneOffset() * 60 * 1000;//add on the timezone offset
+    return new Date(timeStamp);
+}
 
 //a function to only return unique values of an array, used in the below code
 //search for onlyUnique
@@ -445,12 +455,13 @@ async.parallel(tasks, function(err) {
 
 
 
-/*
+
 
 new CronJob('* * * * * *', function() {
 //this cron is to push from manager secondary shifts to manager final shifts
 // and also deletes all secondary shifts that was pushed
 /// this code here is for populating quickshift customer timelines
+console.log('peanuts rocks my socks')
   Quickshifts_customer_timeline.find(function (err,docs){
     if (err) { return callback(err); }
       //setting an array up to collect distinct manager user_id
@@ -476,13 +487,13 @@ new CronJob('* * * * * *', function() {
 
 
       //setting a variable for today's date
-      var date_today = new Date().getTime() + (29*60*60*24*1000);
+      var date_today = new Date().getTime()
       var date_manager_lockout
       var date_schedule_start
 
       //going through each manager user id
       for (i = 0; i<= unique_manager_user_ids.length-1; i++){
-
+        console.log('manager iteration # '+i)
         //creating array to push all manager lockouts too
         var manager_is_lockedout = []
 
@@ -517,6 +528,8 @@ new CronJob('* * * * * *', function() {
         //got this code from a search
         //due to how async works with node and mongodb, can't run a loop with nested find functions
         //this code below allows me to do so
+
+        /*
         asyncLoop(manager_is_lockedout.length, function(loop){
           manager_final_shifts(manager_userid, manager_is_lockedout[loop.iteration()], function(result) {
 
@@ -527,6 +540,141 @@ new CronJob('* * * * * *', function() {
               function(){console.log('')}
 
         );
+
+        */
+
+        //***** another logic break
+        //***   the code below copies form manager final shift to employee final shift
+
+        // need to get the dates that need to be filled in the employee database
+        //below logic compares current date to the manger lockout
+        //if equal to the manager lockout i add the date to an array
+        var employee_final_needs_filled = []
+
+        //setting a variable for today's date
+        var date_today = new Date().getTime() + (9*60*60*24*1000);
+        date_today = roundDate(date_today).getTime()
+
+        //looping though everything in the database
+        for(j = 0; j<= docs.length-1; j++){
+          //checking to ensure that i'm looking at the manager specific
+          //document from database
+          if (manager_userid == docs[j].manager_userid ){
+            //checking to see if schedule start date
+
+            //needed to create varible to convert date to unix time for comparison
+            date_manager_lockout = new Date(docs[j].manager_lockout).getTime()
+            date_manager_lockout = roundDate(date_manager_lockout).getTime()
+            if(date_manager_lockout == date_today){
+              date_schedule_start = new Date(docs[j].schedule_start).toDateString()
+              employee_final_needs_filled.push(date_schedule_start)
+            //end of manager lockout date comparision within docs
+            }
+          //the if to match docs with manager user_id
+          }
+        //end of docs loop
+        }
+
+
+        //console.log(employee_final_needs_filled)
+
+        //this should theoretically only be 1, if it's not one, erik and i need
+        // to understand what is going on
+        if(employee_final_needs_filled.length == 1){
+
+          //code below pulls all employees and employee types from the people db
+          People.find(
+          {$and:[
+            {mgr_userid: manager_userid}
+          ]},
+          function (err, emp) {
+            if (err) return handleError(err);
+
+            //need to convert to pretty date before pushing through final shifts
+            var datetouse = get_pretty_date(employee_final_needs_filled[0])
+
+            Finalshift.find(
+              {$and:[
+                {userid: manager_userid},
+                {date_range_start: datetouse}]},
+              function (err, shift) {
+                if (err) { return callback(err); }
+
+                  //now i need to iterate through all the shifts and save to
+                  //each empployee
+
+                  emp.forEach(function(emp, index) {
+                    shift.forEach(function(shift,index){
+
+                      if(shift.employee_type == emp.type){
+                        //getting the dasy
+                        var str = shift.days_worked
+                        var str_array = str.split(',')
+                        for(var i = 0; i < str_array.length; i++) {
+                          // Trim the excess whitespace.
+                          str_array[i] = str_array[i].replace(/^\s*/, "").replace(/\s*$/, "");
+
+
+                          Finalemployeeshift.update(
+                            {$and:[
+                              {email: emp.userid},
+                              {date_range_start: shift.date_range_start},
+                              {date_range_end: shift.date_range_end},
+                              {employee_type: shift.employee_type},
+                              {days_worked:  str_array[i]},
+                              {num_employees: shift.num_employees},
+                              {shift_start_time: shift.shift_start_time},
+                              {shift_end_time: shift.shift_end_time}
+                            ]},
+                            {$set:
+                              {email: emp.userid,
+                              date_range_start: shift.date_range_start,
+                              date_range_end: shift.date_range_end,
+                              employee_type: shift.employee_type,
+                              days_worked:   str_array[i],
+                              num_employees: shift.num_employees,
+                              shift_start_time: shift.shift_start_time,
+                              shift_end_time: shift.shift_end_time}
+                            },
+                            {upsert: true},
+                              function(err, test) {
+                                  if (err) {
+                                      console.log(err);
+                                  }
+                                  else {
+                                      console.log(test);
+                                  }
+                              }
+                            );
+
+                      //going through array of shifts days
+                      }
+                    //ending cheking to ensure we're only adding if employee types match
+                    }
+
+                    //ending going through each shift
+                    })
+
+                  //ending going through each employee pulled
+                  });
+              //ending looking for final manager shift
+              })
+          //ending people find
+          })
+
+        //end of checking how many dates i need to backfill for
+        };
+
+
+
+        if(employee_final_needs_filled.length > 1){
+        //set up code here to automate and email to me and peanuts
+
+        }
+
+        //***** another logic break end
+        //**********
+
 
       //end of manager loop
       }
@@ -539,5 +687,3 @@ new CronJob('* * * * * *', function() {
 
 
 }, null, true, 'America/Los_Angeles');
-
-*/
