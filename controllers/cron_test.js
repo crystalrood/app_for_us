@@ -451,11 +451,11 @@ async.parallel(tasks, function(err) {
 //ending async parallel call
 });
 }, null, true, 'America/Los_Angeles');
+
+
 */
 
-
-
-
+/*
 
 new CronJob('* * * * * *', function() {
 //this cron is to push from manager secondary shifts to manager final shifts
@@ -481,7 +481,7 @@ console.log('peanuts rocks my socks')
       var unique_manager_user_ids = manager_user_ids.filter(onlyUnique);
 
 
-      // **** code logic shift
+      ///------ code logic shift
       //here should be all the logic behind getting the info for the
       // secondary shift and final shift databases
 
@@ -529,7 +529,6 @@ console.log('peanuts rocks my socks')
         //due to how async works with node and mongodb, can't run a loop with nested find functions
         //this code below allows me to do so
 
-        /*
         asyncLoop(manager_is_lockedout.length, function(loop){
           manager_final_shifts(manager_userid, manager_is_lockedout[loop.iteration()], function(result) {
 
@@ -541,10 +540,8 @@ console.log('peanuts rocks my socks')
 
         );
 
-        */
-
-        //***** another logic break
-        //***   the code below copies form manager final shift to employee final shift
+        ///------ another logic break
+        ///------   the code below copies form manager final shift to employee final shift
 
         // need to get the dates that need to be filled in the employee database
         //below logic compares current date to the manger lockout
@@ -552,7 +549,7 @@ console.log('peanuts rocks my socks')
         var employee_final_needs_filled = []
 
         //setting a variable for today's date
-        var date_today = new Date().getTime() + (9*60*60*24*1000);
+        var date_today = new Date().getTime() + 2*60*60*1000*24
         date_today = roundDate(date_today).getTime()
 
         //looping though everything in the database
@@ -565,7 +562,11 @@ console.log('peanuts rocks my socks')
             //needed to create varible to convert date to unix time for comparison
             date_manager_lockout = new Date(docs[j].manager_lockout).getTime()
             date_manager_lockout = roundDate(date_manager_lockout).getTime()
-            if(date_manager_lockout == date_today){
+            console.log('manager_lcokout '+ date_manager_lockout)
+            console.log(date_today )
+            console.log(date_today >= date_manager_lockout)
+            console.log(docs[j])
+            if(date_manager_lockout <= date_today){
               date_schedule_start = new Date(docs[j].schedule_start).toDateString()
               employee_final_needs_filled.push(date_schedule_start)
             //end of manager lockout date comparision within docs
@@ -576,7 +577,7 @@ console.log('peanuts rocks my socks')
         }
 
 
-        //console.log(employee_final_needs_filled)
+        console.log(employee_final_needs_filled)
 
         //this should theoretically only be 1, if it's not one, erik and i need
         // to understand what is going on
@@ -612,12 +613,12 @@ console.log('peanuts rocks my socks')
                         var str_array = str.split(',')
                         for(var i = 0; i < str_array.length; i++) {
                           // Trim the excess whitespace.
-                          str_array[i] = str_array[i].replace(/^\s*/, "").replace(/\s*$/, "");
-
+                          ADD CODE HERE
+                          //console.log(emp.email)
 
                           Finalemployeeshift.update(
                             {$and:[
-                              {email: emp.userid},
+                              {email: emp.email},
                               {date_range_start: shift.date_range_start},
                               {date_range_end: shift.date_range_end},
                               {employee_type: shift.employee_type},
@@ -627,7 +628,7 @@ console.log('peanuts rocks my socks')
                               {shift_end_time: shift.shift_end_time}
                             ]},
                             {$set:
-                              {email: emp.userid,
+                              {email: emp.email,
                               date_range_start: shift.date_range_start,
                               date_range_end: shift.date_range_end,
                               employee_type: shift.employee_type,
@@ -672,8 +673,8 @@ console.log('peanuts rocks my socks')
 
         }
 
-        //***** another logic break end
-        //**********
+        ///------ another logic break end
+        ///------
 
 
       //end of manager loop
@@ -687,3 +688,5 @@ console.log('peanuts rocks my socks')
 
 
 }, null, true, 'America/Los_Angeles');
+*/
+//str_array[i] = str_array[i].replace(/^\s*/, "").replace(/\s*$/, "");

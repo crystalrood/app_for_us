@@ -51,12 +51,11 @@ block content
             //getting the data from the initial pull upon page load
             var data_for_db = document.getElementById("spref_json").value;
             var data_for_db_value = JSON.parse( data_for_db );
-            //console.log(data_for_db_value.shifts)
             
             var shifts_data = data_for_db_value.shifts;
             var schedule_data = data_for_db_value.timeline;
-            //console.log(data_for_db_value.schedule)
-            //console.log(data_for_db_value.shifts)
+            //console.log(shifts_data)
+            //console.log(schedule_data)
 
             //doing work to fill in the drop down
             var listItems = [];
@@ -117,8 +116,11 @@ block content
             var date_selected_in_dropdown = out[0].substring(0,10)
             var trHTML = '';
 
+            
             //putting all the new rows from the post function together in HTML
             shifts_data.forEach(function(item, itemIndex){
+              console.log('date range json '+item.date_range_start)
+              console.log('date range selected '+date_selected_in_dropdown)
             if(item.date_range_start == date_selected_in_dropdown) {
               trHTML += '<tr><td>' + item.employee_type
                 +'<td>' + item.days_worked
