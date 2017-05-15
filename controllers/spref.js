@@ -15,7 +15,7 @@ var employee_type = 0
 var manager_user_id = 0
 
 exports.getSpref = (req, res, next) => {
-
+  console.log(req.user.id)
     People.findOne({$and:[
       { email: req.user.email}
       ]}, function (err,docs){

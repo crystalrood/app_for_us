@@ -9,6 +9,8 @@ const User = require('../models/User.js');
 const Finalshift = require('../models/Finalshift.js');
 const People = require('../models/People.js');
 const Finalemployeeshift = require('../models/Finalemployeeshift.js');
+const Actualfinalemployeeshift = require('../models/Actualfinalemployeeshift.js');
+
 const EventEmitter = require('events');
 //const asyncLoop = require('node-async-loop');
 /*
@@ -690,3 +692,166 @@ console.log('peanuts rocks my socks')
 }, null, true, 'America/Los_Angeles');
 */
 //str_array[i] = str_array[i].replace(/^\s*/, "").replace(/\s*$/, "");
+
+
+
+
+
+
+/*
+
+
+new CronJob('* * * * * *', function() {
+//this cron popualtes actual final employee shifts
+console.log('peanuts rocks my socks')
+  Quickshifts_customer_timeline.find(function (err,docs){
+    if (err) { return callback(err); }
+      //setting an array up to collect distinct manager user_id
+      var manager_user_ids = []
+      //console.log(docs)
+      //collating all the manager user id's then using a function defined above
+      //to get unique manager user ids'
+      for (i = 0; i <= docs.length-1; i++) {
+        manager_user_ids.push(docs[i].manager_userid)
+      }
+
+      if (docs.length == 0){
+        console.log('show this')
+      }
+
+      //getting unique manager userid's
+      var unique_manager_user_ids = manager_user_ids.filter(onlyUnique);
+
+
+      ///------ code logic shift
+      //here should be all the logic behind getting the info for the
+      // secondary shift and final shift databases
+
+
+      //setting a variable for today's date
+      var date_today = new Date().getTime()
+      var date_manager_lockout
+      var date_schedule_start
+
+      //going through each manager user id
+      for (i = 0; i<= unique_manager_user_ids.length-1; i++){
+        console.log('manager iteration # '+i)
+        var manager_user_id = unique_manager_user_ids[i]
+        //creating array to push all manager lockouts too
+        var employee_is_lockout = []
+
+        //looping though everything in the database
+        for(j = 0; j<= docs.length-1; j++){
+          //checking to ensure that i'm looking at the manager specific
+          //document from database
+          if (unique_manager_user_ids[i] == docs[j].manager_userid ){
+            //checking to see if schedule start date
+
+            //needed to create varible to convert date to unix time for comparison
+            date_employee_lockout = new Date(docs[j].employee_lockout).getTime()
+
+            if(date_employee_lockout <= date_today && date_employee_lockout >= (date_today-60*60*24*2*1000)){
+              date_schedule_start = new Date(docs[j].schedule_start).toDateString()
+              employee_is_lockout.push(date_schedule_start)
+            //end of manager lockout date comparision within docs
+            }
+
+          //the if to match docs with manager user_id
+          }
+
+        //end of docs loop
+        }
+
+        // the next thing i need to do is to pull the pople the manager is linked to
+        console.log(employee_is_lockout)
+
+        //code below pulls all employees and employee types from the people db
+        People.find({mgr_userid: manager_user_id},function (err, employee)
+        {
+          if (err) return handleError(err);
+          console.log(employee)
+
+          employee.forEach(function(emp, index) {
+
+            User.find({email: emp.email}, function (err, usr)
+            {
+                if (err) return handleError(err);
+
+                Finalemployeeshift.find({email: emp.email}, function (err, shift)
+                {
+                    if (err) return handleError(err);
+
+                    shift.forEach(function(shft, index) {
+
+                      // this variable is put here to check to see if employee ever logged in to select shifts
+                      // if shft.availability === undefined, this means they never logged in
+                      //and are defaulted to available
+                      var is_availability = true
+
+                      if (shft.availability === undefined){
+                        is_availability= true
+                      } else {
+                        is_availability= shft.availability
+                      }
+
+                      // putting information collected and aggregated
+                      // into the actual final employee shifts
+                      Actualfinalemployeeshift.update(
+                        {$and:[
+                          {emp_userid: usr[0]._id},
+                          {emp_email: emp.email},
+                          {date_range_start: shft.date_range_start},
+                          {date_range_end: shft.date_range_end},
+                          {days_worked: shft.days_worked},
+                          {employee_type:  shft.employee_type},
+                          {num_employees: shft.num_employees},
+                          {shift_start_time: shft.shift_start_time},
+                          {shift_end_time: shft.shift_end_time},
+                          {availability: is_availability},
+                        ]},
+                        {$set:
+                          {emp_userid: usr[0]._id,
+                          emp_email:emp.email,
+                          date_range_start: shft.date_range_start,
+                          date_range_end: shft.date_range_end,
+                          days_worked: shft.days_worked,
+                          employee_type: shft.employee_type,
+                          num_employees: shft.num_employees,
+                          shift_start_time: shft.shift_start_time,
+                          shift_end_time: shft.shift_end_time,
+                          availability: is_availability}
+                        },
+                        {upsert: true},
+                          function(err, test) {
+                              if (err) {
+                                  console.log(err);
+                              }
+                              else {
+                                  console.log(test);
+                              }
+                          }
+                        );
+
+
+                    })
+
+
+                })
+
+            })
+
+          })
+
+
+
+
+        });
+
+
+    //ending manager loop
+    }
+//ending async parallel call
+});
+}, null, true, 'America/Los_Angeles');
+
+*/

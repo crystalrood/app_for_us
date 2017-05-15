@@ -119,8 +119,8 @@ block content
             
             //putting all the new rows from the post function together in HTML
             shifts_data.forEach(function(item, itemIndex){
-              console.log('date range json '+item.date_range_start)
-              console.log('date range selected '+date_selected_in_dropdown)
+              //console.log('date range json '+item.date_range_start)
+              //console.log('date range selected '+date_selected_in_dropdown)
             if(item.date_range_start == date_selected_in_dropdown) {
               trHTML += '<tr><td>' + item.employee_type
                 +'<td>' + item.days_worked
@@ -156,7 +156,7 @@ block content
         
           var spref_json_value1 = JSON.parse( spref_json );
           var spref_json_value = spref_json_value1.shifts
-          console.log(spref_json_value)
+          //console.log(spref_json_value)
           //clearing table
           var table = document.getElementById("myTableData");
           table.getElementsByTagName("tbody")[0].innerHTML = table.rows[0].innerHTML;
@@ -176,7 +176,7 @@ block content
               row.insertCell(2).innerHTML= spref_json_value[i].num_employees;
               row.insertCell(3).innerHTML= spref_json_value[i].shift_start_time;
               row.insertCell(4).innerHTML= spref_json_value[i].shift_end_time;
-              console.log(spref_json_value[i].availability)
+              //console.log(spref_json_value[i].availability)
               if(spref_json_value[i].availability=="true"){
                 row.insertCell(5).innerHTML= '<input id="type" type="checkbox" name="Available" autofocus="autofocus" checked="checked" onClick="Javacsript:on_check_click(this)">';
               } else {
